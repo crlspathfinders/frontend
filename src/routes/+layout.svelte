@@ -3,6 +3,8 @@
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Dropdown, DropdownItem, DropdownDivider } from 'flowbite-svelte';
     import { ChevronDownOutline } from 'flowbite-svelte-icons';
     import { page } from '$app/stores';
+    import { user, logout } from "../stores/auth";
+
     $: activeUrl = $page.url.pathname;
 </script>
 
@@ -13,19 +15,23 @@
     </NavBrand>
     <NavHamburger />
     <NavUl {activeUrl}>
-        <NavLi class="text-gray-800" href="/">Home</NavLi>   
-        <NavLi class="text-gray-800" href="/findaclub">Find a Club</NavLi>
-        <NavLi class="text-gray-800" href="/becomeamentor">Become a Mentor</NavLi>
-        <NavLi class="cursor-pointer text-gray-800">
-        Dropdown<ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline" />
-        </NavLi>
-        <Dropdown class="w-44 z-20">
-        <DropdownItem href="/registeryourclub">Register Your Club</DropdownItem>
-        <DropdownItem href="/">Settings</DropdownItem>
-        <DropdownItem href="/">Earnings</DropdownItem>
-        <DropdownDivider />
-        <DropdownItem href="/">Sign out</DropdownItem>
-        </Dropdown>
+        {#if $user }
+            <NavLi class="text-gray-800" href="/">Home</NavLi>   
+            <NavLi class="text-gray-800" href="/findaclub">Find a Club</NavLi>
+            <NavLi class="text-gray-800" href="/becomeamentor">Become a Mentor</NavLi>
+            <NavLi class="cursor-pointer text-gray-800">
+            Dropdown<ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline" />
+            </NavLi>
+            <Dropdown class="w-44 z-20">
+                <DropdownItem href="/registeryourclub">Register Your Club</DropdownItem>
+                <DropdownItem href="/">Settings</DropdownItem>
+                <DropdownItem href="/">Earnings</DropdownItem>
+                <DropdownItem on:click={logout} href="/">Sign Out</DropdownItem>
+            </Dropdown>
+        {:else}
+            <NavLi class="text-gray-800" href="/auth/login">Log In</NavLi>   
+            <NavLi class="text-gray-800" href="/auth/signup">Sign Up</NavLi>
+        {/if}
     </NavUl>
 </Navbar>
 

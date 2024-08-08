@@ -1,3 +1,6 @@
+import { getAuth, getIdToken } from "firebase/auth";
+import { auth } from './auth/firebaseConfig';
+
 const SEND_URL = import.meta.env.VITE_URL
 
 export async function createUser(email, is_leader, password, role) {
@@ -59,5 +62,36 @@ export async function editClub(email, is_leader, password, role) {
     } catch (error) {
         console.log("Error: " + error);
         return -1;
+    }
+}
+
+let isLoggedIn = false;
+
+function toggleIsLoggedIn() { isLoggedIn = !isLoggedIn; }
+
+export function getLoggedIn() { return isLoggedIn; }
+
+export async function fetchUserInfo() {
+    if (!auth.currentUser) {
+        toggleIsLoggedIn();
+        // return {status: "User is not logged in"};
+    } else {
+        console.log(auth.currentUser["email"]);
+        const token = await getIdToken(auth.currentUser);
+        console.log(token);
+        const response = await fetch('/user-info', {
+            method: 'GET',
+            headers: {
+            'Authorization': `Bearer ${token}`
+            }
+        });
+    
+        if (!response.ok) {
+            throw new Error('Failed to fetch user info');
+        }
+    
+        const status = response.json();
+        console.log(status);
+        return status["status"];
     }
 }

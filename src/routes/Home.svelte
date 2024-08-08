@@ -1,10 +1,30 @@
 <script lang="js">
+    import { onMount } from 'svelte';
     import { Section, ContentWithImage } from 'flowbite-svelte-blocks';
+    import { user } from "../stores/auth"
+    import { fetchUserInfo } from "../lib/user"
+
+    let email = "";
+
+    $: {
+      user.subscribe(value => {
+        if (value) {
+          email = value.email;
+        } else {
+          email = '';
+        }
+      });
+    }
+
+    onMount(async () => {
+      const userInfo = await fetchUserInfo();
+      console.log(userInfo["status"]);
+    })
 </script>
   
 <Section name="contentwithimg">
     <ContentWithImage>
-        <svelte:fragment slot="h2">We didn't reinvent the wheel</svelte:fragment>
+        <svelte:fragment slot="h2">{email}</svelte:fragment>
         <p class="mb-4">We are strategists, designers and developers. Innovators and problem solvers. Small enough to be simple and quick, but big enough to deliver the scope you want at the pace you need. Small enough to be simple and quick, but big enough to deliver the scope you want at the pace you need.</p>
         <p>We are strategists, designers and developers. Innovators and problem solvers. Small enough to be simple and quick.</p>
 
