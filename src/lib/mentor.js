@@ -1,24 +1,16 @@
 const SEND_URL = import.meta.env.VITE_URL
 
-export async function createMentor(advisor_email, clubDays, club_description, club_name, president_email, room_number, secret_password, start_time, status, vicePresidentsEmails) {
-
-    let club_days = [];
-    let vice_presidents_emails = []
-
-    club_days.push(clubDays);
-    vice_presidents_emails.push(vicePresidentsEmails)
+export async function createMentor(firstName, lastName, email, races, religions, gender, languages, academics) {
 
     const toSend = {
-        advisor_email,
-        club_days,
-        club_description,
-        club_name,
-        president_email,
-        room_number,
-        secret_password,
-        start_time,
-        status,
-        vice_presidents_emails
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+        races: races,
+        religions: religions,
+        gender: gender,
+        languages: languages,
+        academics: academics
     }; // Make sure the values here match the ORDER and NAME that is expected in the Python class!
 
     console.log(toSend)
@@ -41,26 +33,17 @@ export async function createMentor(advisor_email, clubDays, club_description, cl
     }
 }
 
-export async function editMentor(advisor_email, clubDays, club_description, club_name, president_email, room_number, secret_password, start_time, status, vicePresidentsEmails) {
-
-    let club_days = [];
-    let vice_presidents_emails = []
-
-    club_days.push(clubDays);
-    vice_presidents_emails.push(vicePresidentsEmails)
+export async function editMentor(firstName, lastName, races, religions, gender, languages, academics) {
 
     const toSend = {
-        advisor_email,
-        club_days,
-        club_description,
-        club_name,
-        president_email,
-        room_number,
-        secret_password,
-        start_time,
-        status,
-        vice_presidents_emails
-    }; 
+        first_name: firstName,
+        last_name: lastName,
+        races: races,
+        religions: religions,
+        gender: gender,
+        languages: languages,
+        academics: academics
+    }; // Make sure the values here match the ORDER and NAME that is expected in the Python class!
 
     console.log(toSend)
 
@@ -75,7 +58,6 @@ export async function editMentor(advisor_email, clubDays, club_description, club
         const status = resData["status"];
         console.log("Successfully retrieved message: " + status);
         // location.reload(); // Change later, etc.
-        console.log(status);
         return status;
     } catch (error) {
         console.log("Error: " + error);
