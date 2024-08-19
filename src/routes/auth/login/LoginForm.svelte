@@ -30,14 +30,14 @@
       }
     }
 
-  onMount(() => {
-    console.log(user);
-    user.subscribe(value => {
-      if (value) {
-        goto('/'); // Redirect to home if already logged in
-      }
-    });
-  });
+  // onMount(() => {
+  //   console.log(user);
+  //   user.subscribe(value => {
+  //     if (value) {
+  //       goto('/'); // Redirect to home if already logged in
+  //     }
+  //   });
+  // });
 
 </script>
   

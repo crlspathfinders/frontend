@@ -5,7 +5,7 @@
     // import paginationData from '../utils/advancedTable.json'
     import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "../../../lib/api";
-    // import EditClub from './EditMe.svelte';
+    import EditMentor from "./EditMentor.svelte";
 
     let divClass='bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden';
     let innerDivClass='flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
@@ -19,7 +19,7 @@
 
     let editOn = false;
 
-    let currClub;
+    let currMentor;
 
     let statusOn = false;
 
@@ -32,7 +32,7 @@
 
 <!-- <StatusModal {statusOn} {currClub}></StatusModal> -->
 
-<!-- <EditClub {editOn} {currClub}></EditClub> -->
+<EditMentor {editOn} {currMentor}></EditMentor>
 
 {#if mentors.length > 0}
 
@@ -84,7 +84,7 @@
         {#each mentors as mentor, i}
             <TableBodyRow >
             <Button style="margin-left:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => {
-              currClub = mentor;
+              currMentor = mentor;
               editOn = !editOn;
           }}>
               <TableBodyCell tdClass="px-4 py-3"><b>Edit</b></TableBodyCell>

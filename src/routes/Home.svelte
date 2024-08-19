@@ -6,19 +6,19 @@
 
     let email = "";
 
-    $: {
-      user.subscribe(value => {
-        if (value) {
-          email = value.email;
-        } else {
-          email = '';
-        }
-      });
-    }
+    // $: {
+    //   user.subscribe(value => {
+    //     if (value) {
+    //       email = value.email;
+    //     } else {
+    //       email = '';
+    //     }
+    //   });
+    // }
 
     onMount(async () => {
       const userInfo = await fetchUserInfo();
-      console.log(userInfo["status"]);
+      if (userInfo["uid"] !== null) { console.log(userInfo["uid"]); }
     })
 </script>
   

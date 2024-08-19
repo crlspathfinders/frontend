@@ -23,8 +23,8 @@
         body: JSON.stringify({ token })
       });
 
-      // Now sign up the user with more info:
-      const tryMakeUser = await makeUser(email, false, "Member");
+      // Now sign up the user with more info (two empty strings for leading and joined_clubs):
+      const tryMakeUser = await makeUser(email, false, "Member", [], []);
 
       const status = await tryMakeUser.JSON();
       return status;

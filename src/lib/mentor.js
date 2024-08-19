@@ -33,11 +33,12 @@ export async function createMentor(firstName, lastName, email, races, religions,
     }
 }
 
-export async function editMentor(firstName, lastName, races, religions, gender, languages, academics) {
+export async function editMentor(firstName, lastName, email, races, religions, gender, languages, academics) {
 
     const toSend = {
-        first_name: firstName,
-        last_name: lastName,
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
         races: races,
         religions: religions,
         gender: gender,

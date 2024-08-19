@@ -1,9 +1,12 @@
 <script>
     import { onMount } from 'svelte';
     import { Section } from 'flowbite-svelte-blocks';
-    import { Label, Input, Button, Select, Textarea, MultiSelect } from 'flowbite-svelte';
+    import { Label, Input, Button, Select, Textarea, MultiSelect, Spinner } from 'flowbite-svelte';
     import { getCollection } from "$lib/api";
     import { createClub, editClub } from "../../lib/club";
+    import { writable } from 'svelte/store';
+
+    let isLoading = writable(false);
 
     let clubDays;
 
@@ -14,6 +17,41 @@
         { value: 'Thursday', name: 'Thursday'},
         { value: 'Friday', name: "Friday"}
     ];
+
+    const handleSubmit = async () => {
+        try {
+            isLoading.set(true);
+            const advisor_email = document.querySelector("#advisoremail").value;
+            // Just send clubDays as is.
+            const desc = document.querySelector("#clubdescription").value;
+            const name = document.querySelector("#clubname").value;
+            const presEmail = document.querySelector("#presidentemail").value;
+            const roomNum = document.querySelector("#roomnumber").value;
+            const startTime = document.querySelector("#clubstarttime").value;
+            const status = "Pending";
+            let veepsEmails = [];
+            for (let i = 1; i < 4; i++) {
+                try {
+                    const veep = document.querySelector("#vicepresidentemail" + i).value;
+                    veepsEmails.push(veep);
+                } catch {
+                    veepsEmails.push("");
+                }
+            }
+            console.log(veepsEmails);
+
+            if (view.localeCompare("Register") === 0) {
+                await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
+            } else if (view.localeCompare("Edit") === 0) {
+                const secretPassword = document.querySelector("#secret_password").value;
+                await editClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
+            }
+        } catch (error) {
+            console.log("Failed to edit club: " + error);
+        } finally {
+            isLoading.set(false);
+        }
+    }
 
     export let view = "";
     export let showVals = false;
@@ -27,35 +65,7 @@
 </script>
 
 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Your Club</h2>
-<form on:submit={() => {
-    
-    const advisor_email = document.querySelector("#advisoremail").value;
-    // Just send clubDays as is.
-    const desc = document.querySelector("#clubdescription").value;
-    const name = document.querySelector("#clubname").value;
-    const presEmail = document.querySelector("#presidentemail").value;
-    const roomNum = document.querySelector("#roomnumber").value;
-    const startTime = document.querySelector("#clubstarttime").value;
-    const status = "Pending";
-    let veepsEmails = [];
-    for (let i = 1; i < 4; i++) {
-        try {
-            const veep = document.querySelector("#vicepresidentemail" + i).value;
-            veepsEmails.push(veep);
-        } catch {
-            veepsEmails.push("");
-        }
-    }
-    console.log(veepsEmails);
-
-    if (view.localeCompare("Register") === 0) {
-        createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
-    } else if (view.localeCompare("Edit") === 0) {
-        const secretPassword = document.querySelector("#secret_password").value;
-        editClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
-    }
-
-}}>
+<form on:submit={handleSubmit}>
     <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
     <div class="sm:col-span-2">
         <Label for="clubname" class="mb-2">Club Name</Label>
@@ -142,6 +152,12 @@
     {#if showVals}
         <input type="text" id="secret_password" value={currClub.secret_password} hidden readonly>
     {/if}
-    <Button color="green" type="submit">{view} Club</Button>
+    <Button color="green" type="submit">
+        {#if $isLoading}
+            Loading .. <Spinner color="green"/>
+        {:else}
+            {view} Club
+        {/if}
+    </Button>
     </div>
 </form>

@@ -1,11 +1,13 @@
 const CURR_URL = "http://127.0.0.1:8000/";
 
-export async function makeUser(email, is_leader, role) {
+export async function makeUser(email, is_leader, role, leading, joined_clubs) {
     try {
         const toSend = {
             email,
             is_leader,
-            role
+            role,
+            leading,
+            joined_clubs
         }
         const url = CURR_URL + "make-user";
         const res = await fetch(url, {

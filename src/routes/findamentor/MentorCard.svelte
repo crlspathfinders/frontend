@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Avatar } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
@@ -95,46 +95,18 @@
     <div class="card-container">
         {#each clubs as club}
 
-            {#if club.status == "Approved"}
-
-                <div  class="space-y-4">
-                    <Card img="https://imagedelivery.net/Gm-NkdakOalj7eMFrJcZPA/5c4b45b8-8a42-4068-9796-658093028500/public">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{club.club_name}</h5>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight">{club.club_description}</p>
-                    <ButtonGroup>
-                        <Button pill color="yellow">
-                            <a href="/findaclub/{club.id}">View Club</a>
-                        </Button>
-                        {#if myClubs.includes(club.id)}
-                            <Button pill color="red" on:click={() => {
-                                    currClick = club.id;
-                                    handleClick(club.id);
-                                }}>
-                                Leave Club
-                                 {#if $isLoading} 
-                                    {#if currClick == club.id}
-                                        <Spinner size={4} color="red"/> 
-                                    {/if}
-                                {/if}
-                            </Button>
-                        {:else}
-                            <Button pill color="green" on:click={() => {
-                                    currClick = club.id;
-                                    handleClick(club.id)
-                                }}>
-                                Join Club 
-                                {#if $isLoading} 
-                                    {#if currClick == club.id}
-                                        <Spinner size={4} color="green"/> 
-                                    {/if}
-                                {/if}
-                            </Button>
-                        {/if}
-                    </ButtonGroup>
-                    </Card>
-                </div>
-
-            {/if}
+        <Card padding="md">
+            <div class="flex flex-col items-center pb-4">
+              <Avatar size="lg" src="https://imagedelivery.net/Gm-NkdakOalj7eMFrJcZPA/5c4b45b8-8a42-4068-9796-658093028500/public" />
+              <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bonnie Green</h5>
+              <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
+              <div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
+                <Button>Add friend</Button>
+                <Button color="light" class="dark:text-white">Message</Button>
+              </div>
+            </div>
+          </Card>
+          
 
         {/each}
     </div>

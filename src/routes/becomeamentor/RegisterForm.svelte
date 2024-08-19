@@ -8,25 +8,15 @@
 
     let email = "";
 
-    $: {
-      user.subscribe(value => {
-        if (value) {
-          email = value.email;
-        } else {
-          email = '';
-        }
-      });
-    }
-
-    let clubDays;
-
-    let daysoftheweek = [
-        { value: 'Monday', name: 'Monday' },
-        { value: 'Tuesday', name: 'Tuesday' },
-        { value: 'Wednesday', name: 'Wednesday' },
-        { value: 'Thursday', name: 'Thursday'},
-        { value: 'Friday', name: "Friday"}
-    ];
+    // $: {
+    //   user.subscribe(value => {
+    //     if (value) {
+    //       email = value.email;
+    //     } else {
+    //       email = '';
+    //     }
+    //   });
+    // }
 
     let races = [
         { value: "Asian / South Asian", name: "Asian / South Asian" },
@@ -83,28 +73,31 @@
 
     export let view = "";
     export let showVals = false;
-    export let currClub = {}
+    export let currMentor = {}
 
-    onMount(() => {
-        if (showVals) {
-            clubDays = currClub.club_days;
-        }
-    })
 </script>
 
-<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Your Club</h2>
+<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Mentor</h2>
 <form on:submit={() => {
     const firstName = document.querySelector("#firstname").value;
     const lastName = document.querySelector("#lastname").value;
+    const races = document.querySelector("#races").value;
+    const religions = document.querySelector("#religions").value;
+    const gender = document.querySelector("#gender").value;
+    const languages = document.querySelector("#languages").value;
+    const academics = document.querySelector("#academics").value;
 
-    createMentor(firstName, lastName, email, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected)
+    // if (view.loc)
+    // createMentor(firstName, lastName, email, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected)
+
+    editMentor(firstName, lastName, currMentor.email, races, religions, gender, languages, academics);
 
 }}>
     <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
     <div class="w-full">
         <Label for="firstname" class="mb-2">First Name</Label>
         {#if showVals}
-            <Input type="text" id="firstname" placeholder="First Name" value={currClub.club_name}/>
+            <Input type="text" id="firstname" placeholder="First Name" value={currMentor.firstname}/>
         {:else}
             <Input type="text" id="firstname" placeholder="First Name" required/>
         {/if}
@@ -112,34 +105,54 @@
     <div class="w-full">
         <Label for="lastname" class="mb-2">Last Name</Label> 
         {#if showVals}
-            <Input type="text" id="lastname" placeholder="Last Name" value={currClub.president_email}/>
+            <Input type="text" id="lastname" placeholder="Last Name" value={currMentor.lastname}/>
         {:else}
             <Input type="text" id="lastname" placeholder="Last Name" required/>
         {/if}
     </div>
     <div class="w-full">
         <Label>Races
-            <MultiSelect class="mt-2" items={races} placeholder="Select your race(s)" bind:value={racesSelected}/>
+            {#if showVals}
+                <MultiSelect class="mt-2" id="races" items={races} placeholder="Select your race(s)" value={currMentor.races}/>
+            {:else}
+                <MultiSelect class="mt-2" id="races" items={races} placeholder="Select your race(s)" bind:value={racesSelected}/>
+            {/if}
         </Label>
     </div>
     <div class="w-full">
         <Label>Religions
-            <MultiSelect class="mt-2" items={religions} placeholder="Select your religion(s)" bind:value={religionsSelected}/>
+            {#if showVals}
+                <MultiSelect class="mt-2" id="religions" items={religions} placeholder="Select your religion(s)" value={currMentor.religions}/>
+            {:else}
+                <MultiSelect class="mt-2" id="religions" items={religions} placeholder="Select your religion(s)" bind:value={religionsSelected}/>
+            {/if}
         </Label>
     </div>
     <div class="w-full">
         <Label>Gender
-            <MultiSelect class="mt-2" items={genders} placeholder="Select your gender(s)" bind:value={genderSelected}/>
+            {#if showVals}
+                <MultiSelect class="mt-2" id="gender" items={genders} placeholder="Select your gender(s)" value={currMentor.gender}/>
+            {:else}
+                <MultiSelect class="mt-2" id="gender" items={genders} placeholder="Select your gender(s)" bind:value={genderSelected}/>
+            {/if}
         </Label>
     </div>
     <div class="w-full">
         <Label>Languages
-            <MultiSelect class="mt-2" items={languages} placeholder="Select your language(s)" bind:value={languagesSelected}/>
+            {#if showVals}
+                <MultiSelect class="mt-2" id="languages" items={languages} placeholder="Select your language(s)" value={currMentor.languages}/>
+            {:else}
+                <MultiSelect class="mt-2" id="languages" items={languages} placeholder="Select your language(s)" bind:value={languagesSelected}/>
+            {/if}
         </Label>
     </div>
     <div class="w-full">
         <Label>Academics
-            <MultiSelect class="mt-2" items={academics} placeholder="Select your academics(s)" bind:value={academicsSelected}/>
+            {#if showVals}
+                <MultiSelect class="mt-2" id="academics" items={academics} placeholder="Select your academics(s)" bind:value={currMentor.academics}/>
+            {:else}
+                <MultiSelect class="mt-2" id="academics" items={academics} placeholder="Select your academics(s)" bind:value={academicsSelected}/>
+            {/if}
         </Label>
     </div>
     <Button color="green" type="submit">{view} Club</Button>

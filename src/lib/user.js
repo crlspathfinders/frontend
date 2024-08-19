@@ -3,39 +3,7 @@ import { auth } from './auth/firebaseConfig';
 
 const SEND_URL = import.meta.env.VITE_URL
 
-export async function createUser(email, is_leader, password, role) {
-
-    // HASH THE PASSWORD HERE
-        // OR IN BACKEND (?)
-
-    const toSend = {
-        email,
-        is_leader,
-        password,
-        role
-    }; // Make sure the values here match the ORDER and NAME that is expected in the Python class!
-
-    console.log(toSend)
-
-    try {
-        const url = SEND_URL + "createuser/"; 
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {"Content-type": "application/json"},
-            body: JSON.stringify(toSend)
-        });
-        const resData = await res.json();
-        const status = resData["status"];
-        console.log("Successfully retrieved message: " + status);
-        // location.reload(); // Change later, etc.
-        return status;
-    } catch (error) {
-        console.log("Error: " + error);
-        return -1;
-    }
-}
-
-export async function editClub(email, is_leader, password, role) {
+export async function editUser(email, is_leader, password, role) {
 
     const toSend = {
         email,
@@ -72,26 +40,48 @@ function toggleIsLoggedIn() { isLoggedIn = !isLoggedIn; }
 export function getLoggedIn() { return isLoggedIn; }
 
 export async function fetchUserInfo() {
-    if (!auth.currentUser) {
-        toggleIsLoggedIn();
-        // return {status: "User is not logged in"};
-    } else {
-        console.log(auth.currentUser["email"]);
-        const token = await getIdToken(auth.currentUser);
-        console.log(token);
-        const response = await fetch('/user-info', {
-            method: 'GET',
-            headers: {
-            'Authorization': `Bearer ${token}`
-            }
-        });
-    
-        if (!response.ok) {
-            throw new Error('Failed to fetch user info');
+    // console.log(auth.currentUser["email"]);
+    const token = await getIdToken(auth.currentUser);
+    console.log(token);
+    const response = await fetch(SEND_URL + 'user-info', {
+        method: 'GET',
+        headers: {
+        'Authorization': `Bearer ${token}`
         }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch user info');
+    }
+
+    const resData = await response.json();
+    // console.log(resData);
+    return resData;
+}
+
+export async function getUserDocData(email) {
+    const url = SEND_URL + "getuserdocdata" + "/" + email;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) { return "Failed to getuserdocdata"; }
+
+        const resData = await res.json();
+        return resData;
+    } catch (error) {
+        return "Failed to getuserdocdata: " + error;
+    }
+}
+
+export async function toggleClub(userEmail, clubId) {
+    const url = SEND_URL + "toggleclub/" + userEmail + "/" + clubId;
+    try {
+        const res = await fetch (url);
+        if (!res.ok) { return "Failed to toggle club"; }
     
-        const status = response.json();
-        console.log(status);
-        return status["status"];
+        const resData = await res.json();
+        return resData;
+    } catch (error) {
+        return "Failed to toggle club: " + error;
     }
 }

@@ -41,35 +41,8 @@
   {clubs.length} Clubs
 </p>
 
-<Section name="advancedTable" classSection='bg-gray-50 p-3 sm:p-5'>
+<!-- <Section name="advancedTable" classSection='bg-gray-50 p-3 sm:p-5'> -->
     <TableSearch placeholder="Search" hoverable={true} bind:value={searching} {divClass} {innerDivClass} {searchClass} {classInput} >
-
-    <div slot="header" class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-      <Button color='alternative'>Actions<ChevronDownOutline class="w-3 h-3 ml-2 " /></Button>
-        <Dropdown class="w-44 divide-y divide-gray-100">
-          <DropdownItem>Mass Edit</DropdownItem>
-          <DropdownItem>Delete all</DropdownItem>
-        </Dropdown>
-      <Button color='alternative'>Filter<FilterSolid class="w-3 h-3 ml-2 " /></Button>
-        <Dropdown class="w-48 p-3 space-y-2 text-sm">
-          <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose brand</h6>
-          <li>
-            <Checkbox>Apple (56)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Microsoft (16)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Razor (49)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Nikon (12)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>BenQ (74)</Checkbox>
-          </li>
-        </Dropdown>
-    </div>
       <TableHead>
         <TableHeadCell padding="px-4 py-3" scope="col"></TableHeadCell>
         <TableHeadCell padding="px-4 py-3" scope="col">Name</TableHeadCell>
@@ -85,6 +58,7 @@
       </TableHead>
       <TableBody>
         {#each clubs as club, i}
+          {#if club.club_name.includes(searching)}
             <TableBodyRow >
             <Button style="margin-left:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => {
               currClub = club;
@@ -101,13 +75,23 @@
                 <TableBodyCell tdClass="px-4 py-3">{club.room_number}</TableBodyCell>
                 <TableBodyCell tdClass="px-4 py-3">{club.secret_password}</TableBodyCell>
                 <TableBodyCell tdClass="px-4 py-3">{club.start_time}</TableBodyCell>
-                <Button style="margin-right:1rem; margin-top:1rem;" outline color="green" size="xs" on:click={() => {
-                  statusOn = !statusOn;
-                  currClub = club;
-                }}>
-                  <TableBodyCell tdClass="px-4 py-3"><b>{club.status}</b></TableBodyCell>
-                </Button>
+                {#if club.status == "Approved"}
+                  <Button style="margin-right:1rem; margin-top:1rem;" outline color="green" size="xs" on:click={() => {
+                    statusOn = !statusOn;
+                    currClub = club;
+                  }}>
+                    <TableBodyCell tdClass="px-4 py-3"><b>{club.status}</b></TableBodyCell>
+                  </Button>
+                {:else}
+                  <Button style="margin-right:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => {
+                    statusOn = !statusOn;
+                    currClub = club;
+                  }}>
+                    <TableBodyCell tdClass="px-4 py-3"><b>{club.status}</b></TableBodyCell>
+                  </Button>
+                {/if}
             </TableBodyRow>
+            {/if}
 
         {/each}
       </TableBody>
@@ -127,6 +111,6 @@
         </ButtonGroup> -->
       </div>
     </TableSearch>
-</Section>
+<!-- </Section> -->
 
 {/if}
