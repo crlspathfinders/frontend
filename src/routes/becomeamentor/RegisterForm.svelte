@@ -74,11 +74,24 @@
     export let view = "";
     export let showVals = false;
     export let currMentor = {}
+    export let currEmail = "";
+
+    onMount(() => {
+        if (showVals) {
+            // console.log(currMentor);
+            // racesSelected = currMentor.races;
+            // religionsSelected = currMentor.religions;
+            // genderSelected = currMentor.gender;
+            // languagesSelected = currMentor.languages;
+            // academicsSelected = currMentor.academics;
+            console.log(racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected);
+        }
+    })
 
 </script>
 
 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Mentor</h2>
-<form on:submit={() => {
+<form on:submit={async () => {
     const firstName = document.querySelector("#firstname").value;
     const lastName = document.querySelector("#lastname").value;
     const races = document.querySelector("#races").value;
@@ -90,7 +103,14 @@
     // if (view.loc)
     // createMentor(firstName, lastName, email, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected)
 
-    editMentor(firstName, lastName, currMentor.email, races, religions, gender, languages, academics);
+    if (showVals) {
+        console.log(showVals);
+        console.log(racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected);
+        const mes = await editMentor(firstName, lastName, currMentor.email, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected);
+        console.log(mes);
+    } else {
+        await createMentor(firstName, lastName, currEmail, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected);
+    }
 
 }}>
     <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -113,7 +133,7 @@
     <div class="w-full">
         <Label>Races
             {#if showVals}
-                <MultiSelect class="mt-2" id="races" items={races} placeholder="Select your race(s)" value={currMentor.races}/>
+                <MultiSelect class="mt-2" id="races" items={races} placeholder="Select your race(s)" bind:value={currMentor.races}/>
             {:else}
                 <MultiSelect class="mt-2" id="races" items={races} placeholder="Select your race(s)" bind:value={racesSelected}/>
             {/if}

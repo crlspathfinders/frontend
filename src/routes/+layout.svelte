@@ -7,11 +7,11 @@
 
     $: activeUrl = $page.url.pathname;
     let activeClass = 'text-white bg-gray-700 md:bg-transparent md:text-gray-700';
-    let nonActiveClass = 'text-gray-500 hover:bg-gray-500 md:hover:bg-transparent md:border-0 md:hover:text-gray-500';
+    let nonActiveClass = 'text-gray-400 hover:bg-gray-500 md:hover:bg-transparent md:border-0 md:hover:text-gray-500';
 
 </script>
 
-<Navbar let:NavContainer color="green">
+<Navbar let:NavContainer color="blue">
     <NavBrand href="/">
         <span class="self-center whitespace-nowrap text-xl font-semibold text-black">CRLS PathFinders</span>
     </NavBrand>

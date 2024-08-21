@@ -1,14 +1,16 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Toast } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
     import { getUserDocData, toggleClub } from "../../lib/user";
     import { writable } from 'svelte/store';
+    import { fly } from 'svelte/transition';
 
     let inClubs = writable([]);
     let isLoading = writable(null);
+    let showToast = writable(false);
 
     let ready = false;
 
@@ -31,6 +33,10 @@
             const userInfo = await getUserDocData(email);
             myClubs = userInfo.joined_clubs;
             inClubs.set(myClubs);
+            setTimeout(() => {
+                showToast.set(false);
+            }, 3000);
+            showToast.set(true)
         }
     }
 
@@ -61,7 +67,7 @@
         padding: 3rem;
         display: grid;
         gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        grid-template-columns: repeat(3, minmax(100px, 1fr));
    }
 
    /* .maincard {
@@ -90,14 +96,26 @@
    }
 </style>
 
+{#if $showToast}
+
+    <div class="toastwrapper" style="z-index:10;">
+        <Toast transition={fly} params={{ x: 200 }} position="bottom-right" color="green" class="mb-4">
+            <!-- <DownloadOutline slot="icon" class="w-6 h-6" /> -->
+            Successfully joined / left club
+        </Toast>
+    </div>
+
+{/if}
+
 {#if ready}
 
     <div class="card-container">
+
         {#each clubs as club}
 
             {#if club.status == "Approved"}
 
-                <div  class="space-y-4">
+                <div class="space-y-4">
                     <Card img="https://imagedelivery.net/Gm-NkdakOalj7eMFrJcZPA/5c4b45b8-8a42-4068-9796-658093028500/public">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{club.club_name}</h5>
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight">{club.club_description}</p>
@@ -139,5 +157,4 @@
         {/each}
     </div>
     
-
 {/if}

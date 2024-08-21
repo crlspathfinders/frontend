@@ -35,6 +35,12 @@ export async function createMentor(firstName, lastName, email, races, religions,
 
 export async function editMentor(firstName, lastName, email, races, religions, gender, languages, academics) {
 
+    // races = races.split(",");
+    // religions = religions.split(",");
+    // gender = gender.split(",");
+    // languages = languages.split(",");
+    // academics = academics.split(",");
+
     const toSend = {
         firstname: firstName,
         lastname: lastName,

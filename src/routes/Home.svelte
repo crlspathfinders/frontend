@@ -6,17 +6,14 @@
 
     let email = "";
 
-    // $: {
-    //   user.subscribe(value => {
-    //     if (value) {
-    //       email = value.email;
-    //     } else {
-    //       email = '';
-    //     }
-    //   });
-    // }
-
     onMount(async () => {
+        user.subscribe(value => {
+        if (value) {
+            email = value.email;
+        } else {
+            email = '';
+        }
+      });
       const userInfo = await fetchUserInfo();
       if (userInfo["uid"] !== null) { console.log(userInfo["uid"]); }
     })

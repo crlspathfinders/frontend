@@ -18,7 +18,7 @@
         } catch (error) {
             console.log("Failed to change status: " + error);
         } finally {
-            status.set(currClub.status);
+            // status.set(currClub.status);
             isLoading.set(false);
             closeModal();
         }
@@ -42,9 +42,9 @@
 
 </script>
 
-<!-- {#if modalOpen} -->
+<!-- {#if $modalOpen} -->
 
-    <Modal title="Change {currClub.club_name} status" bind:open={statusOn} >
+    <Modal title="Change {currClub.club_name} status" open={statusOn} on:close={closeModal}>
         <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">
             <center>
                 <!-- Status: <b>{$status}</b> -->
@@ -61,7 +61,6 @@
                     Loading ... <Spinner color="purple"/>
                 {/if}
                 <br>
-                { message }
             </center>
         </p>
     </Modal>

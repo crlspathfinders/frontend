@@ -8,7 +8,11 @@
 
     let isLoading = writable(false);
 
-    let clubDays;
+    let clubDays = [];
+
+    let selectedClubDays;
+
+    let currDays = [];
 
     let daysoftheweek = [
         { value: 'Monday', name: 'Monday' },
@@ -23,12 +27,20 @@
             isLoading.set(true);
             const advisor_email = document.querySelector("#advisoremail").value;
             // Just send clubDays as is.
+            // try {
+            //     const clubDaysS = document.querySelector("#clubdays").value;
+            //     console.log(clubDaysS);
+            // } catch { console.log(); }
+            console.log(currClub.club_days);
+            clubDays = currClub.club_days;
             const desc = document.querySelector("#clubdescription").value;
             const name = document.querySelector("#clubname").value;
             const presEmail = document.querySelector("#presidentemail").value;
             const roomNum = document.querySelector("#roomnumber").value;
             const startTime = document.querySelector("#clubstarttime").value;
-            const status = "Pending";
+            let status;
+            if (showVals) { status = "Approved"; }
+            else { status = "Pending"; } 
             let veepsEmails = [];
             for (let i = 1; i < 4; i++) {
                 try {
@@ -60,6 +72,8 @@
     onMount(() => {
         if (showVals) {
             clubDays = currClub.club_days;
+            console.log(clubDays);
+            currDays = currClub.club_days;
         }
     })
 </script>
@@ -127,7 +141,7 @@
         <Label>
             Days your club meets
             {#if showVals}
-                <MultiSelect class="mt-2" placeholder="Select day(s)" items={daysoftheweek} value={currClub.club_days} />
+                <MultiSelect class="mt-2" id="clubdays" placeholder="Select day(s)" items={daysoftheweek} bind:value={currClub.club_days} />
             {:else}
                 <MultiSelect class="mt-2" placeholder="Select day(s)" items={daysoftheweek} bind:value={clubDays} required />
             {/if}

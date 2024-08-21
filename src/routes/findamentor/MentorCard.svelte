@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Avatar } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Avatar, Toast } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
