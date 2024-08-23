@@ -10,15 +10,27 @@
     import { writable } from 'svelte/store';
     import { changeStatus } from '../../../lib/club';
     import { DotsHorizontalOutline, DotsVerticalOutline } from 'flowbite-svelte-icons';
-    import { ToolbarButton, DropdownDivider } from 'flowbite-svelte';
+    import { ToolbarButton, DropdownDivider, Popover } from 'flowbite-svelte';
     import { fly } from 'svelte/transition';
+    import { toggleClub } from "../../../lib/user";
 
     let isLoading = writable(false);
     let modalOpen = writable(false);
     let status = writable(null);
     let showToast = writable(false);
+    let removeLoading = writable(false);
+    let deleteConfirmModal = writable(false);
+    
+    let clubMembers = []
+
+    let currI;
 
     let message = "";
+
+    const findClubMembers = (club) => {
+      clubMembers = club.members;
+      return clubMembers;
+    }
 
     const handleStatus = async (secPass, status) => {
         isLoading.set(true);
@@ -29,12 +41,38 @@
             console.log("Failed to change status: " + error);
         } finally {
             // status.set(currClub.status);
+            closeModal();
             isLoading.set(false);
             clubs = await getCollection("Clubs");
-            closeModal();
             setTimeout(() => {
                 showToast.set(false);
             }, 6000);
+            showToast.set(true)
+        }
+    }
+
+    const handleClick = async (email, clubId) => {
+        removeLoading.set(true);
+        try {
+            const res = await toggleClub(email, clubId);
+        } catch (error) {
+            console.log("Failed to toggle club! " + error);
+        } finally {
+            clubs = await getCollection("Clubs");
+            for (let i = 0; i < clubs.length; i++) {
+              if (clubs[i].id.localeCompare(clubId) === 0) {
+                console.log(clubs[i]);
+                currClub = clubs[i];
+                clubMembers = currClub.members;
+              }
+            }
+            // toggleRow(currI, currClub);
+            removeLoading.set(false);
+            closeDeleteConfirmModal();
+            setTimeout(() => {
+                showToast.set(false);
+            }, 3000);
+            // clubMembers.set()
             showToast.set(true)
         }
     }
@@ -55,6 +93,20 @@
 
     let statusOn = false;
 
+    let openRow;
+    let details;
+
+    let currId;
+    let currName;
+
+    let currClick;
+
+    const toggleRow = (i, club) => {
+      currI = i;
+      findClubMembers(club);
+      openRow = openRow === i ? null : i
+    }
+
     onMount(async () => {
         clubs = await getCollection("Clubs");
         console.log(clubs);
@@ -63,19 +115,34 @@
     const openModal = () => modalOpen.set(true);
     const closeModal = () => modalOpen.set(false);
 
+    const openDeleteConfirmModal = () => deleteConfirmModal.set(true);
+    const closeDeleteConfirmModal = () => deleteConfirmModal.set(false);
+
 </script>
 
-
-{#if $showToast}
+<!-- {#if $showToast}
 
   <div class="toastwrapper" style="z-index:10;">
       <Toast transition={fly} params={{ x: 200 }} position="bottom-right" color="green" class="mb-4">
-          <!-- <DownloadOutline slot="icon" class="w-6 h-6" /> -->
           <p class="text-gray-700">
             Changed <b>{currClub.club_name}</b> status to <b>{currClub.status}</b>
           </p>
       </Toast>
   </div>
+
+{/if} -->
+
+{#if $deleteConfirmModal}
+
+  <Modal title="Delete Member" open={$deleteConfirmModal} on:close={closeDeleteConfirmModal}>
+    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Deleting <b>{currClick}</b> from <b>{currName}</b> will permanently remove them from this club. They will have to join back themselves. You cannot undo this action.</p>
+    <Button outline color="red" on:click={() => handleClick(currClick, currId) }>
+      Delete
+      {#if $removeLoading}
+        <Spinner size={4} color="red"/>
+      {/if}
+    </Button>
+  </Modal>
 
 {/if}
 
@@ -118,7 +185,6 @@
 
 <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
   <div>
-      <!-- Start coding here -->
       <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
               <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -127,6 +193,7 @@
                           <th scope="col" class="px-4 py-3">Edit</th>
                           <th scope="col" class="px-4 py-3">Status</th>
                           <th scope="col" class="px-4 py-3">Name</th>
+                          <th scope="col" class="px-4 py-3">Members</th>
                           <th scope="col" class="px-4 py-3">President</th>
                           <th scope="col" class="px-4 py-3">Vice Presidents</th>
                           <th scope="col" class="px-4 py-3">Advisor</th>
@@ -145,7 +212,6 @@
                       <tr class="border-b dark:border-gray-700">
                         <td>
                           <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
-                            console.log(club);
                             currClub = club;
                             console.log(club);
                             editOn = !editOn;
@@ -162,9 +228,7 @@
                           }}>{club.status}</Button>
                         {:else}
                           <Button style="margin-right:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={async () => {
-                            // statusOn = !statusOn;
                             currClub = club;
-                            // clubs = await getCollection("Clubs");
                             openModal();
                           }}>
                             {club.status}
@@ -172,6 +236,7 @@
                         {/if}
                         </td>
                           <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u><a href="/findaclub/{club.id}">{club.club_name}</a></u></b></th>
+                          <td class="px-4 py-3" style="cursor:pointer;" id="members" on:click={() => toggleRow(i, club)}><u>{club.members.length}</u></td>
                           <td class="px-4 py-3">{club.president_email}</td>
                           <td class="px-4 py-3">{club.vice_presidents_emails}</td>
                           <td class="px-4 py-3">{club.advisor_email}</td>
@@ -180,9 +245,40 @@
                           <td class="px-4 py-3">{club.room_number}</td>
                           <td class="px-4 py-3">{club.secret_password}</td>
                           <td class="px-4 py-3">{club.start_time}</td>
-                          <!-- <b><td class="px-4 py-3">{club.status}</td></b> -->
                       </tr>
+
+                      {#if openRow === i}
+
+                        <td class="px-4 py-3">
+
+                          <Table>
+
+                            {#each clubMembers as mem, i}
+
+                              <TableBodyRow>
+                                <TableBodyCell>
+                                  <Button outline color="red" size="xs" on:click={() => {
+                                    currClick = mem;
+                                    currId = club.id
+                                    currName = club.club_name;
+                                    openDeleteConfirmModal();
+                                  }}>
+                                  Remove
+                                </Button>
+                                </TableBodyCell>
+                                <TableBodyCell>{i + 1} | {mem}</TableBodyCell>
+                              </TableBodyRow>
+                             
+                            {/each}
+                            
+                          </Table>
+                          
+                        </td>
+
+                      {/if}
+
                     {/each}
+
                   </tbody>
               </table>
           </div>

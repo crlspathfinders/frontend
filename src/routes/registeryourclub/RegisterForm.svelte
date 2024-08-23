@@ -56,7 +56,7 @@
                 await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
             } else if (view.localeCompare("Edit") === 0) {
                 const secretPassword = document.querySelector("#secret_password").value;
-                await editClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
+                await editClub(advisor_email, currDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
             }
         } catch (error) {
             console.log("Failed to edit club: " + error);
@@ -70,7 +70,10 @@
     export let currClub = {}
 
     onMount(() => {
+        console.log("onmount");
         if (showVals) {
+            console.log("showvals");
+            console.log(currClub);
             clubDays = currClub.club_days;
             console.log(clubDays);
             currDays = currClub.club_days;
@@ -141,7 +144,7 @@
         <Label>
             Days your club meets
             {#if showVals}
-                <MultiSelect class="mt-2" id="clubdays" placeholder="Select day(s)" items={daysoftheweek} bind:value={currClub.club_days} />
+                <MultiSelect class="mt-2" id="clubdays" placeholder="Select day(s)" items={daysoftheweek} bind:value={currDays} />
             {:else}
                 <MultiSelect class="mt-2" placeholder="Select day(s)" items={daysoftheweek} bind:value={clubDays} required />
             {/if}
