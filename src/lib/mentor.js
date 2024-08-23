@@ -1,5 +1,49 @@
 const SEND_URL = import.meta.env.VITE_URL
 
+export let races = [
+    { value: "Asian / South Asian", name: "Asian / South Asian" },
+    { value: "Black", name: "Black" },
+    { value: "Hispanic", name: "Hispanic" },
+    { value: "White", name: "White" },
+    { value: "Arab", name: "Arab" },
+]
+
+export let religions = [
+    { value: "Muslim", name: "Muslim" },
+    { value: "Jewish", name: "Jewish" },
+    { value: "Hindu", name: "Hindu" },
+    { value: "Buddhist", name: "Buddhist" },
+    { value: "Atheist", name: "Atheist" },
+    // { value: "Christian", name: "Christian" },
+]
+
+export let genders = [
+    { value: "Male", name: "Male" },
+    { value: "Female", name: "Female" },
+    { value: "Non-binary", name: "Non-binary" }
+]
+
+export let languages = [
+    { value: "Amharic", name: "Amharic" },
+    { value: "Bangla", name: "Bangla" },
+    { value: "Spanish", name: "Spanish" },
+    { value: "Hindi", name: "Hindi" },
+    { value: "Portuguese", name: "Portuguese" },
+    { value: "Chinese", name: "Chinese" },
+    { value: "Korean", name: "Korean "},
+    { value: "Japanese", name: "Japanese" }
+]
+
+export let academics = [
+    { value: "English", name: "English" },
+    { value: "History", name: "History" },
+    { value: "Chemistry", name: "Chemistry" },
+    { value: "Physics", name: "Physics" },
+    // { value: "Biology", name: "Biology" },
+    { value: "Computer Science", name: "Computer Science" }
+]
+
+
 export async function createMentor(firstName, lastName, email, races, religions, gender, languages, academics) {
 
     const toSend = {
@@ -69,5 +113,18 @@ export async function editMentor(firstName, lastName, email, races, religions, g
     } catch (error) {
         console.log("Error: " + error);
         return -1;
+    }
+}
+
+export async function deleteMentor(email) {
+    const url = SEND_URL + "deletementor/" + email;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) { console.log("Failed to fetch url"); }
+        const resData = await res.json();
+        console.log(resData);
+        return resData;
+    } catch (error) {
+        console.log("Failed to delete mentor: " + error);
     }
 }

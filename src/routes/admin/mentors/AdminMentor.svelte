@@ -1,17 +1,16 @@
 <script>
     import { onMount } from 'svelte';
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, DropdownItem, Checkbox, ButtonGroup } from 'flowbite-svelte';
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, DropdownItem, Checkbox, ButtonGroup, A, Modal, Spinner } from 'flowbite-svelte';
     import { Section } from 'flowbite-svelte-blocks';
     // import paginationData from '../utils/advancedTable.json'
     import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "../../../lib/api";
     import EditMentor from "./EditMentor.svelte";
+    import { writable } from 'svelte/store';
+    import { deleteMentor } from "../../../lib/mentor";
 
-    let divClass='bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden';
-    let innerDivClass='flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
-    let searchClass='w-full md:w-1/2 relative';
-    let svgDivClass='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none';
-    let classInput="text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10";
+    let deleteMentorConfirmModal = writable(false);
+    let removeLoading = writable(false);
 
     let mentors = [];
 
@@ -23,100 +22,100 @@
 
     let statusOn = false;
 
+    let currEmail;
+
+    const handleDelete = async (email) => {
+      removeLoading.set(true);
+      try {
+        const res = await deleteMentor(email);
+        console.log(res);
+      } catch (error) {
+        console.log("Failed to delete mentor: " + error);
+      } finally {
+        mentors = await getCollection("Mentors");
+        removeLoading.set(false);
+        closedeleteMentorConfirmModal();
+      }
+    }
+
     onMount(async () => {
         mentors = await getCollection("Mentors");
         console.log(mentors);
     });
 
+    const opendeleteMentorConfirmModal = () => deleteMentorConfirmModal.set(true);
+    const closedeleteMentorConfirmModal = () => deleteMentorConfirmModal.set(false);
+
 </script>
 
-<!-- <StatusModal {statusOn} {currClub}></StatusModal> -->
+{#if $deleteMentorConfirmModal}
+
+  <Modal title="Delete {currEmail}" open={$deleteMentorConfirmModal} on:close={closedeleteMentorConfirmModal}>
+    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Are you sure you want to permanently remove <b>{currEmail}</b>? You cannot undo this action.</p>
+    <Button outline color="red" on:click={() => {handleDelete(currEmail); } }>
+      Delete
+      {#if $removeLoading}
+        <Spinner size={4} color="red"/>
+      {/if}
+    </Button>
+  </Modal>
+
+{/if}
 
 <EditMentor {editOn} {currMentor}></EditMentor>
 
-{#if mentors.length > 0}
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+  <div>
+      <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+          <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
+                          <th scope="col" class="px-4 py-3">Edit</th>
+                          <th scope="col" class="px-4 py-3">First Name</th>
+                          <th scope="col" class="px-4 py-3">Last Name</th>
+                          <th scope="col" class="px-4 py-3">Email</th>
+                          <th scope="col" class="px-4 py-3">Gender</th>
+                          <th scope="col" class="px-4 py-3">Language(s)</th>
+                          <th scope="col" class="px-4 py-3">Race(s)</th>
+                          <th scope="col" class="px-4 py-3">Religion(s)</th>
+                          <th scope="col" class="px-4 py-3">Academic(s)</th>
+                          <th scope="col" class="px-4 py-3">Delete</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {#each mentors as m, i}
+                      <tr class="border-b dark:border-gray-700">
+                        <td>
+                          <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
+                            currMentor = m;
+                            editOn = !editOn;
+                        }}>Edit</Button>
+                          <td class="px-4 py-3">{i + 1} | {m.firstname}</td>
+                          <td class="px-4 py-3">{m.lastname}</td>
+                          <td class="px-4 py-3"><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td>
+                          <td class="px-4 py-3">{m.gender}</td>
+                          <td class="px-4 py-3">{m.languages}</td>
+                          <td class="px-4 py-3">{m.races}</td>
+                          <td class="px-4 py-3">{m.religions}</td>
+                          <td class="px-4 py-3">{m.academics}</td>
 
-<p class="text-xl">
-  {mentors.length} Mentors
-</p>
+                          <td class="px-2 py-1">
+                            <Button outline color="red" size="xs" on:click={() => { 
+                              currEmail = m.email;
+                              opendeleteMentorConfirmModal(); 
+                            }}>
+                              Delete
+                            </Button>
+                          </td>
 
-<Section name="advancedTable" classSection='bg-gray-50 dark:bg-gray-900 p-3 sm:p-5'>
-    <TableSearch placeholder="Search" hoverable={true} bind:value={searching} {divClass} {innerDivClass} {searchClass} {classInput} >
+                      </tr>
 
-    <div slot="header" class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-      <Button color='alternative'>Actions<ChevronDownOutline class="w-3 h-3 ml-2 " /></Button>
-        <Dropdown class="w-44 divide-y divide-gray-100">
-          <DropdownItem>Mass Edit</DropdownItem>
-          <DropdownItem>Delete all</DropdownItem>
-        </Dropdown>
-      <Button color='alternative'>Filter<FilterSolid class="w-3 h-3 ml-2 " /></Button>
-        <Dropdown class="w-48 p-3 space-y-2 text-sm">
-          <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose brand</h6>
-          <li>
-            <Checkbox>Apple (56)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Microsoft (16)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Razor (49)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Nikon (12)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>BenQ (74)</Checkbox>
-          </li>
-        </Dropdown>
-    </div>
-      <TableHead>
-        <TableHeadCell padding="px-4 py-3" scope="col"></TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">First Name</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Last Name</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Email</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Gender</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Language(s)</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Race(s)</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Religion(s)</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Academic(s)</TableHeadCell>
-      </TableHead>
-      <TableBody>
-        {#each mentors as mentor, i}
-            <TableBodyRow >
-            <Button style="margin-left:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => {
-              currMentor = mentor;
-              editOn = !editOn;
-          }}>
-              <TableBodyCell tdClass="px-4 py-3"><b>Edit</b></TableBodyCell>
-            </Button>
-                <TableBodyCell tdClass="px-4 py-3">{i + 1} | {mentor.firstname}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{mentor.lastname}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{mentor.email}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{mentor.gender}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{mentor.languages}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{mentor.races}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{mentor.religions}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{mentor.academics}</TableBodyCell>
-            </TableBodyRow>
+                    {/each}
 
-        {/each}
-      </TableBody>
-      <div slot="footer" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-      <!-- <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-        Showing
-        <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
-        of
-        <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span>
-      </span> -->
-        <!-- <ButtonGroup>
-          <Button on:click={loadPreviousPage} disabled={currentPosition === 0}><ChevronLeftOutline size='xs' class='m-1.5'/></Button>
-          {#each pagesToShow as pageNumber}
-            <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
-          {/each}
-          <Button on:click={loadNextPage} disabled={ totalPages === endPage }><ChevronRightOutline size='xs' class='m-1.5'/></Button>
-        </ButtonGroup> -->
+                  </tbody>
+              </table>
+          </div>
       </div>
-    </TableSearch>
-</Section>
-
-{/if}
+  </div>
+</section>
