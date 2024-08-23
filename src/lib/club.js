@@ -125,3 +125,16 @@ export async function changeStatus(secret_password, status) {
         return -1;
     }
 }
+
+export async function deleteClub(clubId) {
+    const url = SEND_URL + "deleteclub/" + clubId;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) { console.log("Failed to fetch url"); }
+        const resData = await res.json();
+        console.log(resData);
+        return resData;
+    } catch (error) {
+        console.log("Failed to delete club: " + error);
+    }
+}

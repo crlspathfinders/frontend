@@ -32,7 +32,7 @@
             //     console.log(clubDaysS);
             // } catch { console.log(); }
             console.log(currClub.club_days);
-            clubDays = currClub.club_days;
+            // clubDays = currClub.club_days;
             const desc = document.querySelector("#clubdescription").value;
             const name = document.querySelector("#clubname").value;
             const presEmail = document.querySelector("#presidentemail").value;

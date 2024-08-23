@@ -8,7 +8,7 @@
     import EditClub from './EditClub.svelte';
     import StatusModal from './StatusModal.svelte';
     import { writable } from 'svelte/store';
-    import { changeStatus } from '../../../lib/club';
+    import { changeStatus, deleteClub } from '../../../lib/club';
     import { DotsHorizontalOutline, DotsVerticalOutline } from 'flowbite-svelte-icons';
     import { ToolbarButton, DropdownDivider, Popover } from 'flowbite-svelte';
     import { fly } from 'svelte/transition';
@@ -20,6 +20,7 @@
     let showToast = writable(false);
     let removeLoading = writable(false);
     let deleteConfirmModal = writable(false);
+    let deleteCLUBConfirmModal = writable(false);
     
     let clubMembers = []
 
@@ -77,6 +78,20 @@
         }
     }
 
+    const handleDelete = async (clubId) => {
+      removeLoading.set(true);
+      try {
+        const res = await deleteClub(clubId);
+        console.log(res);
+      } catch (error) {
+        console.log("Failed to delete club: " + error);
+      } finally {
+        clubs = await getCollection("Clubs");
+        removeLoading.set(false);
+        closedeleteCLUBConfirmModal();
+      }
+    }
+
     let divClass='bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden';
     let innerDivClass='flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
     let searchClass='w-full md:w-1/2 relative';
@@ -118,6 +133,9 @@
     const openDeleteConfirmModal = () => deleteConfirmModal.set(true);
     const closeDeleteConfirmModal = () => deleteConfirmModal.set(false);
 
+    const opendeleteCLUBConfirmModal = () => deleteCLUBConfirmModal.set(true);
+    const closedeleteCLUBConfirmModal = () => deleteCLUBConfirmModal.set(false);
+
 </script>
 
 <!-- {#if $showToast}
@@ -131,6 +149,20 @@
   </div>
 
 {/if} -->
+
+{#if $deleteCLUBConfirmModal}
+
+  <Modal title="Delete {currName}" open={$deleteCLUBConfirmModal} on:close={closedeleteCLUBConfirmModal}>
+    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Are you sure you want to permanently remove <b>{currName}</b>? You cannot undo this action.</p>
+    <Button outline color="red" on:click={() => {handleDelete(currId); } }>
+      Delete
+      {#if $removeLoading}
+        <Spinner size={4} color="red"/>
+      {/if}
+    </Button>
+  </Modal>
+
+{/if}
 
 {#if $deleteConfirmModal}
 
@@ -202,9 +234,7 @@
                           <th scope="col" class="px-4 py-3">Room</th>
                           <th scope="col" class="px-4 py-3">Password</th>
                           <th scope="col" class="px-4 py-3">Start Time</th>
-                          <th scope="col" class="px-4 py-3">
-                              <span class="sr-only">Actions</span>
-                          </th>
+                          <th scope="col" class="px-4 py-3">Delete</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -245,6 +275,16 @@
                           <td class="px-4 py-3">{club.room_number}</td>
                           <td class="px-4 py-3">{club.secret_password}</td>
                           <td class="px-4 py-3">{club.start_time}</td>
+                          <td class="px-2 py-1">
+                            <Button outline color="red" size="xs" on:click={() => { 
+                              currId = club.id
+                              currName = club.club_name;
+                              opendeleteCLUBConfirmModal(); 
+                            }}>
+                              Delete
+                            </Button>
+                          </td>
+
                       </tr>
 
                       {#if openRow === i}
