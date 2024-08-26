@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, DropdownItem, Checkbox, ButtonGroup, A, Modal, Spinner } from 'flowbite-svelte';
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, DropdownItem, Checkbox, ButtonGroup, A, Modal, Spinner, ListPlaceholder, Search } from 'flowbite-svelte';
     import { Section } from 'flowbite-svelte-blocks';
     // import paginationData from '../utils/advancedTable.json'
     import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
@@ -8,7 +8,9 @@
     import EditMentor from "./EditMentor.svelte";
     import { writable } from 'svelte/store';
     import { deleteMentor } from "../../../lib/mentor";
+    import { TableHeader } from 'flowbite-svelte-blocks';
 
+    let wholeReady = writable(false);
     let deleteMentorConfirmModal = writable(false);
     let removeLoading = writable(false);
 
@@ -23,6 +25,13 @@
     let statusOn = false;
 
     let currEmail;
+
+    function labelIncludesSearchTerm(label, searchTerm) {
+      if (typeof label === 'string' && typeof searchTerm === 'string') {
+        return label.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return false;
+    }
 
     const handleDelete = async (email) => {
       removeLoading.set(true);
@@ -39,8 +48,15 @@
     }
 
     onMount(async () => {
+      wholeReady.set(false);
+      try {
         mentors = await getCollection("Mentors");
         console.log(mentors);
+      } catch (error) {
+        console.log("Onmount failed: " + error);
+      } finally {
+        wholeReady.set(true);
+      }
     });
 
     const opendeleteMentorConfirmModal = () => deleteMentorConfirmModal.set(true);
@@ -62,60 +78,77 @@
 
 {/if}
 
-<EditMentor {editOn} {currMentor}></EditMentor>
+{#if $wholeReady}
 
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-  <div>
-      <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-          <div class="overflow-x-auto">
-              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                          <th scope="col" class="px-4 py-3">Edit</th>
-                          <th scope="col" class="px-4 py-3">First Name</th>
-                          <th scope="col" class="px-4 py-3">Last Name</th>
-                          <th scope="col" class="px-4 py-3">Email</th>
-                          <th scope="col" class="px-4 py-3">Gender</th>
-                          <th scope="col" class="px-4 py-3">Language(s)</th>
-                          <th scope="col" class="px-4 py-3">Race(s)</th>
-                          <th scope="col" class="px-4 py-3">Religion(s)</th>
-                          <th scope="col" class="px-4 py-3">Academic(s)</th>
-                          <th scope="col" class="px-4 py-3">Delete</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {#each mentors as m, i}
-                      <tr class="border-b dark:border-gray-700">
-                        <td>
-                          <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
-                            currMentor = m;
-                            editOn = !editOn;
-                        }}>Edit</Button>
-                          <td class="px-4 py-3">{i + 1} | {m.firstname}</td>
-                          <td class="px-4 py-3">{m.lastname}</td>
-                          <td class="px-4 py-3"><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td>
-                          <td class="px-4 py-3">{m.gender}</td>
-                          <td class="px-4 py-3">{m.languages}</td>
-                          <td class="px-4 py-3">{m.races}</td>
-                          <td class="px-4 py-3">{m.religions}</td>
-                          <td class="px-4 py-3">{m.academics}</td>
+  <EditMentor {editOn} {currMentor}></EditMentor>
 
-                          <td class="px-2 py-1">
-                            <Button outline color="red" size="xs" on:click={() => { 
-                              currEmail = m.email;
-                              opendeleteMentorConfirmModal(); 
-                            }}>
-                              Delete
-                            </Button>
-                          </td>
+  <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+    <div>
+      <TableHeader headerType="search">
+         <Search bind:value={searching} slot="search" placeholder="Search {mentors.length} mentors" size="md"/>
+         <div class=""></div>
+      </TableHeader>    
+    </div>
+    <br>
+    <div>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Edit</th>
+                            <th scope="col" class="px-4 py-3">Delete</th>
+                            <th scope="col" class="px-4 py-3">First Name</th>
+                            <th scope="col" class="px-4 py-3">Last Name</th>
+                            <th scope="col" class="px-4 py-3">Email</th>
+                            <th scope="col" class="px-4 py-3">Gender</th>
+                            <th scope="col" class="px-4 py-3">Language(s)</th>
+                            <th scope="col" class="px-4 py-3">Race(s)</th>
+                            <th scope="col" class="px-4 py-3">Religion(s)</th>
+                            <th scope="col" class="px-4 py-3">Academic(s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {#each mentors as m, i}
+                        {#if labelIncludesSearchTerm(m.email, searching)}
+                          <tr class="border-b dark:border-gray-700">
+                            <td>
+                              <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
+                                currMentor = m;
+                                editOn = !editOn;
+                            }}>Edit</Button>
+                            </td>
+                            <td class="px-2 py-1">
+                              <Button style="margin-left:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => { 
+                                currEmail = m.email;
+                                opendeleteMentorConfirmModal(); 
+                              }}>
+                                Delete
+                              </Button>
+                            </td>
+                            <td class="px-4 py-3">{i + 1} | {m.firstname}</td>
+                            <td class="px-4 py-3">{m.lastname}</td>
+                            <td class="px-4 py-3"><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td>
+                            <td class="px-4 py-3">{m.gender}</td>
+                            <td class="px-4 py-3">{m.languages}</td>
+                            <td class="px-4 py-3">{m.races}</td>
+                            <td class="px-4 py-3">{m.religions}</td>
+                            <td class="px-4 py-3">{m.academics}</td>
+                          </tr>
+                        {/if}
+                      {/each}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+  </section>
 
-                      </tr>
+{:else}
 
-                    {/each}
+<center>
+  Gathering Data ... <Spinner color="green"/>
+  <ListPlaceholder></ListPlaceholder>
+</center>
 
-                  </tbody>
-              </table>
-          </div>
-      </div>
-  </div>
-</section>
+{/if}

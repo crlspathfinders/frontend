@@ -1,12 +1,13 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Avatar, Toast } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Avatar, Toast, P, CardPlaceholder } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
     import { getUserDocData, toggleClub } from "../../lib/user";
     import { writable } from 'svelte/store';
 
+    let wholeReady = writable(false);
     let inClubs = writable([]);
     let isLoading = writable(null);
 
@@ -50,8 +51,15 @@
     });
 
     onMount(async () => {
-        clubs = await getCollection("Clubs");
-        ready = true;
+        wholeReady.set(false);
+        try {
+            clubs = await getCollection("Clubs");
+            ready = true;
+        } catch(error) {
+            console.log("Onmount failed: " + error);
+        } finally {
+            wholeReady.set(true);
+        }
     })
 
 </script>
@@ -90,7 +98,7 @@
    }
 </style>
 
-{#if ready}
+{#if $wholeReady}
 
     <div class="card-container">
         {#each clubs as club}
@@ -110,6 +118,15 @@
 
         {/each}
     </div>
-    
+
+{:else}
+
+    <div class="card-container">
+        <CardPlaceholder />
+        <CardPlaceholder />
+        <CardPlaceholder />
+        <CardPlaceholder />
+        <CardPlaceholder />
+    </div>
 
 {/if}

@@ -1,12 +1,13 @@
 <script>
     import { onMount } from 'svelte';
-    import { Button, Modal, Select, Label, Spinner, P, ListPlaceholder } from 'flowbite-svelte';
+    import { Button, Modal, Select, Label, Spinner, P, ListPlaceholder, Search} from 'flowbite-svelte';
     import { Section } from 'flowbite-svelte-blocks';
     import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline, AlignCenterOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "../../../lib/api";
     import { writable } from 'svelte/store';
     import { roleChoices, changeUserRole, deleteUser, getUserDocData } from '../../../lib/user';
     import { user } from '../../../stores/auth';
+    import { TableHeader } from 'flowbite-svelte-blocks';
 
     let wholeReady = writable(false);
     let roleModalOpen = writable(false);
@@ -20,6 +21,15 @@
     let roleColor;
     let email;
     let loggedInUser;
+
+    let searching = "";
+
+    function labelIncludesSearchTerm(label, searchTerm) {
+      if (typeof label === 'string' && typeof searchTerm === 'string') {
+        return label.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return false;
+    }
 
     function setTableClass(email) {
       let tableClass = "border-b dark:border-gray-700";
@@ -148,6 +158,13 @@
 
   <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
     <div>
+      <TableHeader headerType="search">
+         <Search bind:value={searching} slot="search" placeholder="Search {users.length} users" size="md"/>
+         <div class=""></div>
+      </TableHeader>    
+    </div>
+    <br>
+    <div>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -162,39 +179,41 @@
                     </thead>
                     <tbody>
                       {#each users as user, i}
-                        <tr class={setTableClass(user.email)}>
-                            <td class="px-4 py-3">
-                              {#if loggedInUser.role == "Admin" && user.role == "Super Admin"}
-                                <Button outline color={setRoleColor(user.role)} size="xs" disabled>
-                                  {user.role}
-                                </Button>
+                        {#if labelIncludesSearchTerm(user.email, searching)}
+                          <tr class={setTableClass(user.email)}>
+                              <td class="px-4 py-3">
+                                {#if loggedInUser.role == "Admin" && user.role == "Super Admin"}
+                                  <Button outline color={setRoleColor(user.role)} size="xs" disabled>
+                                    {user.role}
+                                  </Button>
+                                {:else}
+                                  <Button outline color={setRoleColor(user.role)} size="xs" on:click={() => {
+                                    currUser = user;
+                                    currRole = user.role;
+                                    openRoleModal();
+                                  }}>
+                                    {user.role}
+                                  </Button>
+                                {/if}
+                              </td>
+                              {#if loggedInUser.role == "Admin" }
+                                <td class="px-2 py-1">
+                                  <Button outline color="red" size="xs" disabled>Delete</Button>
+                                </td>
                               {:else}
-                                <Button outline color={setRoleColor(user.role)} size="xs" on:click={() => {
-                                  currUser = user;
-                                  currRole = user.role;
-                                  openRoleModal();
-                                }}>
-                                  {user.role}
-                                </Button>
+                                <td class="px-2 py-1">
+                                  <Button outline color="red" size="xs" on:click={() => {
+                                    currUser = user;
+                                    currRole = user.role;
+                                    openDeleteMModal();
+                                  }}>Delete</Button>
+                                </td>
                               {/if}
-                            </td>
-                            {#if loggedInUser.role == "Admin" }
-                              <td class="px-2 py-1">
-                                <Button outline color="red" size="xs" disabled>Delete</Button>
-                              </td>
-                            {:else}
-                              <td class="px-2 py-1">
-                                <Button outline color="red" size="xs" on:click={() => {
-                                  currUser = user;
-                                  currRole = user.role;
-                                  openDeleteMModal();
-                                }}>Delete</Button>
-                              </td>
-                            {/if}
-                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u>{user.email}</u></b></th>
-                            <td class="px-4 py-3">{user.joined_clubs}</td>
-                            <td class="px-4 py-3">{user.leading}</td>
-                        </tr>
+                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u>{user.email}</u></b></th>
+                              <td class="px-4 py-3">{user.joined_clubs}</td>
+                              <td class="px-4 py-3">{user.leading}</td>
+                          </tr>
+                        {/if}
                       {/each}
                     </tbody>
                 </table>
@@ -202,6 +221,7 @@
         </div>
     </div>
   </section>
+
 {:else}
 
 <center>

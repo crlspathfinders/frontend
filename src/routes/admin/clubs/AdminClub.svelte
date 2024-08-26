@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, DropdownItem, Checkbox, ButtonGroup, Modal, Spinner, Toast } from 'flowbite-svelte';
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, DropdownItem, Checkbox, ButtonGroup, Modal, Spinner, Toast, ListPlaceholder, Search } from 'flowbite-svelte';
     import { Section } from 'flowbite-svelte-blocks';
     // import paginationData from '../utils/advancedTable.json'
     import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
@@ -13,7 +13,9 @@
     import { ToolbarButton, DropdownDivider, Popover } from 'flowbite-svelte';
     import { fly } from 'svelte/transition';
     import { toggleClub } from "../../../lib/user";
+    import { TableHeader } from 'flowbite-svelte-blocks';
 
+    let wholeReady = writable(false);
     let isLoading = writable(false);
     let modalOpen = writable(false);
     let status = writable(null);
@@ -27,6 +29,13 @@
     let currI;
 
     let message = "";
+
+    function labelIncludesSearchTerm(label, searchTerm) {
+      if (typeof label === 'string' && typeof searchTerm === 'string') {
+        return label.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return false;
+    }
 
     const findClubMembers = (club) => {
       clubMembers = club.members;
@@ -123,8 +132,16 @@
     }
 
     onMount(async () => {
+      wholeReady.set(false);
+      try {
         clubs = await getCollection("Clubs");
         console.log(clubs);
+      } catch (error) {
+        console.log("Onmount failed: " + error);
+      } finally {
+        wholeReady.set(true);
+      }
+        
     });
 
     const openModal = () => modalOpen.set(true);
@@ -137,18 +154,6 @@
     const closedeleteCLUBConfirmModal = () => deleteCLUBConfirmModal.set(false);
 
 </script>
-
-<!-- {#if $showToast}
-
-  <div class="toastwrapper" style="z-index:10;">
-      <Toast transition={fly} params={{ x: 200 }} position="bottom-right" color="green" class="mb-4">
-          <p class="text-gray-700">
-            Changed <b>{currClub.club_name}</b> status to <b>{currClub.status}</b>
-          </p>
-      </Toast>
-  </div>
-
-{/if} -->
 
 {#if $deleteCLUBConfirmModal}
 
@@ -213,115 +218,135 @@
 
 {/if}
 
-<EditClub {editOn} {currClub}></EditClub>
+{#if $wholeReady}
 
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-  <div>
-      <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-          <div class="overflow-x-auto">
-              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                          <th scope="col" class="px-4 py-3">Edit</th>
-                          <th scope="col" class="px-4 py-3">Status</th>
-                          <th scope="col" class="px-4 py-3">Name</th>
-                          <th scope="col" class="px-4 py-3">Members</th>
-                          <th scope="col" class="px-4 py-3">President</th>
-                          <th scope="col" class="px-4 py-3">Vice Presidents</th>
-                          <th scope="col" class="px-4 py-3">Advisor</th>
-                          <th scope="col" class="px-4 py-3">Days</th>
-                          <th scope="col" class="px-4 py-3">Description</th>
-                          <th scope="col" class="px-4 py-3">Room</th>
-                          <th scope="col" class="px-4 py-3">Password</th>
-                          <th scope="col" class="px-4 py-3">Start Time</th>
-                          <th scope="col" class="px-4 py-3">Delete</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {#each clubs as club, i}
-                      <tr class="border-b dark:border-gray-700">
-                        <td>
-                          <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
-                            currClub = club;
-                            console.log(club);
-                            editOn = !editOn;
-                        }}>Edit</Button>
-                        </td>
-                        <td class="px-2 py-1">
-                          {#if club.status == "Approved"}
-                          <Button style="margin-right:1rem; margin-top:1rem;" outline color="green" size="xs" on:click={() => {
-                            // statusOn = !statusOn;
-                            currClub = club;
-                            // console.log(club);
-                            // clubs = await getCollection("Clubs");
-                            openModal();
-                          }}>{club.status}</Button>
-                        {:else}
-                          <Button style="margin-right:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={async () => {
-                            currClub = club;
-                            openModal();
-                          }}>
-                            {club.status}
-                          </Button>
+  <EditClub {editOn} {currClub}></EditClub>
+
+  <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+    <div>
+      <TableHeader headerType="search">
+         <Search bind:value={searching} slot="search" placeholder="Search {clubs.length} clubs" size="md"/>
+         <div class=""></div>
+      </TableHeader>    
+    </div>
+    <br>
+    <div>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Edit</th>
+                            <th scope="col" class="px-4 py-3">Status</th>
+                            <th scope="col" class="px-4 py-3">Delete</th>
+                            <th scope="col" class="px-4 py-3">Name</th>
+                            <th scope="col" class="px-4 py-3">Members</th>
+                            <th scope="col" class="px-4 py-3">President</th>
+                            <th scope="col" class="px-4 py-3">Vice Presidents</th>
+                            <th scope="col" class="px-4 py-3">Advisor</th>
+                            <th scope="col" class="px-4 py-3">Days</th>
+                            <th scope="col" class="px-4 py-3">Description</th>
+                            <th scope="col" class="px-4 py-3">Room</th>
+                            <th scope="col" class="px-4 py-3">Password</th>
+                            <th scope="col" class="px-4 py-3">Start Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {#each clubs as club, i}
+                        {#if labelIncludesSearchTerm(club.club_name, searching)}
+                          <tr class="border-b dark:border-gray-700">
+                            <td>
+                              <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
+                                currClub = club;
+                                console.log(club);
+                                editOn = !editOn;
+                            }}>Edit</Button>
+                            </td>
+                            <td class="px-2 py-1">
+                              {#if club.status == "Approved"}
+                              <Button style="margin-right:1rem; margin-top:1rem;" outline color="green" size="xs" on:click={() => {
+                                // statusOn = !statusOn;
+                                currClub = club;
+                                // console.log(club);
+                                // clubs = await getCollection("Clubs");
+                                openModal();
+                              }}>{club.status}</Button>
+                            {:else}
+                              <Button style="margin-right:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={async () => {
+                                currClub = club;
+                                openModal();
+                              }}>
+                                {club.status}
+                              </Button>
+                            {/if}
+                            </td>
+                            <td class="px-2 py-1">
+                              <Button style="margin-right:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => { 
+                                currId = club.id
+                                currName = club.club_name;
+                                opendeleteCLUBConfirmModal(); 
+                              }}>
+                                Delete
+                              </Button>
+                            </td>
+                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u><a href="/findaclub/{club.id}">{club.club_name}</a></u></b></th>
+                              <td class="px-4 py-3" style="cursor:pointer;" id="members" on:click={() => toggleRow(i, club)}><u>{club.members.length}</u></td>
+                              <td class="px-4 py-3">{club.president_email}</td>
+                              <td class="px-4 py-3">{club.vice_presidents_emails}</td>
+                              <td class="px-4 py-3">{club.advisor_email}</td>
+                              <td class="px-4 py-3">{club.club_days}</td>
+                              <td class="px-4 py-3">{club.club_description}</td>
+                              <td class="px-4 py-3">{club.room_number}</td>
+                              <td class="px-4 py-3">{club.secret_password}</td>
+                              <td class="px-4 py-3">{club.start_time}</td>
+
+                          </tr>
                         {/if}
-                        </td>
-                          <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u><a href="/findaclub/{club.id}">{club.club_name}</a></u></b></th>
-                          <td class="px-4 py-3" style="cursor:pointer;" id="members" on:click={() => toggleRow(i, club)}><u>{club.members.length}</u></td>
-                          <td class="px-4 py-3">{club.president_email}</td>
-                          <td class="px-4 py-3">{club.vice_presidents_emails}</td>
-                          <td class="px-4 py-3">{club.advisor_email}</td>
-                          <td class="px-4 py-3">{club.club_days}</td>
-                          <td class="px-4 py-3">{club.club_description}</td>
-                          <td class="px-4 py-3">{club.room_number}</td>
-                          <td class="px-4 py-3">{club.secret_password}</td>
-                          <td class="px-4 py-3">{club.start_time}</td>
-                          <td class="px-2 py-1">
-                            <Button outline color="red" size="xs" on:click={() => { 
-                              currId = club.id
-                              currName = club.club_name;
-                              opendeleteCLUBConfirmModal(); 
-                            }}>
-                              Delete
-                            </Button>
+
+                        {#if openRow === i}
+
+                          <td class="px-4 py-3">
+
+                            <Table>
+
+                              {#each clubMembers as mem, i}
+
+                                <TableBodyRow>
+                                  <TableBodyCell>
+                                    <Button outline color="red" size="xs" on:click={() => {
+                                      currClick = mem;
+                                      currId = club.id
+                                      currName = club.club_name;
+                                      openDeleteConfirmModal();
+                                    }}>
+                                    Remove
+                                  </Button>
+                                  </TableBodyCell>
+                                  <TableBodyCell>{i + 1} | {mem}</TableBodyCell>
+                                </TableBodyRow>
+                              
+                              {/each}
+                              
+                            </Table>
+                            
                           </td>
 
-                      </tr>
+                        {/if}
 
-                      {#if openRow === i}
+                      {/each}
 
-                        <td class="px-4 py-3">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+  </section>
 
-                          <Table>
+{:else}
 
-                            {#each clubMembers as mem, i}
+<center>
+  Gathering Data ... <Spinner color="green"/>
+  <ListPlaceholder></ListPlaceholder>
+</center>
 
-                              <TableBodyRow>
-                                <TableBodyCell>
-                                  <Button outline color="red" size="xs" on:click={() => {
-                                    currClick = mem;
-                                    currId = club.id
-                                    currName = club.club_name;
-                                    openDeleteConfirmModal();
-                                  }}>
-                                  Remove
-                                </Button>
-                                </TableBodyCell>
-                                <TableBodyCell>{i + 1} | {mem}</TableBodyCell>
-                              </TableBodyRow>
-                             
-                            {/each}
-                            
-                          </Table>
-                          
-                        </td>
-
-                      {/if}
-
-                    {/each}
-
-                  </tbody>
-              </table>
-          </div>
-      </div>
-  </div>
-</section>
+{/if}

@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Toast } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
@@ -8,6 +8,7 @@
     import { writable } from 'svelte/store';
     import { fly } from 'svelte/transition';
 
+    let wholeReady = writable(false);
     let inClubs = writable([]);
     let isLoading = writable(null);
     let showToast = writable(false);
@@ -41,24 +42,25 @@
     }
 
     onMount(async () => {
-        // userInfo = await fetchUserInfo();
-        // if (userInfo["uid"] !== null) { console.log(userInfo["uid"]); }
-        // console.log(userInfo);
-        user.subscribe(async value => {
-            if (value) {
-                email = value.email;
-                const userInfo = await getUserDocData(email);
-                myClubs = userInfo.joined_clubs;
-                inClubs.set(myClubs);
-                console.log(myClubs);
-            }
-        });
+        wholeReady.set(false);
+        try {
+            user.subscribe(async value => {
+                if (value) {
+                    email = value.email;
+                    const userInfo = await getUserDocData(email);
+                    myClubs = userInfo.joined_clubs;
+                    inClubs.set(myClubs);
+                    console.log(myClubs);
+                }
+            });
+            clubs = await getCollection("Clubs");
+            ready = true;
+        } catch (error) {
+            console.log("Onmount failed: " + error);
+        } finally {
+            wholeReady.set(true);
+        }
     });
-
-    onMount(async () => {
-        clubs = await getCollection("Clubs");
-        ready = true;
-    })
 
 </script>
 
@@ -107,7 +109,7 @@
 
 {/if}
 
-{#if ready}
+{#if $wholeReady}
 
     <div class="card-container">
 
@@ -155,6 +157,16 @@
             {/if}
 
         {/each}
+    </div>
+
+{:else}
+
+    <div class="card-container">
+        <CardPlaceholder />
+        <CardPlaceholder />
+        <CardPlaceholder />
+        <CardPlaceholder />
+        <CardPlaceholder />
     </div>
     
 {/if}
