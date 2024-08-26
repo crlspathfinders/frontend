@@ -3,6 +3,15 @@ import { auth } from './auth/firebaseConfig';
 
 const SEND_URL = import.meta.env.VITE_URL
 
+export let roleChoices = [
+    { value: "Member", name: "Member", color: "light"},
+    { value: "Mentor", name: "Mentor", color: "blue"},
+    { value: "Leader", name: "Leader", color: "green"},
+    { value: "Advisor", name: "Advisor", color: "yellow"},
+    { value: "Admin", name: "Admin", color: "dark"},
+    { value: "Super Admin", name: "Super Admin", color: "purple"}
+]
+
 export async function editUser(email, is_leader, password, role) {
 
     const toSend = {
@@ -76,12 +85,43 @@ export async function getUserDocData(email) {
 export async function toggleClub(userEmail, clubId) {
     const url = SEND_URL + "toggleclub/" + userEmail + "/" + clubId;
     try {
-        const res = await fetch (url);
+        const res = await fetch(url);
         if (!res.ok) { return "Failed to toggle club"; }
     
         const resData = await res.json();
         return resData;
     } catch (error) {
         return "Failed to toggle club: " + error;
+    }
+}
+
+export async function changeUserRole(email, newRole) {
+    const url = SEND_URL + "changerole";
+    try {
+        const toSend = {
+            email,
+            new_role: newRole
+        };
+        console.log(toSend);
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {"Content-type": "application/json"},
+            body: JSON.stringify(toSend)
+        });
+    } catch (error) {
+        console.log("Error changing role: " + error);
+    }
+}
+
+export async function deleteUser(email) {
+    const url = SEND_URL + "deleteuser/" + email;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) { console.log("Failed to fetch url"); }
+        const resData = await res.json();
+        console.log(resData);
+        return resData;
+    } catch (error) {
+        console.log("Failed to delete user: " + error);
     }
 }

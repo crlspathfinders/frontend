@@ -1,116 +1,212 @@
 <script>
     import { onMount } from 'svelte';
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch, Button, Dropdown, DropdownItem, Checkbox, ButtonGroup } from 'flowbite-svelte';
+    import { Button, Modal, Select, Label, Spinner, P, ListPlaceholder } from 'flowbite-svelte';
     import { Section } from 'flowbite-svelte-blocks';
-    // import paginationData from '../utils/advancedTable.json'
-    import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline } from 'flowbite-svelte-icons';
+    import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline, AlignCenterOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "../../../lib/api";
-    // import EditClub from './EditMe.svelte';
+    import { writable } from 'svelte/store';
+    import { roleChoices, changeUserRole, deleteUser, getUserDocData } from '../../../lib/user';
+    import { user } from '../../../stores/auth';
 
-    let divClass='bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden';
-    let innerDivClass='flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
-    let searchClass='w-full md:w-1/2 relative';
-    let svgDivClass='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none';
-    let classInput="text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10";
+    let wholeReady = writable(false);
+    let roleModalOpen = writable(false);
+    let deleteModalOpen = writable(false);
+    let isLoading = writable(false);
 
     let users = [];
 
-    let searching = "";
+    let currUser;
+    let currRole;
+    let roleColor;
+    let email;
+    let loggedInUser;
 
-    let editOn = false;
+    function setTableClass(email) {
+      let tableClass = "border-b dark:border-gray-700";
+      if (email.localeCompare(loggedInUser.email) === 0) {
+        tableClass = "border-b bg-gray-200 dark:border-gray-700";
+        return tableClass;
+      }
+      return tableClass;
+    }
 
-    let currClub;
+    function setRoleColor(role) {
+      const roleInd = roleChoices.findIndex(p => p.name == role);
+      roleColor = roleChoices[roleInd].color;
+      return roleColor;
+    }
 
-    let statusOn = false;
+    function setRoleChoices(role) {
+      if (role.localeCompare("Admin") === 0) {
+        let newRoleChoices = [];
+        for (let i = 0; i < roleChoices.length - 2; i++) {
+          // Copy all except admin & super admin
+          newRoleChoices.push(roleChoices[i]);
+        }
+        console.log(newRoleChoices);
+        return newRoleChoices;
+      } 
+      return roleChoices;
+    }
+
+    const handleRoleChange = async () => {
+      isLoading.set(true);
+      try {
+        const res = await changeUserRole(currUser.email, currRole);
+        console.log(res);
+      } catch (error) {
+        console.log("Failed to change user's role: " + error);
+      } finally {
+        users = await getCollection("Users");
+        isLoading.set(false);
+        closeRoleModal();
+      }
+    }
+
+    const handleDelete = async (email) => {
+      isLoading.set(true);
+      try {
+        const res = await deleteUser(email);
+        console.log(res);
+      } catch (error) {
+        console.log("Failed to delete user: " + error);
+      } finally {
+        users = await getCollection("Users");
+        isLoading.set(false);
+        closeDeleteModal();
+      }
+    }
 
     onMount(async () => {
+      wholeReady.set(false);
+      try {
         users = await getCollection("Users");
         console.log(users);
+        user.subscribe(value => {
+          if (value) {
+              email = value.email;
+          } else {
+              email = '';
+          }
+        });
+        loggedInUser = await getUserDocData(email);
+        console.log(loggedInUser);
+      } catch (error) {
+        console.log("Onmount failed: " + error);
+      } finally {
+        wholeReady.set(true);
+      }
     });
+
+    const openRoleModal = () => roleModalOpen.set(true);
+    const closeRoleModal = () => roleModalOpen.set(false);
+
+    const openDeleteMModal = () => deleteModalOpen.set(true);
+    const closeDeleteModal = () => deleteModalOpen.set(false);
 
 </script>
 
-<!-- <StatusModal {statusOn} {currClub}></StatusModal> -->
+<!-- Role Modal: -->
 
-<!-- <EditClub {editOn} {currClub}></EditClub> -->
+{#if $roleModalOpen}
 
-{#if users.length > 0}
+  <Modal title="Change {currUser.email} role" open={$roleModalOpen} on:close={closeRoleModal} >
+    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">
+        <Label>
+          Current role:
+          <Select class="mt-2" items={setRoleChoices(loggedInUser.role)} bind:value={currRole} />
+        </Label>
+        <br>
+        <Button outline color={setRoleColor(currRole)} type="submit" on:click={handleRoleChange}>
+          Change Role
+          {#if $isLoading}
+            <Spinner size={4} color="purple"/>
+          {/if}
+        </Button>
+    </p>
+  </Modal>
 
-<p class="text-xl">
-    {users.length} Users
-</p>
+{/if}
 
-<Section name="advancedTable" classSection='bg-gray-50 dark:bg-gray-900 p-3 sm:p-5'>
-    <TableSearch placeholder="Search" hoverable={true} bind:value={searching} {divClass} {innerDivClass} {searchClass} {classInput} >
+<!-- Delete Modal: -->
 
-    <div slot="header" class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-      <Button color='alternative'>Actions<ChevronDownOutline class="w-3 h-3 ml-2 " /></Button>
-        <Dropdown class="w-44 divide-y divide-gray-100">
-          <DropdownItem>Mass Edit</DropdownItem>
-          <DropdownItem>Delete all</DropdownItem>
-        </Dropdown>
-      <Button color='alternative'>Filter<FilterSolid class="w-3 h-3 ml-2 " /></Button>
-        <Dropdown class="w-48 p-3 space-y-2 text-sm">
-          <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose brand</h6>
-          <li>
-            <Checkbox>Apple (56)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Microsoft (16)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Razor (49)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>Nikon (12)</Checkbox>
-          </li>
-          <li>
-            <Checkbox>BenQ (74)</Checkbox>
-          </li>
-        </Dropdown>
+{#if $deleteModalOpen}
+
+  <Modal title="Delete Member" open={$deleteModalOpen} on:close={closeDeleteModal}>
+    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Deleting <b>{currUser.email}</b> will permanently delete their account. They will have sign back up to rejoin the site. You cannot undo this action.</p>
+    <Button outline color="red" on:click={handleDelete(currUser.email)}>
+      Delete
+      {#if $isLoading}
+        <Spinner size={4} color="red"/>
+      {/if}
+    </Button>
+  </Modal>
+
+{/if}
+
+{#if $wholeReady}
+
+  <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+    <div>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Role</th> 
+                            <th scope="col" class="px-4 py-3">Delete</th>
+                            <th scope="col" class="px-4 py-3">Email</th>
+                            <th scope="col" class="px-4 py-3">Joined Clubs</th>
+                            <th scope="col" class="px-4 py-3">Leading</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {#each users as user, i}
+                        <tr class={setTableClass(user.email)}>
+                            <td class="px-4 py-3">
+                              {#if loggedInUser.role == "Admin" && user.role == "Super Admin"}
+                                <Button outline color={setRoleColor(user.role)} size="xs" disabled>
+                                  {user.role}
+                                </Button>
+                              {:else}
+                                <Button outline color={setRoleColor(user.role)} size="xs" on:click={() => {
+                                  currUser = user;
+                                  currRole = user.role;
+                                  openRoleModal();
+                                }}>
+                                  {user.role}
+                                </Button>
+                              {/if}
+                            </td>
+                            {#if loggedInUser.role == "Admin" }
+                              <td class="px-2 py-1">
+                                <Button outline color="red" size="xs" disabled>Delete</Button>
+                              </td>
+                            {:else}
+                              <td class="px-2 py-1">
+                                <Button outline color="red" size="xs" on:click={() => {
+                                  currUser = user;
+                                  currRole = user.role;
+                                  openDeleteMModal();
+                                }}>Delete</Button>
+                              </td>
+                            {/if}
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u>{user.email}</u></b></th>
+                            <td class="px-4 py-3">{user.joined_clubs}</td>
+                            <td class="px-4 py-3">{user.leading}</td>
+                        </tr>
+                      {/each}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-      <TableHead>
-        <TableHeadCell padding="px-4 py-3" scope="col"></TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Email</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Is Leader</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Joined Clubs</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Leading</TableHeadCell>
-        <TableHeadCell padding="px-4 py-3" scope="col">Role</TableHeadCell>
-      </TableHead>
-      <TableBody>
-        {#each users as user, i}
-            <TableBodyRow >
-            <Button style="margin-left:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => {
-              currClub = user;
-              editOn = !editOn;
-          }}>
-              <TableBodyCell tdClass="px-4 py-3"><b>Edit</b></TableBodyCell>
-            </Button>
-                <TableBodyCell tdClass="px-4 py-3">{i + 1} | {user.email}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{user.is_leader}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{user.joined_clubs}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{user.leading}</TableBodyCell>
-                <TableBodyCell tdClass="px-4 py-3">{user.role}</TableBodyCell>
-            </TableBodyRow>
+  </section>
+{:else}
 
-        {/each}
-      </TableBody>
-      <div slot="footer" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-      <!-- <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-        Showing
-        <span class="font-semibold text-gray-900 dark:text-white">{startRange}-{endRange}</span>
-        of
-        <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span>
-      </span> -->
-        <!-- <ButtonGroup>
-          <Button on:click={loadPreviousPage} disabled={currentPosition === 0}><ChevronLeftOutline size='xs' class='m-1.5'/></Button>
-          {#each pagesToShow as pageNumber}
-            <Button on:click={() => goToPage(pageNumber)}>{pageNumber}</Button>
-          {/each}
-          <Button on:click={loadNextPage} disabled={ totalPages === endPage }><ChevronRightOutline size='xs' class='m-1.5'/></Button>
-        </ButtonGroup> -->
-      </div>
-    </TableSearch>
-</Section>
+<center>
+  Gathering Data ... <Spinner color="green"/>
+  <ListPlaceholder></ListPlaceholder>
+</center>
 
 {/if}
