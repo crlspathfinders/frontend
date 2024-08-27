@@ -179,7 +179,7 @@
                     </thead>
                     <tbody>
                       {#each users as user, i}
-                        {#if labelIncludesSearchTerm(user.email, searching)}
+                        {#if labelIncludesSearchTerm(user.email, searching) || labelIncludesSearchTerm(user.role, searching)}
                           <tr class={setTableClass(user.email)}>
                               <td class="px-4 py-3">
                                 {#if loggedInUser.role == "Admin" && user.role == "Super Admin"}

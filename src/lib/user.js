@@ -3,7 +3,7 @@ import { auth } from './auth/firebaseConfig';
 
 const SEND_URL = import.meta.env.VITE_URL
 
-export let roleChoices = [
+export const roleChoices = [
     { value: "Member", name: "Member", color: "light"},
     { value: "Mentor", name: "Mentor", color: "blue"},
     { value: "Leader", name: "Leader", color: "green"},
@@ -73,12 +73,12 @@ export async function getUserDocData(email) {
 
     try {
         const res = await fetch(url);
-        if (!res.ok) { return "Failed to getuserdocdata"; }
+        if (!res.ok) { throw new Error("Failed to getuserdocdata"); }
 
         const resData = await res.json();
         return resData;
     } catch (error) {
-        return "Failed to getuserdocdata: " + error;
+        return null;
     }
 }
 

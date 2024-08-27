@@ -1,18 +1,25 @@
 <script>
     import { onMount } from 'svelte';
     import { Section } from 'flowbite-svelte-blocks';
-    import { Label, Input, Button, Select, Textarea, MultiSelect, Spinner } from 'flowbite-svelte';
+    import { Label, Input, Button, Select, Textarea, MultiSelect, Spinner, Modal, Alert } from 'flowbite-svelte';
     import { getCollection } from "$lib/api";
     import { createClub, editClub } from "../../lib/club";
-    import { writable } from 'svelte/store';
+    import { get, writable } from 'svelte/store';
+    import { getUserDocData } from "../../lib/user";
+    import { user } from "../../stores/auth";
 
     let isLoading = writable(false);
+    let confirmRegisterModal = writable(false);
+    let errorMessage = writable("");
+    let successMessage = writable("");
 
     let clubDays = [];
 
     let selectedClubDays;
 
     let currDays = [];
+
+    let loggedInEmail;
 
     let daysoftheweek = [
         { value: 'Monday', name: 'Monday' },
@@ -22,47 +29,90 @@
         { value: 'Friday', name: "Friday"}
     ];
 
-    const handleSubmit = async () => {
-        try {
-            isLoading.set(true);
-            const advisor_email = document.querySelector("#advisoremail").value;
-            // Just send clubDays as is.
-            // try {
-            //     const clubDaysS = document.querySelector("#clubdays").value;
-            //     console.log(clubDaysS);
-            // } catch { console.log(); }
-            console.log(currClub.club_days);
-            // clubDays = currClub.club_days;
-            const desc = document.querySelector("#clubdescription").value;
-            const name = document.querySelector("#clubname").value;
-            const presEmail = document.querySelector("#presidentemail").value;
-            const roomNum = document.querySelector("#roomnumber").value;
-            const startTime = document.querySelector("#clubstarttime").value;
-            let status;
-            if (showVals) { status = "Approved"; }
-            else { status = "Pending"; } 
-            let veepsEmails = [];
-            for (let i = 1; i < 4; i++) {
-                try {
-                    const veep = document.querySelector("#vicepresidentemail" + i).value;
-                    veepsEmails.push(veep);
-                } catch {
-                    veepsEmails.push("");
-                }
+    const checkAllInfo = async () => {
+        const advisor_email = document.querySelector("#advisoremail").value;
+        const name = document.querySelector("#clubname").value;
+        const presEmail = document.querySelector("#presidentemail").value;
+        let veepsEmails = [];
+        for (let i = 1; i < 4; i++) {
+            try {
+                const veep = document.querySelector("#vicepresidentemail" + i).value;
+                veepsEmails.push(veep);
+            } catch {
+                veepsEmails.push("");
             }
-            console.log(veepsEmails);
+        }
 
-            if (view.localeCompare("Register") === 0) {
-                await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
-            } else if (view.localeCompare("Edit") === 0) {
-                const secretPassword = document.querySelector("#secret_password").value;
-                await editClub(advisor_email, currDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
+        // Make sure advisor is already signed up with role "Advisor":
+        const advisor = await getUserDocData(advisor_email);
+        console.log(advisor);
+        if (!advisor) {
+            errorMessage.set("Your advisor needs to have already made an account with CRLS PathFinders prior to registering your club.")
+            return false;
+        }
+
+        // Make sure this club name hasn't been taken:
+        const allClubs = await getCollection("Clubs");
+        for (let i = 0; i < allClubs.length; i++) {
+            if (allClubs[i].club_name.localeCompare(name) === 0) {
+                errorMessage.set("There is already a club registered as " + name);
+                return false;
             }
-        } catch (error) {
-            console.log("Failed to edit club: " + error);
-        } finally {
+        }
+
+        // Make sure presEmail == currLoggedIn.email
+        if (loggedInEmail.localeCompare(presEmail) !== 0) {
+            errorMessage.set("Only the president of " + name + " can register.");
+            return false;
+        }
+
+        return true;
+    }
+
+    const handleSubmit = async () => {
+        isLoading.set(true);
+        if (await checkAllInfo()) {
+            try {
+                const advisor_email = document.querySelector("#advisoremail").value;
+                console.log(currClub.club_days);
+                const desc = document.querySelector("#clubdescription").value;
+                const name = document.querySelector("#clubname").value;
+                const presEmail = document.querySelector("#presidentemail").value;
+                const roomNum = document.querySelector("#roomnumber").value;
+                const startTime = document.querySelector("#clubstarttime").value;
+                let status;
+                if (showVals) { status = "Approved"; }
+                else { status = "Pending"; } 
+                let veepsEmails = [];
+                for (let i = 1; i < 4; i++) {
+                    try {
+                        const veep = document.querySelector("#vicepresidentemail" + i).value;
+                        veepsEmails.push(veep);
+                    } catch {
+                        veepsEmails.push("");
+                    }
+                }
+                console.log(veepsEmails);
+
+                if (view.localeCompare("Register") === 0) {
+                    await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
+                } else if (view.localeCompare("Edit") === 0) {
+                    const secretPassword = document.querySelector("#secret_password").value;
+                    await editClub(advisor_email, currDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
+                }
+                errorMessage.set("");
+                successMessage.set(name + " has been successfully registered. In order to view your club on the website, your advisor first needs to verify it. They should have gotten an email with a code to verify the club. Once they do so, " + name + " will be visible on the PathFinders website.");
+            } catch (error) {
+                errorMessage.set("" + error);
+                console.log("Failed to edit club: " + error);
+            } finally {
+                isLoading.set(false);
+            }
+        } else {
+            console.log("Club registration criteria not met!");
             isLoading.set(false);
         }
+        
     }
 
     export let view = "";
@@ -78,11 +128,55 @@
             console.log(clubDays);
             currDays = currClub.club_days;
         }
-    })
+        user.subscribe(value => {
+            if (value) {
+                loggedInEmail = value.email;
+            } else {
+                loggedInEmail = '';
+            }
+        });
+    });
+
+    const openConfirmRegisterModal = () => confirmRegisterModal.set(true);
+    const closeConfirmRegisterModal = () => confirmRegisterModal.set(false);
 </script>
 
+<!-- Confirm register club: -->
+
+{#if $confirmRegisterModal}
+
+  <Modal title="Register New Club" open={$confirmRegisterModal} on:close={openConfirmRegisterModal} >
+    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">
+        <center>
+            rehaan
+            <br>
+        </center>
+    </p>
+  </Modal>
+
+{/if}
+
+<br>
 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Your Club</h2>
-<form on:submit={handleSubmit}>
+<form on:submit={() => {
+    handleSubmit();
+    // checkAllInfo();
+    // openConfirmRegisterModal();
+}}>
+    {#if !showVals}
+        {#if $errorMessage.length > 1}
+            <Alert color="red">
+                <span class="font-medium">Signup failed:</span>
+                {$errorMessage}
+            </Alert>
+        {:else if $successMessage.length > 1}
+            <Alert color="blue">
+                <span class="font-medium">Next steps:</span>
+                {$successMessage}
+            </Alert>
+        {/if}
+    {/if}
+    <br>
     <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
     <div class="sm:col-span-2">
         <Label for="clubname" class="mb-2">Club Name</Label>
@@ -177,4 +271,6 @@
         {/if}
     </Button>
     </div>
+    <br>
+    <br><br>
 </form>

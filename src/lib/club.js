@@ -138,3 +138,25 @@ export async function deleteClub(clubId) {
         console.log("Failed to delete club: " + error);
     }
 }
+
+export async function verifyClub(secret_password) {
+    const url = SEND_URL + "verifyclub/";
+    const toSend = { secret_password };
+    try {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {"Content-type": "application/json"},
+            body: JSON.stringify(toSend)
+        });
+        if (!res.ok) {
+            console.log("Verification failed");
+            return false;
+        }
+        const resData = await res.json();
+        console.log(resData);
+        return resData;
+    } catch (error) {
+        console.log("Verification failed: " + error);
+        return false;
+    }
+}

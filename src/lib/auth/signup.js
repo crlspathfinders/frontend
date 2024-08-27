@@ -19,9 +19,9 @@ export async function makeUser(email, is_leader, role, leading, joined_clubs) {
         });
         const resData = await res.json();
         console.log(resData);
-        return resData;
+        return {"status": resData};
     } catch (except) {
         console.log("Failed to make user: " + except);
-        return "Failed to make user: " + except;
+        return {"status": "Failed to make user: " + except};
     }
 }

@@ -171,10 +171,10 @@
 
 {#if $deleteConfirmModal}
 
-  <Modal title="Delete Member" open={$deleteConfirmModal} on:close={closeDeleteConfirmModal}>
-    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Deleting <b>{currClick}</b> from <b>{currName}</b> will permanently remove them from this club. They will have to join back themselves. You cannot undo this action.</p>
+  <Modal title="Remove Member" open={$deleteConfirmModal} on:close={closeDeleteConfirmModal}>
+    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Removing <b>{currClick}</b> from <b>{currName}</b> will permanently remove them from this club. They will have to join back themselves. You cannot undo this action.</p>
     <Button outline color="red" on:click={() => handleClick(currClick, currId) }>
-      Delete
+      Remove
       {#if $removeLoading}
         <Spinner size={4} color="red"/>
       {/if}

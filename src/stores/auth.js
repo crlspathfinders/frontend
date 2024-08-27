@@ -16,6 +16,7 @@ function logout() {
   }).catch((error) => {
     console.error("Sign out error", error);
   });
+  goto('/auth/login')
 }
 
 export { user, logout };
