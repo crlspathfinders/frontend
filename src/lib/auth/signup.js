@@ -1,4 +1,4 @@
-const CURR_URL = "http://127.0.0.1:8000/";
+const SEND_URL = import.meta.env.VITE_URL
 
 export async function makeUser(email, is_leader, role, leading, joined_clubs) {
     try {
@@ -9,7 +9,7 @@ export async function makeUser(email, is_leader, role, leading, joined_clubs) {
             leading,
             joined_clubs
         }
-        const url = CURR_URL + "make-user";
+        const url = SEND_URL + "make-user";
         const res = await fetch(url, {
             method: "POST",
             headers: {

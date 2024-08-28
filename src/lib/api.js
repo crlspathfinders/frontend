@@ -1,6 +1,8 @@
+const SEND_URL = import.meta.env.VITE_URL
+
 export async function getCollection(collection) {
     try {
-        const url = "http://127.0.0.1:8000/read/" + collection;
+        const url = SEND_URL + "read/" + collection;
         const res = await fetch(url);
         if (!res.ok) { throw new Error("getvals fetching didn't work"); }
         let resData = await res.json();
@@ -18,7 +20,7 @@ export async function getCollection(collection) {
 
 export async function getCollectionDoc(collection, docId) {
     try {
-        const url = "http://127.0.0.1:8000/read/" + collection + "/" + docId;
+        const url = SEND_URL + "read/" + collection + "/" + docId;
         const res = await fetch(url);
         if (!res.ok) { throw new Error("getvals fetching didn't work"); }
         let resData = await res.json();
@@ -35,7 +37,7 @@ export async function getCollectionDoc(collection, docId) {
 
 export async function deleteDoc(collection, id) {
     try {
-        const url = "http://127.0.0.1:8000/delete/" + collection + "/" + id;
+        const url = SEND_URL + "delete/" + collection + "/" + id;
         const res = await fetch(url);
         if (!res.ok) { throw new Error("Failure to delete id"); }
         const resData = await res.json();
