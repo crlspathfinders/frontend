@@ -174,7 +174,7 @@
                             <th scope="col" class="px-4 py-3">Delete</th>
                             <th scope="col" class="px-4 py-3">Email</th>
                             <th scope="col" class="px-4 py-3">Joined Clubs</th>
-                            <th scope="col" class="px-4 py-3">Leading</th>
+                            <th scope="col" class="px-4 py-3">Is Leader</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -211,7 +211,7 @@
                               {/if}
                               <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u>{user.email}</u></b></th>
                               <td class="px-4 py-3">{user.joined_clubs}</td>
-                              <td class="px-4 py-3">{user.leading}</td>
+                              <td class="px-4 py-3">{user.is_leader}</td>
                           </tr>
                         {/if}
                       {/each}

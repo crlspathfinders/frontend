@@ -1,12 +1,14 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder, Search } from 'flowbite-svelte';
+    import { TableHeader } from 'flowbite-svelte-blocks';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
     import { getUserDocData, toggleClub } from "../../lib/user";
     import { writable } from 'svelte/store';
     import { fly } from 'svelte/transition';
+    import { Badge } from 'flowbite-svelte';
 
     let wholeReady = writable(false);
     let inClubs = writable([]);
@@ -23,6 +25,23 @@
 
     let currClick = "";
 
+    let searching = "";
+
+    let userInfo;
+
+    function labelIncludesSearchTerm(label, searchTerm) {
+      if (typeof label === 'string' && typeof searchTerm === 'string') {
+        return label.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return false;
+    }
+
+    function handleDescription(desc) {
+        if (desc.length > 100) {
+            return desc.substring(0, 100) + " ... ";
+        } return desc;
+    }
+
     const handleClick = async (clubId) => {
         try {
             isLoading.set(true);
@@ -31,9 +50,10 @@
             console.log("Failed to toggle club! " + error)
         } finally {
             isLoading.set(false);
-            const userInfo = await getUserDocData(email);
+            userInfo = await getUserDocData(email);
             myClubs = userInfo.joined_clubs;
             inClubs.set(myClubs);
+            clubs = await getCollection("Clubs");
             setTimeout(() => {
                 showToast.set(false);
             }, 3000);
@@ -47,14 +67,14 @@
             user.subscribe(async value => {
                 if (value) {
                     email = value.email;
-                    const userInfo = await getUserDocData(email);
+                    userInfo = await getUserDocData(email);
+                    console.log(userInfo);
                     myClubs = userInfo.joined_clubs;
                     inClubs.set(myClubs);
                     console.log(myClubs);
                 }
             });
             clubs = await getCollection("Clubs");
-            ready = true;
         } catch (error) {
             console.log("Onmount failed: " + error);
         } finally {
@@ -66,18 +86,17 @@
 
 <style>
    .card-container {
-        padding: 3rem;
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(3, minmax(100px, 1fr));
+    padding: 3rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
    }
 
-   /* .maincard {
-      background: #fff;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-   } */
+   .clubcard:hover {
+    transform: scale(1.02);
+    transition: all ease-in-out .08s;
+    box-shadow: inset;
+   }
 
    @media (max-width: 1200px) {
       .card-container {
@@ -111,16 +130,25 @@
 
 {#if $wholeReady}
 
+    <div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
+        <TableHeader headerType="search">
+            <Search bind:value={searching} slot="search" placeholder="Search {clubs.length} clubs" size="md"/>
+            <div class=""></div>
+        </TableHeader>    
+    </div>
+
     <div class="card-container">
 
         {#each clubs as club}
 
-            {#if club.status == "Approved"}
+            {#if club.status == "Approved" && labelIncludesSearchTerm(club.club_name, searching)}
 
-                <div class="space-y-4">
-                    <Card img="https://imagedelivery.net/Gm-NkdakOalj7eMFrJcZPA/5c4b45b8-8a42-4068-9796-658093028500/public">
+                <div class="space-y-4 clubcard">
+                    <Card img={club.club_img}>
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{club.club_name}</h5>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight">{club.club_description}</p>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight">
+                        {handleDescription(club.club_description)}
+                    </p>
                     <ButtonGroup>
                         <Button pill color="yellow">
                             <a href="/findaclub/{club.id}">View Club</a>
@@ -151,6 +179,8 @@
                             </Button>
                         {/if}
                     </ButtonGroup>
+                    <br><br>
+                    <Badge color="dark">{club.members.length} members</Badge>
                     </Card>
                 </div>
 

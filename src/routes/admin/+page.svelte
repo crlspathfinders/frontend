@@ -1,23 +1,60 @@
 <script>
+    import { onMount } from 'svelte';
     import { Tabs, TabItem } from 'flowbite-svelte';
     import AdminClub from "./clubs/AdminClub.svelte"
     import AdminMentor from './mentors/AdminMentor.svelte';
     import AdminUser from './users/AdminUser.svelte';
+    import { user } from '../../stores/auth';
+    import { getUserDocData } from '../../lib/user';
+    import { writable } from 'svelte/store';
+    import NoAccessPage from '../NoAccessPage.svelte';
+
+    let wholeReady = writable(false);
+
+    let email = "";
+    let userInfo;
+
+    onMount(async () => {
+        wholeReady.set(false);
+        user.subscribe(async value => {
+            if (value) {
+                email = value.email;
+                console.log(email);
+                userInfo = await getUserDocData(email);
+            } else {
+                email = '';
+            }
+        });
+        wholeReady.set(true);
+        
+    })
 </script>
 
-<div style="margin:3rem; margin-top:0" class="admincontainer">
-    <p class="text-xl">Admin Dashboard</p>
+{#if $wholeReady}
 
-    <Tabs tabStyle="underline">
-        <TabItem open title="Clubs">
-            <AdminClub></AdminClub>
-        </TabItem>
-        <TabItem title="Mentors">
-            <AdminMentor></AdminMentor>
-        </TabItem>
-        <TabItem title="Users">
-            <AdminUser></AdminUser>
-        </TabItem>
-    </Tabs>
+    {#if userInfo.role == "Super Admin" || userInfo.role == "Admin"}
 
-</div>
+        <div style="margin:3rem; margin-top:0" class="admincontainer">
+            <p class="text-xl">Admin Dashboard</p>
+
+            <Tabs tabStyle="underline">
+                <TabItem open title="Clubs">
+                    <AdminClub></AdminClub>
+                </TabItem>
+                <TabItem title="Mentors">
+                    <AdminMentor></AdminMentor>
+                </TabItem>
+                <TabItem title="Users">
+                    <AdminUser></AdminUser>
+                </TabItem>
+            </Tabs>
+
+        </div>
+    
+    {:else}
+
+        <NoAccessPage></NoAccessPage>
+        
+    {/if}
+
+{/if}

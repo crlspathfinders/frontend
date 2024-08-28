@@ -71,7 +71,7 @@
 
     const handleSubmit = async () => {
         isLoading.set(true);
-        if (await checkAllInfo()) {
+        if (await checkAllInfo() || showVals) {
             try {
                 const advisor_email = document.querySelector("#advisoremail").value;
                 console.log(currClub.club_days);
@@ -95,13 +95,17 @@
                 console.log(veepsEmails);
 
                 if (view.localeCompare("Register") === 0) {
-                    await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
+                    await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails)
                 } else if (view.localeCompare("Edit") === 0) {
                     const secretPassword = document.querySelector("#secret_password").value;
                     await editClub(advisor_email, currDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
                 }
                 errorMessage.set("");
-                successMessage.set(name + " has been successfully registered. In order to view your club on the website, your advisor first needs to verify it. They should have gotten an email with a code to verify the club. Once they do so, " + name + " will be visible on the PathFinders website.");
+                if (!showVals) {
+                    successMessage.set(name + " has been successfully registered. In order to view your club on the website, your advisor first needs to verify it. They should have gotten an email with a code to verify the club. Once they do so, " + name + " will be visible on the PathFinders website.");
+                } else {
+                    successMessage.set("Successfully edited " + name + "! Reload the page to see the changes.");
+                }
             } catch (error) {
                 errorMessage.set("" + error);
                 console.log("Failed to edit club: " + error);
@@ -166,12 +170,24 @@
     {#if !showVals}
         {#if $errorMessage.length > 1}
             <Alert color="red">
-                <span class="font-medium">Signup failed:</span>
+                <span class="font-medium">Registration failed:</span>
                 {$errorMessage}
             </Alert>
         {:else if $successMessage.length > 1}
             <Alert color="blue">
                 <span class="font-medium">Next steps:</span>
+                {$successMessage}
+            </Alert>
+        {/if}
+    {:else}
+        {#if $errorMessage.length > 1}
+            <Alert color="red">
+                <span class="font-medium">Club editing failed:</span>
+                {$errorMessage}
+            </Alert>
+        {:else if $successMessage.length > 1}
+            <Alert color="blue">
+                <span class="font-medium">Success:</span>
                 {$successMessage}
             </Alert>
         {/if}

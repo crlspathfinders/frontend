@@ -160,3 +160,46 @@ export async function verifyClub(secret_password) {
         return false;
     }
 }
+
+export async function UploadClubImage(file) {
+    let formData = new FormData();
+    formData.append('file', file);
+    console.log(formData);
+
+    try {
+        let url = SEND_URL + "uploadclubimage/";
+        let response = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+
+        let resData = await response.json();
+        console.log(resData);
+        const imgUrl = resData["status"];
+        return imgUrl;
+    
+        // if (data.image_url) {
+        //     imageUrl = data.image_url;
+        // }
+    } catch (error) {
+        console.log("error uploading club img: " + error);
+        return false;
+    }
+}
+
+export async function setClubImg(imgUrl, clubId) {
+    const toSend = {
+        img_url: imgUrl,
+        club_id: clubId
+    }
+
+    // try {
+    const url = SEND_URL + "setclubimg";
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {"Content-type": "application/json"},
+        body: JSON.stringify(toSend)
+    });
+    return response;
+    // }
+}

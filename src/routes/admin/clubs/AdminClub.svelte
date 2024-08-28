@@ -101,11 +101,11 @@
       }
     }
 
-    let divClass='bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden';
-    let innerDivClass='flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4';
-    let searchClass='w-full md:w-1/2 relative';
-    let svgDivClass='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none';
-    let classInput="text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2  pl-10";
+    function handleDescription(desc) {
+        if (desc.length > 100) {
+            return desc.substring(0, 100) + " ... ";
+        } return desc;
+    }
 
     let clubs = [];
 
@@ -253,7 +253,7 @@
                     </thead>
                     <tbody>
                       {#each clubs as club, i}
-                        {#if labelIncludesSearchTerm(club.club_name, searching)}
+                        {#if labelIncludesSearchTerm(club.club_name, searching) || labelIncludesSearchTerm(club.status, searching)}
                           <tr class="border-b dark:border-gray-700">
                             <td>
                               <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
@@ -295,7 +295,7 @@
                               <td class="px-4 py-3">{club.vice_presidents_emails}</td>
                               <td class="px-4 py-3">{club.advisor_email}</td>
                               <td class="px-4 py-3">{club.club_days}</td>
-                              <td class="px-4 py-3">{club.club_description}</td>
+                              <td class="px-4 py-3">{handleDescription(club.club_description)}</td>
                               <td class="px-4 py-3">{club.room_number}</td>
                               <td class="px-4 py-3">{club.secret_password}</td>
                               <td class="px-4 py-3">{club.start_time}</td>
