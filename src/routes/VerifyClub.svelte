@@ -3,7 +3,7 @@
     import { writable } from 'svelte/store';
 	import { onMount } from 'svelte';
     import { Label, Input } from 'flowbite-svelte';
-    import { verifyClub } from "../lib/club";
+    import { verifyClub } from "../lib/club"; 
 
     let isLoading = writable(false);
     let errorMessage = writable("");
