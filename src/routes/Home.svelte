@@ -7,7 +7,6 @@
     import { fetchUserInfo } from "../lib/user"
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
-
     let email = "";
 
     onMount(async () => {
@@ -34,16 +33,29 @@
             Through one on one tutoring, class shadowing, and more, everything you need to create the best high school experience for you is here.
         </p>
         <br>
-        <a href="/findaclub">
-            <Button size="xl" outline color="green" class="inline-flex items-center justify-center mr-3">
-                Find a club<ArrowRightOutline size="md" class="ml-2 -mr-1" />
-            </Button>
-        </a>
-        <a href="/findamentor">
-            <Button size="xl" outline color="blue" class="inline-flex items-center justify-center mr-3">
-                Find a mentor<ArrowRightOutline size="md" class="ml-2 -mr-1" />
-            </Button>
-        </a>
+        {#if $user}
+            <a href="/findaclub">
+                <Button size="xl" outline color="green" class="inline-flex items-center justify-center mr-3">
+                    Find a club<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+                </Button>
+            </a>
+            <a href="/findamentor">
+                <Button size="xl" outline color="blue" class="inline-flex items-center justify-center mr-3">
+                    Find a mentor<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+                </Button>
+            </a>
+        {:else}
+            <a href="/auth/signup">
+                <Button size="xl" outline color="green" class="inline-flex items-center justify-center mr-3">
+                    Sign Up<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+                </Button>
+            </a>
+            <a href="/auth/login">
+                <Button size="xl" outline color="blue" class="inline-flex items-center justify-center mr-3">
+                    Log In<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+                </Button>
+            </a>
+        {/if}
       </HeroHeader>
     </div>
     <!-- <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
