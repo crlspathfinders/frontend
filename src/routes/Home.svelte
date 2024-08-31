@@ -1,8 +1,12 @@
 <script lang="js">
     import { onMount } from 'svelte';
     import { Section, ContentWithImage } from 'flowbite-svelte-blocks';
+    import { News, HeroHeader, HeroBody } from 'flowbite-svelte-blocks';
+    import { Button } from "flowbite-svelte";
     import { user } from "../stores/auth"
     import { fetchUserInfo } from "../lib/user"
+    import { ArrowRightOutline } from 'flowbite-svelte-icons';
+
 
     let email = "";
 
@@ -18,16 +22,31 @@
         if (userInfo["uid"] !== null) { console.log(userInfo["uid"]); }
     })
 </script>
-  
-<Section name="contentwithimg">
-    <ContentWithImage>
-        <svelte:fragment slot="h2">{email}</svelte:fragment>
-        <p class="mb-4">We are strategists, designers and developers. Innovators and problem solvers. Small enough to be simple and quick, but big enough to deliver the scope you want at the pace you need. Small enough to be simple and quick, but big enough to deliver the scope you want at the pace you need.</p>
-        <p>We are strategists, designers and developers. Innovators and problem solvers. Small enough to be simple and quick.</p>
 
-        <svelte:fragment slot="image">
-        <img class="w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/office-long-2.png" alt="office content 1" />
-        <img class="mt-4 w-full lg:mt-10 rounded-lg" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/office-long-1.png" alt="office content 2" />
-        </svelte:fragment>
-    </ContentWithImage>
-</Section>
+<Section name="heroVisual">
+    <div class="mr-auto place-self-center lg:col-span-7">
+      <HeroHeader h1Class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white" pClass="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+        <svelte:fragment slot="h1">CRLS PathFinders</svelte:fragment>
+        <p>
+            Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer.
+        </p>
+        <p>
+            Through one on one tutoring, class shadowing, and more, everything you need to create the best high school experience for you is here.
+        </p>
+        <br>
+        <a href="/findaclub">
+            <Button size="xl" outline color="green" class="inline-flex items-center justify-center mr-3">
+                Find a club<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+            </Button>
+        </a>
+        <a href="/findamentor">
+            <Button size="xl" outline color="blue" class="inline-flex items-center justify-center mr-3">
+                Find a mentor<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+            </Button>
+        </a>
+      </HeroHeader>
+    </div>
+    <!-- <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+      <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup" />
+    </div> -->
+  </Section>
