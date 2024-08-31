@@ -1,11 +1,9 @@
 <script>
     import { onMount } from 'svelte';
-    import { Button, Modal, Select, Label, Spinner, P, ListPlaceholder, Search} from 'flowbite-svelte';
-    import { Section } from 'flowbite-svelte-blocks';
-    import { PlusOutline, ChevronDownOutline, FilterSolid, ChevronRightOutline, ChevronLeftOutline, AlignCenterOutline } from 'flowbite-svelte-icons';
+    import { Button, Modal, Select, Label, Spinner, P, ListPlaceholder, Search, Toggle } from 'flowbite-svelte';
     import { getCollection } from "../../../lib/api";
     import { writable } from 'svelte/store';
-    import { roleChoices, changeUserRole, deleteUser, getUserDocData } from '../../../lib/user';
+    import { roleChoices, changeUserRole, deleteUser, getUserDocData, toggleLeaderMentor } from '../../../lib/user';
     import { user } from '../../../stores/auth';
     import { TableHeader } from 'flowbite-svelte-blocks';
 
@@ -57,6 +55,15 @@
         return newRoleChoices;
       } 
       return roleChoices;
+    }
+
+    const handleToggleLeaderMentor = async (email, leaderMentor, toggle) => {
+      try {
+        const res = await toggleLeaderMentor(email, leaderMentor, toggle);
+        console.log(res);
+      } catch (error) {
+        console.log("Failed to toggle leader mentor: " + error);
+      } 
     }
 
     const handleRoleChange = async () => {
@@ -175,6 +182,7 @@
                             <th scope="col" class="px-4 py-3">Email</th>
                             <th scope="col" class="px-4 py-3">Joined Clubs</th>
                             <th scope="col" class="px-4 py-3">Is Leader</th>
+                            <th scope="col" class="px-4 py-3">Is Mentor</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -211,7 +219,12 @@
                               {/if}
                               <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u>{user.email}</u></b></th>
                               <td class="px-4 py-3">{user.joined_clubs}</td>
-                              <td class="px-4 py-3">{user.is_leader}</td>
+                              <td class="px-4 py-3">
+                                <Toggle color="green" checked={user.is_leader} on:change={toggleLeaderMentor(user.email, "Leader", !user.is_leader)}></Toggle>
+                              </td>
+                              <td class="px-4 py-3">
+                                <Toggle color="blue" checked={user.is_mentor} on:change={toggleLeaderMentor(user.email, "Mentor", !user.is_mentor)}></Toggle>
+                              </td>
                           </tr>
                         {/if}
                       {/each}

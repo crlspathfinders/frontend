@@ -52,7 +52,9 @@
                 <DropdownItem href="/account">Account</DropdownItem>
                 {#if loggedInUser.role != "Advisor"}
                     <DropdownItem href="/registeryourclub">Register Your Club</DropdownItem>
-                    <DropdownItem href="/becomeamentor">Become a Mentor</DropdownItem>
+                    {#if loggedInUser.role != "Mentor" }
+                        <DropdownItem href="/becomeamentor">Become a Mentor</DropdownItem>
+                    {/if}
                 {/if}
                 {#if loggedInUser.role == "Admin" || loggedInUser.role == "Super Admin"}
                     <DropdownItem href="/admin">Admin</DropdownItem>

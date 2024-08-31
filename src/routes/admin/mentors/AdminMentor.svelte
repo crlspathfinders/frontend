@@ -101,6 +101,7 @@
                             <th scope="col" class="px-4 py-3">First Name</th>
                             <th scope="col" class="px-4 py-3">Last Name</th>
                             <th scope="col" class="px-4 py-3">Email</th>
+                            <th scope="col" class="px-4 py-3">Bio</th>
                             <th scope="col" class="px-4 py-3">Gender</th>
                             <th scope="col" class="px-4 py-3">Language(s)</th>
                             <th scope="col" class="px-4 py-3">Race(s)</th>
@@ -129,6 +130,7 @@
                             <td class="px-4 py-3">{i + 1} | {m.firstname}</td>
                             <td class="px-4 py-3">{m.lastname}</td>
                             <td class="px-4 py-3"><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td>
+                            <td class="px-4 py-3">{m.bio}</td>
                             <td class="px-4 py-3">{m.gender}</td>
                             <td class="px-4 py-3">{m.languages}</td>
                             <td class="px-4 py-3">{m.races}</td>

@@ -108,6 +108,7 @@ export async function changeUserRole(email, newRole) {
             headers: {"Content-type": "application/json"},
             body: JSON.stringify(toSend)
         });
+        console.log(res);
     } catch (error) {
         console.log("Error changing role: " + error);
     }
@@ -124,4 +125,19 @@ export async function deleteUser(email) {
     } catch (error) {
         console.log("Failed to delete user: " + error);
     }
+}
+
+export async function toggleLeaderMentor(email, leaderMentor, toggle) {
+    const toSend = {
+        email,
+        leader_mentor: leaderMentor,
+        toggle
+    }
+    const url = SEND_URL + "toggleleadermentor";
+    console.log(toSend);
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-type": "application/json"},
+        body: JSON.stringify(toSend)
+    });
 }

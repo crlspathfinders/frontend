@@ -125,7 +125,7 @@
 <!-- Edit club: -->
 {#if $showEditModal}
 
-    <Modal open={$showEditModal} class="min-w-full" on:close={closeshowEditModal}>
+    <Modal class="min-w-full" open={$showEditModal} on:close={closeshowEditModal}>
         <RegisterForm {view} {currClub} {showVals}></RegisterForm>
     </Modal>
 

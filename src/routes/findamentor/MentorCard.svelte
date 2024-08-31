@@ -1,66 +1,57 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Avatar, Toast, P, CardPlaceholder } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Avatar, Toast, P, CardPlaceholder, Modal } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
-    import { getUserDocData, toggleClub } from "../../lib/user";
+    import { getUserDocData, toggleClub, fetchUserInfo } from "../../lib/user";
     import { writable } from 'svelte/store';
+    import { PenOutline } from 'flowbite-svelte-icons';
+    import RegisterForm from '../becomeamentor/RegisterForm.svelte';
 
     let wholeReady = writable(false);
-    let inClubs = writable([]);
-    let isLoading = writable(null);
+    let showEditModal = writable(false);
 
     let ready = false;
 
-    let clubs = [];
+    let mentors = [];
 
-    let myClubs = [];
+    let email = "";
 
-    let email;
+    let userInfo;
 
-    let currClick = "";
+    let view = "Edit";
+    let showVals = true;
 
-    const handleClick = async (clubId) => {
-        try {
-            isLoading.set(true);
-            const res = await toggleClub(email, clubId);
-        } catch(error) {
-            console.log("Failed to toggle club! " + error)
-        } finally {
-            isLoading.set(false);
-            const userInfo = await getUserDocData(email);
-            myClubs = userInfo.joined_clubs;
-            inClubs.set(myClubs);
-        }
-    }
-
-    onMount(async () => {
-        // userInfo = await fetchUserInfo();
-        // if (userInfo["uid"] !== null) { console.log(userInfo["uid"]); }
-        // console.log(userInfo);
-        user.subscribe(async value => {
-            if (value) {
-                email = value.email;
-                const userInfo = await getUserDocData(email);
-                myClubs = userInfo.joined_clubs;
-                inClubs.set(myClubs);
-                console.log(myClubs);
-            }
-        });
-    });
+    let currMentor;
 
     onMount(async () => {
         wholeReady.set(false);
+        user.subscribe(async value => {
+            console.log("val");
+            if (value) {
+                console.log("OK");
+                email = value.email;
+                userInfo = await getUserDocData(email);
+                console.log(userInfo);
+            }
+            console.log("done ok");
+        });
         try {
-            clubs = await getCollection("Clubs");
-            ready = true;
+            mentors = await getCollection("Mentors");
+            console.log(mentors);
+            console.log("subscribe start");
+            
+            console.log("subscribe end");
         } catch(error) {
             console.log("Onmount failed: " + error);
         } finally {
             wholeReady.set(true);
         }
-    })
+    });
+
+    const openshowEditModal = () => showEditModal.set(true);
+    const closeshowEditModal = () => showEditModal.set(false);
 
 </script>
 
@@ -98,24 +89,54 @@
    }
 </style>
 
+<Modal class="min-w-full" open={$showEditModal} on:close={closeshowEditModal}>
+    <RegisterForm {view} {currMentor} {showVals}></RegisterForm>
+</Modal>
+
 {#if $wholeReady}
 
     <div class="card-container">
-        {#each clubs as club}
+        {#each mentors as m}
 
-        <Card padding="md">
-            <div class="flex flex-col items-center pb-4">
-              <Avatar size="lg" src="https://imagedelivery.net/Gm-NkdakOalj7eMFrJcZPA/5c4b45b8-8a42-4068-9796-658093028500/public" />
-              <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bonnie Green</h5>
-              <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
-              <div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
-                <Button>Add friend</Button>
-                <Button color="light" class="dark:text-white">Message</Button>
-              </div>
-            </div>
-          </Card>
+            <Card padding="md">
+                <div class="flex flex-col items-center pb-4">
+                <Avatar size="xl" src={m.profile_pic} border class="ring-blue-400"/>
+                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                    {m.firstname} {m.lastname}
+                    {#if m.email == email}
+                        <Button size="xs" pill outline color="blue" on:click={() => {
+                            console.log("clicked");
+                            currMentor = m;
+                            console.log(currMentor);
+                            openshowEditModal();
+                        }}><PenOutline></PenOutline></Button>
+                    {/if}
+                </h5>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    <i>Academic Interests: </i>{m.academics}
+                </span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    <i>Language I Speak: </i>{m.languages}
+                </span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    {m.races}
+                </span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    {m.religions}
+                </span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    {m.gender}
+                </span>
+                <span style="border-top: 1px solid black;" class="text-sm text-gray-800 dark:text-gray-400">
+                    {m.bio}
+                </span>
+                <div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
+                    <Button outline color="dark">Add friend</Button>
+                    <Button color="light" class="dark:text-white">Message</Button>
+                </div>
+                </div>
+            </Card>
           
-
         {/each}
     </div>
 

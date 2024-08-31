@@ -12,9 +12,9 @@ export let religions = [
     { value: "Muslim", name: "Muslim" },
     { value: "Jewish", name: "Jewish" },
     { value: "Hindu", name: "Hindu" },
-    { value: "Buddhist", name: "Buddhist" },
+    // { value: "Buddhist", name: "Buddhist" },
     { value: "Atheist", name: "Atheist" },
-    // { value: "Christian", name: "Christian" },
+    { value: "Christian", name: "Christian" },
 ]
 
 export let genders = [
@@ -27,11 +27,11 @@ export let languages = [
     { value: "Amharic", name: "Amharic" },
     { value: "Bangla", name: "Bangla" },
     { value: "Spanish", name: "Spanish" },
-    { value: "Hindi", name: "Hindi" },
+    // { value: "Hindi", name: "Hindi" },
     { value: "Portuguese", name: "Portuguese" },
     { value: "Chinese", name: "Chinese" },
-    { value: "Korean", name: "Korean "},
-    { value: "Japanese", name: "Japanese" }
+    // { value: "Korean", name: "Korean "},
+    // { value: "Japanese", name: "Japanese" }
 ]
 
 export let academics = [
@@ -43,12 +43,12 @@ export let academics = [
     { value: "Computer Science", name: "Computer Science" }
 ]
 
-
-export async function createMentor(firstName, lastName, email, races, religions, gender, languages, academics) {
+export async function createMentor(firstName, lastName, bio, email, races, religions, gender, languages, academics) {
 
     const toSend = {
         firstname: firstName,
         lastname: lastName,
+        bio,
         email: email,
         races: races,
         religions: religions,
@@ -77,7 +77,7 @@ export async function createMentor(firstName, lastName, email, races, religions,
     }
 }
 
-export async function editMentor(firstName, lastName, email, races, religions, gender, languages, academics) {
+export async function editMentor(firstName, lastName, bio, email, races, religions, gender, languages, academics) {
 
     // races = races.split(",");
     // religions = religions.split(",");
@@ -88,6 +88,7 @@ export async function editMentor(firstName, lastName, email, races, religions, g
     const toSend = {
         firstname: firstName,
         lastname: lastName,
+        bio,
         email: email,
         races: races,
         religions: religions,
@@ -127,4 +128,45 @@ export async function deleteMentor(email) {
     } catch (error) {
         console.log("Failed to delete mentor: " + error);
     }
+}
+
+export async function UploadMentorImage(file) {
+    let formData = new FormData();
+    formData.append('file', file);
+    console.log(formData);
+
+    try {
+        let url = SEND_URL + "uploadmentorimage/";
+        let response = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+
+        let resData = await response.json();
+        console.log(resData);
+        const imgUrl = resData["status"];
+        return imgUrl;
+
+    } catch (error) {
+        console.log("error uploading mentor img: " + error);
+        return false;
+    }
+}
+
+export async function SetMentorImage(imgUrl, mentorEmail) {
+    const toSend = {
+        img_url: imgUrl,
+        mentor_email: mentorEmail
+    }
+    console.log(toSend);
+
+    // try {
+    const url = SEND_URL + "setmentorimg/";
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {"Content-type": "application/json"},
+        body: JSON.stringify(toSend)
+    });
+    return response;
+    // }
 }

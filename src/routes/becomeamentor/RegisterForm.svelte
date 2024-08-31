@@ -1,13 +1,17 @@
 <script>
     import { onMount } from 'svelte';
     import { Section } from 'flowbite-svelte-blocks';
-    import { Label, Input, Button, Select, Textarea, MultiSelect, P, Spinner } from 'flowbite-svelte';
+    import { Label, Input, Button, Select, Textarea, MultiSelect, P, Spinner, Alert, Avatar } from 'flowbite-svelte';
     import { getCollectionDoc } from "$lib/api";
-    import { createMentor, editMentor, races, religions, genders, languages, academics } from "../../lib/mentor";
+    import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage } from "../../lib/mentor";
     import { user } from "../../stores/auth";
     import { writable } from 'svelte/store';
 
     let isLoading = writable(false);
+    let imgLoading = writable(false);
+    let showSubmitImage = writable(false);
+    let errorMessage = writable("");
+    let successMessage = writable("");
 
     let email = "";
 
@@ -23,29 +27,66 @@
     let newLanguages = [];
     let newAcademics = [];
 
+    let bio;
+
     let importRaces = [];
+
+    const handleSubmitImage = async (file) => {
+        // First make sure it is the correct dimensions, type, etc.
+        if (file.length < 1) { 
+            errorMessage.set("Please select a file.");
+            return -1;
+        }
+        console.log(file);
+        imgLoading.set(true);
+        errorMessage.set("");
+        successMessage.set("");
+        try {
+            const res = await UploadMentorImage(file);
+            console.log(res, currEmail);
+            if (showVals) {
+                const res2 = await SetMentorImage(res, currMentor.email);
+                console.log(res2);
+                successMessage.set("Successfully uploaded profile picture.");
+            } else {
+                const res2 = await SetMentorImage(res, currEmail);
+                console.log(res2);
+                successMessage.set("Successfully uploaded profile picture.");
+            }
+            
+        } catch (error) {
+            console.log("failure in handling submit img: " + error);
+            errorMessage.set("Image upload failure: " + error);
+        } finally {
+            imgLoading.set(false);
+        }
+    }
 
     const handleSubmit = async () => {
         try {
+            showSubmitImage.set(false);
             isLoading.set(true);
             const firstName = document.querySelector("#firstname").value;
             const lastName = document.querySelector("#lastname").value;
-            const races = document.querySelector("#races").value;
-            const religions = document.querySelector("#religions").value;
-            const gender = document.querySelector("#gender").value;
-            const languages = document.querySelector("#languages").value;
-            const academics = document.querySelector("#academics").value;
+            const bio = document.querySelector("#bio").value;
 
             if (view.localeCompare("Register") === 0) {
-                const mes = await createMentor(firstName, lastName, currEmail, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected);
+                const mes = await createMentor(firstName, lastName, bio, currEmail, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected);
                 console.log(mes);
+                errorMessage.set("");
+                successMessage.set("You are successfully registered as a mentor! Add a profile picture below:");
+                showSubmitImage.set(true);
             } else if (view.localeCompare("Edit") === 0) {
-                await editMentor(firstName, lastName, currMentor.email, newRaces, newReligions, newGender, newLanguages, newAcademics);
+                await editMentor(firstName, lastName, bio, currMentor.email, newRaces, newReligions, newGender, newLanguages, newAcademics);
+                errorMessage.set("");
+                successMessage.set("Successfully edited. Reload the page to see the changes.");
             }
         } catch (error) {
-            console.log("Failed to edit mentor: " + error);
+            console.log("Failed to register / edit mentor: " + error);
+            errorMessage.set("" + error);
         } finally {
             isLoading.set(false);
+            showSubmitImage.set(true);
         }
     }
 
@@ -74,7 +115,7 @@
             newGender = currMentor.gender;
             newLanguages = currMentor.languages;
             newAcademics = currMentor.academics;
-            
+            console.log(currMentor);
         }
     });
 
@@ -83,9 +124,9 @@
     export let currMentor = {}
     export let currEmail = "";
 
-</script>
+    let file = ""
 
-<!-- <MultiSelect class="mt-2" id="languages" items={languages} placeholder="Select your language(s)" bind:value={languagesSelected}/> -->
+</script>
 
 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Mentor</h2>
 <form on:submit={handleSubmit}>
@@ -107,7 +148,8 @@
         {/if}
     </div>
     <div class="w-full">
-        <Label>Races
+        <Label>
+            Races
             {#if showVals}
                 <MultiSelect class="mt-2" id="races" size="lg" items={races} placeholder="Select your race(s)" bind:value={newRaces}/>
             {:else}
@@ -116,7 +158,8 @@
         </Label>
     </div>
     <div class="w-full">
-        <Label>Religions
+        <Label>
+            Religions
             {#if showVals}
                 <MultiSelect class="mt-2" id="religions" size="lg" items={religions} placeholder="Select your religion(s)" bind:value={newReligions}/>
             {:else}
@@ -125,7 +168,8 @@
         </Label>
     </div>
     <div class="w-full">
-        <Label>Gender
+        <Label>
+            Gender
             {#if showVals}
                 <MultiSelect class="mt-2" id="gender" items={genders} placeholder="Select your gender(s)" bind:value={newGender}/>
             {:else}
@@ -134,7 +178,8 @@
         </Label>
     </div>
     <div class="w-full">
-        <Label>Languages
+        <Label>
+            Languages
             {#if showVals}
                 <MultiSelect class="mt-2" id="languages" items={languages} placeholder="Select your language(s)" bind:value={newLanguages}/>
             {:else}
@@ -143,7 +188,8 @@
         </Label>
     </div>
     <div class="w-full">
-        <Label>Academics
+        <Label>
+            Academics
             {#if showVals}
                 <MultiSelect class="mt-2" id="academics" items={academics} placeholder="Select your academics(s)" bind:value={newAcademics}/>
             {:else}
@@ -151,13 +197,69 @@
             {/if}
         </Label>
     </div>
-    <div class="w-full">
+    <div class="sm:col-span-2">
+        <Label>
+            Bio
+            {#if showVals}
+                <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" bind:value={currMentor.bio}/>
+            {:else}
+                <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" />
+            {/if}
+        </Label>
     </div>
     <Button color="green" type="submit">
-        {view} Club
+        {view}
         {#if $isLoading}
             <Spinner color="green"/>
         {/if}
     </Button>
     </div>
 </form>
+
+<br>
+{#if !showVals}
+    {#if $errorMessage.length > 1}
+        <Alert color="red">
+            <span class="font-medium">Registration failed:</span>
+            {$errorMessage}
+        </Alert>
+    {:else if $successMessage.length > 1}
+        <Alert color="blue">
+            <span class="font-medium">Success:</span>
+            {$successMessage}
+        </Alert>
+    {/if}
+{:else}
+    {#if $errorMessage.length > 1}
+        <Alert color="red">
+            <span class="font-medium">Mentor editing failed:</span>
+            {$errorMessage}
+        </Alert>
+    {:else if $successMessage.length > 1}
+        <Alert color="blue">
+            <span class="font-medium">Success:</span>
+            {$successMessage}
+        </Alert>
+    {/if}
+{/if}
+
+{#if $showSubmitImage || showVals}
+
+    <Avatar size="xl" src={currMentor.profile_pic} border/>  
+
+    <div class="w-full" style="margin-top:2rem;margin-bottom:2rem;">
+        <Label> Upload profile picture </Label>
+        <input style="border:1px solid black;border-radius:5px;" type="file" accept="image/*" required on:change={e => file = e.target.files[0]} />
+        <!-- <br> -->
+        <Button size="md" outline color="blue" on:click={async () => {
+            console.log(file);
+            await handleSubmitImage(file);
+        }}>
+            Upload
+            {#if $imgLoading}
+                <Spinner size={5} color="blue"/>
+            {/if}
+        </Button>
+    </div>
+
+{/if}
