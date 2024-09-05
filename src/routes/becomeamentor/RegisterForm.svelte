@@ -71,6 +71,12 @@
             const bio = document.querySelector("#bio").value;
 
             if (view.localeCompare("Register") === 0) {
+                if (academicsSelected.length < 1) {
+                    errorMessage.set("Please select at least one academic interest.");
+                    showSubmitImage.set(false);
+                    isLoading.set(false);
+                    return -1;
+                }
                 const mes = await createMentor(firstName, lastName, bio, currEmail, racesSelected, religionsSelected, genderSelected, languagesSelected, academicsSelected);
                 console.log(mes);
                 errorMessage.set("");
@@ -85,8 +91,13 @@
             console.log("Failed to register / edit mentor: " + error);
             errorMessage.set("" + error);
         } finally {
-            isLoading.set(false);
-            showSubmitImage.set(true);
+            if (academicsSelected.length < 1) {
+                showSubmitImage.set(false);
+                isLoading.set(false);
+            } else {
+                isLoading.set(false);
+                showSubmitImage.set(true);
+            }
         }
     }
 
@@ -128,11 +139,13 @@
 
 </script>
 
+<br>
+
 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Mentor</h2>
 <form on:submit={handleSubmit}>
     <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
     <div class="w-full">
-        <Label for="firstname" class="mb-2">First Name</Label>
+        <Label for="firstname" class="mb-2">First Name <i style="color: red;">*</i></Label>
         {#if showVals}
             <Input type="text" id="firstname" placeholder="First Name" value={currMentor.firstname}/>
         {:else}
@@ -140,7 +153,7 @@
         {/if}
     </div>
     <div class="w-full">
-        <Label for="lastname" class="mb-2">Last Name</Label> 
+        <Label for="lastname" class="mb-2">Last Name <i style="color: red;">*</i></Label> 
         {#if showVals}
             <Input type="text" id="lastname" placeholder="Last Name" value={currMentor.lastname}/>
         {:else}
@@ -189,7 +202,7 @@
     </div>
     <div class="w-full">
         <Label>
-            Academics
+            Academics <i style="color: red;">*</i>
             {#if showVals}
                 <MultiSelect class="mt-2" id="academics" items={academics} placeholder="Select your academics(s)" bind:value={newAcademics}/>
             {:else}
@@ -199,11 +212,11 @@
     </div>
     <div class="sm:col-span-2">
         <Label>
-            Bio
+            Bio <i style="color: red;">*</i>
             {#if showVals}
                 <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" bind:value={currMentor.bio}/>
             {:else}
-                <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" />
+                <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" required/>
             {/if}
         </Label>
     </div>

@@ -192,10 +192,10 @@
             </Alert>
         {/if}
     {/if}
-    <br>
+    <!-- <br> -->
     <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
     <div class="sm:col-span-2">
-        <Label for="clubname" class="mb-2">Club Name</Label>
+        <Label for="clubname" class="mb-2">Club Name <i style="color: red;">*</i></Label>
         {#if showVals}
             <Input type="text" id="clubname" placeholder="Type club name" value={currClub.club_name}/>
         {:else}
@@ -203,7 +203,7 @@
         {/if}
     </div>
     <div class="w-full">
-        <Label for="presidentemail" class="mb-2">President Email</Label> 
+        <Label for="presidentemail" class="mb-2">President Email <i style="color: red;">*</i></Label> 
         {#if showVals}
             <Input type="text" id="presidentemail" placeholder="President email" value={currClub.president_email}/>
         {:else}
@@ -235,7 +235,7 @@
         {/if}
     </div>
     <div class="w-full">
-        <Label for="advisoremail" class="mb-2">Advisor Email</Label>
+        <Label for="advisoremail" class="mb-2">Advisor Email <i style="color: red;">*</i></Label>
         {#if showVals}
             <Input type="text" id="advisoremail" value={currClub.advisor_email} placeholder="Advisor Email" />
         {:else}
@@ -243,7 +243,7 @@
         {/if}
     </div>
     <div class="w-full">
-        <Label for="roomnumber" class="mb-2">Room Number</Label>
+        <Label for="roomnumber" class="mb-2">Room Number <i style="color: red;">*</i></Label>
         {#if showVals}
             <Input type="number" id="roomnumber" value={currClub.room_number} placeholder="Room Number"/>
         {:else}
@@ -252,7 +252,7 @@
     </div>
     <div class="w-full">
         <Label>
-            Days your club meets
+            Days your club meets <i style="color: red;">*</i>
             {#if showVals}
                 <MultiSelect class="mt-2" id="clubdays" placeholder="Select day(s)" items={daysoftheweek} bind:value={currDays} />
             {:else}
@@ -261,7 +261,7 @@
         </Label>
     </div>
     <div class="w-full">
-        <Label for="clubstarttime" class="mb-2">Club Start Time</Label>
+        <Label for="clubstarttime" class="mb-2">Club Start Time <i style="color: red;">*</i></Label>
         {#if showVals}
             <Input type="time" id="clubstarttime" placeholder="12" value={currClub.start_time} />
         {:else}
@@ -269,7 +269,7 @@
         {/if}
     </div>
     <div class="sm:col-span-2">
-        <Label for="description" class="mb-2">Description</Label>
+        <Label for="description" class="mb-2">Description <i style="color: red;">*</i></Label>
         {#if showVals}
             <Textarea id="clubdescription" placeholder="Any additional information that club members should know before joining your club!" rows="4" name="description" value={currClub.club_description} />
         {:else}
