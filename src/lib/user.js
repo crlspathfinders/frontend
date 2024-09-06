@@ -1,4 +1,4 @@
-import { getAuth, getIdToken } from "firebase/auth";
+// import { getAuth, getIdToken } from "firebase/auth";
 import { auth } from './auth/firebaseConfig';
 
 const SEND_URL = import.meta.env.VITE_URL

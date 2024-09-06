@@ -17,8 +17,8 @@
                 email = '';
             }
         });
-        const userInfo = await fetchUserInfo();
-        if (userInfo["uid"] !== null) { console.log(userInfo["uid"]); }
+        // const userInfo = await fetchUserInfo();
+        // if (userInfo["uid"] !== null) { console.log(userInfo["uid"]); }
     })
 </script>
 

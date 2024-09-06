@@ -38,7 +38,7 @@
     <VerifyClub></VerifyClub>
 {/if}
 
-{#if $wholeReady}
+<!-- {#if $wholeReady} -->
 
     <Navbar let:NavContainer color="blue">
         <NavBrand href="/">
@@ -55,21 +55,23 @@
                 </NavLi>
                 <Dropdown class="w-44 z-20 text-gray-500">
                     <DropdownItem href="/account">Account</DropdownItem>
-                    {#if loggedInUser.role != "Advisor"}
-                        <DropdownItem href="/registeryourclub">Register Your Club</DropdownItem>
-                        {#if loggedInUser.role != "Mentor" }
-                            <DropdownItem href="/becomeamentor">Become a Mentor</DropdownItem>
+                    {#if loggedInUser }
+                        {#if loggedInUser.role != "Advisor"}
+                            <DropdownItem href="/registeryourclub">Register Your Club</DropdownItem>
+                            {#if loggedInUser.role != "Mentor" }
+                                <DropdownItem href="/becomeamentor">Become a Mentor</DropdownItem>
+                            {/if}
                         {/if}
+                        {#if loggedInUser.role == "Admin" || loggedInUser.role == "Super Admin"}
+                            <DropdownItem href="/admin">Admin</DropdownItem>
+                        {/if}      
+                        {#if loggedInUser.role == "Advisor" || loggedInUser.role == "Super Admin"}
+                            <DropdownItem href="#" on:click={() => {
+                                openVerify.set(true);
+                            }}>Verify Club</DropdownItem>
+                        {/if}    
                     {/if}
-                    {#if loggedInUser.role == "Admin" || loggedInUser.role == "Super Admin"}
-                        <DropdownItem href="/admin">Admin</DropdownItem>
-                    {/if}      
-                    {#if loggedInUser.role == "Advisor" || loggedInUser.role == "Super Admin"}
-                        <DropdownItem href="#" on:click={() => {
-                            openVerify.set(true);
-                        }}>Verify Club</DropdownItem>
-                    {/if}    
-                    <DropdownItem on:click={logout} href="/">Sign Out</DropdownItem>
+                        <DropdownItem on:click={logout} href="/">Sign Out</DropdownItem>
                 </Dropdown>
             {:else}
                 <NavLi class="text-gray-800" href="/auth/login">Log In</NavLi>   
@@ -78,4 +80,4 @@
         </NavUl>
     </Navbar>
 
-{/if}
+<!-- {/if} -->
