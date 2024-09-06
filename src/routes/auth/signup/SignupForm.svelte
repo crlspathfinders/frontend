@@ -10,6 +10,8 @@
     import { Alert } from 'flowbite-svelte';
     import { goto } from "$app/navigation";
 
+    const SEND_URL = import.meta.env.VITE_URL
+
     let email;
     let password;
     let confirmPassword;
@@ -44,7 +46,8 @@
         if (checkInfo()) {
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           const token = await userCredential.user.getIdToken();
-          await fetch('http://127.0.0.1:8000/create-user', {
+          const url = SEND_URL + 'create-user';
+          await fetch(url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
