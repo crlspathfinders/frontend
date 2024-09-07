@@ -158,7 +158,7 @@
 {#if $deleteCLUBConfirmModal}
 
   <Modal title="Delete {currName}" open={$deleteCLUBConfirmModal} on:close={closedeleteCLUBConfirmModal}>
-    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Are you sure you want to permanently remove <b>{currName}</b>? You cannot undo this action.</p>
+    <p class="text-base leading-relaxed text-gray-800">Are you sure you want to permanently remove <b>{currName}</b>? You cannot undo this action.</p>
     <Button outline color="red" on:click={() => {handleDelete(currId); } }>
       Delete
       {#if $removeLoading}
@@ -172,7 +172,7 @@
 {#if $deleteConfirmModal}
 
   <Modal title="Remove Member" open={$deleteConfirmModal} on:close={closeDeleteConfirmModal}>
-    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Removing <b>{currClick}</b> from <b>{currName}</b> will permanently remove them from this club. They will have to join back themselves. You cannot undo this action.</p>
+    <p class="text-base leading-relaxed text-gray-800">Removing <b>{currClick}</b> from <b>{currName}</b> will permanently remove them from this club. They will have to join back themselves. You cannot undo this action.</p>
     <Button outline color="red" on:click={() => handleClick(currClick, currId) }>
       Remove
       {#if $removeLoading}
@@ -186,7 +186,7 @@
 {#if $modalOpen}
 
   <Modal title="Change {currClub.club_name} status" open={$modalOpen} on:close={closeModal} >
-    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">
+    <p class="text-base leading-relaxed text-gray-800">
         <center>
             <!-- Status: <b>{$status}</b> -->
             Status: <b>{currClub.status}</b>
@@ -222,7 +222,7 @@
 
   <EditClub {editOn} {currClub}></EditClub>
 
-  <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+  <section class="bg-gray-50 p-3 sm:p-5">
     <div>
       <TableHeader headerType="search">
          <Search bind:value={searching} slot="search" placeholder="Search {clubs.length} clubs" size="md"/>
@@ -231,10 +231,10 @@
     </div>
     <br>
     <div>
-        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+        <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-4 py-3">Edit</th>
                             <th scope="col" class="px-4 py-3">Status</th>
@@ -254,7 +254,7 @@
                     <tbody>
                       {#each clubs as club, i}
                         {#if labelIncludesSearchTerm(club.club_name, searching) || labelIncludesSearchTerm(club.status, searching)}
-                          <tr class="border-b dark:border-gray-700">
+                          <tr class="border-b">
                             <td>
                               <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
                                 currClub = club;
@@ -289,7 +289,7 @@
                                 Delete
                               </Button>
                             </td>
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u><a href="/findaclub/{club.id}">{club.club_name}</a></u></b></th>
+                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{i + 1} | <b><u><a href="/findaclub/{club.id}">{club.club_name}</a></u></b></th>
                               <td class="px-4 py-3" style="cursor:pointer;" id="members" on:click={() => toggleRow(i, club)}><u>{club.members.length}</u></td>
                               <td class="px-4 py-3">{club.president_email}</td>
                               <td class="px-4 py-3">{club.vice_presidents_emails}</td>

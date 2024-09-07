@@ -30,9 +30,9 @@
     }
 
     function setTableClass(email) {
-      let tableClass = "border-b dark:border-gray-700";
+      let tableClass = "border-b";
       if (email.localeCompare(loggedInUser.email) === 0) {
-        tableClass = "border-b bg-gray-200 dark:border-gray-700";
+        tableClass = "border-b bg-gray-200";
         return tableClass;
       }
       return tableClass;
@@ -128,7 +128,7 @@
 {#if $roleModalOpen}
 
   <Modal title="Change {currUser.email} role" open={$roleModalOpen} on:close={closeRoleModal} >
-    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">
+    <p class="text-base leading-relaxed text-gray-800">
         <Label>
           Current role:
           <Select class="mt-2" items={setRoleChoices(loggedInUser.role)} bind:value={currRole} />
@@ -150,7 +150,7 @@
 {#if $deleteModalOpen}
 
   <Modal title="Delete Member" open={$deleteModalOpen} on:close={closeDeleteModal}>
-    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Deleting <b>{currUser.email}</b> will permanently delete their account. They will have sign back up to rejoin the site. You cannot undo this action.</p>
+    <p class="text-base leading-relaxed text-gray-800">Deleting <b>{currUser.email}</b> will permanently delete their account. They will have sign back up to rejoin the site. You cannot undo this action.</p>
     <Button outline color="red" on:click={handleDelete(currUser.email)}>
       Delete
       {#if $isLoading}
@@ -163,7 +163,7 @@
 
 {#if $wholeReady}
 
-  <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+  <section class="bg-gray-50 p-3 sm:p-5">
     <div>
       <TableHeader headerType="search">
          <Search bind:value={searching} slot="search" placeholder="Search {users.length} users" size="md"/>
@@ -172,10 +172,10 @@
     </div>
     <br>
     <div>
-        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+        <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-4 py-3">Role</th> 
                             <th scope="col" class="px-4 py-3">Delete</th>
@@ -218,7 +218,7 @@
                                   }}>Delete</Button>
                                 </td>
                               {/if}
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u>{user.email}</u></b></th>
+                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{i + 1} | <b><u>{user.email}</u></b></th>
                               <td class="px-4 py-3">{user.joined_clubs}</td>
                               <td class="px-4 py-3">
                                 <Toggle color="green" checked={user.is_leader} on:change={handleToggleLeaderMentor(user.email, "Leader", !user.is_leader)}></Toggle>

@@ -45,7 +45,7 @@
 <!-- {#if $modalOpen} -->
 
     <Modal title="Change {currClub.club_name} status" open={statusOn} on:close={closeModal}>
-        <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">
+        <p class="text-base leading-relaxed text-gray-800">
             <center>
                 <!-- Status: <b>{$status}</b> -->
                  Status: <b>{currClub.status}</b>

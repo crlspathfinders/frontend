@@ -80,7 +80,7 @@
           <form on:submit={() => {
               signup();
           }} class="flex flex-col space-y-6">
-              <h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Sign up</h3>
+              <h3 class="text-xl font-medium text-gray-900 p-0">Sign up</h3>
               <Label class="space-y-2">
                   <span>Your email</span>
                   <Input bind:value={email} name="email" id="email" placeholder="name@cpsd.us" required/>

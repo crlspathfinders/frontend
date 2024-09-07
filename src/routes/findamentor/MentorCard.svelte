@@ -101,7 +101,7 @@
             <Card padding="md">
                 <div class="flex flex-col items-center pb-4">
                 <Avatar size="xl" src={m.profile_pic} border class="ring-blue-400"/>
-                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                <h5 class="mb-1 text-xl font-medium text-gray-900">
                     {m.firstname} {m.lastname}
                     {#if m.email == email}
                         <Button size="xs" pill outline color="blue" on:click={() => {
@@ -112,27 +112,27 @@
                         }}><PenOutline></PenOutline></Button>
                     {/if}
                 </h5>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="text-sm text-gray-500">
                     <i>Academic Interests: </i>{m.academics}
                 </span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="text-sm text-gray-500">
                     <i>Language I Speak: </i>{m.languages}
                 </span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="text-sm text-gray-500">
                     {m.races}
                 </span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="text-sm text-gray-500">
                     {m.religions}
                 </span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="text-sm text-gray-500">
                     {m.gender}
                 </span>
-                <span style="border-top: 1px solid black;" class="text-sm text-gray-800 dark:text-gray-400">
+                <span style="border-top: 1px solid black;" class="text-sm text-gray-800">
                     {m.bio}
                 </span>
                 <div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
                     <Button outline color="dark">Add friend</Button>
-                    <Button color="light" class="dark:text-white">Message</Button>
+                    <Button color="light" class="">Message</Button>
                 </div>
                 </div>
             </Card>

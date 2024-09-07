@@ -40,7 +40,7 @@
     });
 </script>
 
-<Tabs tabStyle="full" defaultClass="flex rounded-lg divide-x rtl:divide-x-reverse divide-gray-200 shadow dark:divide-gray-700">
+<Tabs tabStyle="full" defaultClass="flex rounded-lg divide-x rtl:divide-x-reverse divide-gray-200 shadow">
 <TabItem class="w-full" open>
     <span slot="title">Account</span>
     <AccountItem {userInfo}></AccountItem>
@@ -51,14 +51,14 @@
 </TabItem>
 <TabItem class="w-full">
     <span slot="title">Settings</span>
-    <p class="text-sm text-gray-500 dark:text-gray-400">
+    <p class="text-sm text-gray-500">
     <b>Settings:</b>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>
 </TabItem>
 <TabItem class="w-full">
     <span slot="title">Users</span>
-    <p class="text-sm text-gray-500 dark:text-gray-400">
+    <p class="text-sm text-gray-500">
     <b>Users:</b>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>

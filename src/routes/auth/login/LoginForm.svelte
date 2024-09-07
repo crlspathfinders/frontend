@@ -36,7 +36,7 @@
     <Register>
       <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
         <form class="flex flex-col space-y-6" on:submit={() => { login(); }}>
-          <h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Login</h3>
+          <h3 class="text-xl font-medium text-gray-900 p-0">Login</h3>
           <Label class="space-y-2">
             <span>Your email</span>
             <Input bind:value={email} type="email" name="email" placeholder="name@company.com" required />
@@ -47,7 +47,7 @@
           </Label>
           <div class="flex items-start">
             <Checkbox>Remember me</Checkbox>
-            <a href="/" class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Forgot password?</a>
+            <a href="/" class="ml-auto text-sm text-blue-700 hover:underline">Forgot password?</a>
           </div>
           <Button color="green" type="submit" class="w-full1">
             Log in
@@ -55,8 +55,8 @@
               <Spinner color="green"/>
             {/if}
           </Button>
-          <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-            Don’t have an account yet? <a href="/auth/signup" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+          <p class="text-sm font-light text-gray-500">
+            Don’t have an account yet? <a href="/auth/signup" class="font-medium text-primary-600 hover:underline">Sign up</a>
           </p>
         </form>
         {#if $errorMessage.length > 1}

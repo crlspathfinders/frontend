@@ -55,7 +55,7 @@
                 <NavLi href="/findaclub">Find a Club</NavLi>
                 <NavLi href="/findamentor">Find a Mentor</NavLi>
                 <NavLi class="cursor-pointer">
-                    {email}<ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline" />
+                    {email}<ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 inline" />
                 </NavLi>
                 <Dropdown class="w-44 z-20 text-gray-500">
                     <DropdownItem href="/account">Account</DropdownItem>

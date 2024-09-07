@@ -224,7 +224,7 @@
     
     {:else}
 
-        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Mentor</h2>
+        <h2 class="mb-4 text-xl font-bold text-gray-900">{view} Mentor</h2>
         <form on:submit={handleSubmit}>
             <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
             <div class="w-full">

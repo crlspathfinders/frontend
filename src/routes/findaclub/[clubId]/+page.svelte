@@ -135,7 +135,7 @@
 {#if $showImageModal}
 
     <Modal title="Upload image" open={$showImageModal} on:close={closeshowImageModal}>
-        <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">Upload a photo of your club</p>
+        <p class="text-base leading-relaxed text-gray-800">Upload a photo of your club</p>
         <input type="file" accept="image/*" on:change={e => file = e.target.files[0]} />
         <br>
         <Button outline color="purple" on:click={async () => {
@@ -213,7 +213,7 @@
 
             <div class="clubinfolistwrapper" style="text-align:left;">
 
-                <List tag="dl" class="text-gray-900 dark:text-white divide-y divide-gray-200  dark:divide-gray-700">
+                <List tag="dl" class="text-gray-900 divide-y divide-gray-200">
 
                     <div class="flex flex-col pb-3">
                       <DescriptionList tag="dt" class="mb-1">President</DescriptionList>
@@ -254,9 +254,9 @@
         </HeroBody>
 
         <Table>
-            <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+            <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white">
               Members
-              <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">See who else is in {clubInfo.club_name}</p>
+              <p class="mt-1 text-sm font-normal text-gray-500">See who else is in {clubInfo.club_name}</p>
             </caption>
             <TableHead>
                 <!-- <TableHeadCell>Name</TableHeadCell> -->

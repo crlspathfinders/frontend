@@ -150,7 +150,7 @@
 {#if $confirmRegisterModal}
 
   <Modal title="Register New Club" open={$confirmRegisterModal} on:close={openConfirmRegisterModal} >
-    <p class="text-base leading-relaxed text-gray-800 dark:text-gray-400">
+    <p class="text-base leading-relaxed text-gray-800">
         <center>
             rehaan
             <br>
@@ -161,7 +161,7 @@
 {/if}
 
 <br>
-<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{view} Your Club</h2>
+<h2 class="mb-4 text-xl font-bold text-gray-900">{view} Your Club</h2>
 <form on:submit={() => {
     handleSubmit();
     // checkAllInfo();
