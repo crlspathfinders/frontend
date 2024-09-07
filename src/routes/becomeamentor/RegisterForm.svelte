@@ -1,18 +1,20 @@
 <script>
     import { onMount } from 'svelte';
     import { Section } from 'flowbite-svelte-blocks';
-    import { Label, Input, Button, Select, Textarea, MultiSelect, P, Spinner, Alert, Avatar, Heading } from 'flowbite-svelte';
+    import { Label, Input, Button, Select, Textarea, P, Spinner, Alert, Avatar, Heading } from 'flowbite-svelte';
     import { getCollectionDoc } from "$lib/api";
-    import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch } from "../../lib/mentor";
+    import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions } from "../../lib/mentor";
     import { user } from "../../stores/auth";
     import { writable } from 'svelte/store';
     import { getUserDocData } from '../../lib/user';
+    import MultiSelect from 'svelte-multiselect'
 
     let isLoading = writable(false);
     let imgLoading = writable(false);
     let showSubmitImage = writable(false);
     let errorMessage = writable("");
     let successMessage = writable("");
+    let restReady = writable(false);
 
     let email = "";
     let loggedInUser;
@@ -142,6 +144,7 @@
     }
 
     onMount(async () => {
+        restReady.set(false);
         importRaces = await getCollectionDoc("Demographics", "9qHHDN65kY2yIfV4BnnK");
         importRaces = importRaces.races;
         console.log(importRaces);
@@ -161,11 +164,15 @@
             languagesSelected = currMentor.languages;
             academicsSelected = currMentor.academics;
             newRaces = currMentor.races;
+            console.log(newRaces);
             newReligions = currMentor.religions;
             newGender = currMentor.gender;
             newLanguages = currMentor.languages;
             newAcademics = currMentor.academics;
             console.log(currMentor);
+            restReady.set(true);
+        } else {
+            restReady.set(true);
         }
     });
 
@@ -224,140 +231,145 @@
     
     {:else}
 
-        <h2 class="mb-4 text-xl font-bold text-gray-900">{view} Mentor</h2>
-        <form on:submit={handleSubmit}>
-            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
-            <div class="w-full">
-                <Label for="firstname" class="mb-2">First Name <i style="color: red;">*</i></Label>
-                {#if showVals}
-                    <Input type="text" id="firstname" placeholder="First Name" value={currMentor.firstname}/>
-                {:else}
-                    <Input type="text" id="firstname" placeholder="First Name" required/>
-                {/if}
-            </div>
-            <div class="w-full">
-                <Label for="lastname" class="mb-2">Last Name <i style="color: red;">*</i></Label> 
-                {#if showVals}
-                    <Input type="text" id="lastname" placeholder="Last Name" value={currMentor.lastname}/>
-                {:else}
-                    <Input type="text" id="lastname" placeholder="Last Name" required/>
-                {/if}
-            </div>
-            <div class="w-full">
-                <Label>
-                    Races
+        {#if $restReady}
+
+            <h2 class="mb-4 text-xl font-bold text-gray-900">{view} Mentor</h2>
+            <form on:submit={handleSubmit}>
+                <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <div class="w-full">
+                    <Label for="firstname" class="mb-2">First Name <i style="color: red;">*</i></Label>
                     {#if showVals}
-                        <MultiSelect class="mt-2" id="races" size="lg" items={races} placeholder="Select your race(s)" bind:value={newRaces}/>
+                        <Input type="text" id="firstname" placeholder="First Name" value={currMentor.firstname}/>
                     {:else}
-                        <MultiSelect class="mt-2" id="races" items={newImportRaces} placeholder="Select your race(s)" bind:value={racesSelected}/>
+                        <Input type="text" id="firstname" placeholder="First Name" required/>
                     {/if}
-                </Label>
-            </div>
-            <div class="w-full">
-                <Label>
-                    Religions
+                </div>
+                <div class="w-full">
+                    <Label for="lastname" class="mb-2">Last Name <i style="color: red;">*</i></Label> 
                     {#if showVals}
-                        <MultiSelect class="mt-2" id="religions" size="lg" items={religions} placeholder="Select your religion(s)" bind:value={newReligions}/>
+                        <Input type="text" id="lastname" placeholder="Last Name" value={currMentor.lastname}/>
                     {:else}
-                        <MultiSelect class="mt-2" id="religions" items={religions} placeholder="Select your religion(s)" bind:value={religionsSelected}/>
+                        <Input type="text" id="lastname" placeholder="Last Name" required/>
                     {/if}
-                </Label>
-            </div>
-            <div class="w-full">
-                <Label>
-                    Gender
-                    {#if showVals}
-                        <MultiSelect class="mt-2" id="gender" items={genders} placeholder="Select your gender(s)" bind:value={newGender}/>
-                    {:else}
-                        <MultiSelect class="mt-2" id="gender" items={genders} placeholder="Select your gender(s)" bind:value={genderSelected}/>
-                    {/if}
-                </Label>
-            </div>
-            <div class="w-full">
-                <Label>
-                    Languages
-                    {#if showVals}
-                        <MultiSelect class="mt-2" id="languages" items={languages} placeholder="Select your language(s)" bind:value={newLanguages}/>
-                    {:else}
-                        <MultiSelect class="mt-2" id="languages" items={languages} placeholder="Select your language(s)" bind:value={languagesSelected}/>
-                    {/if}
-                </Label>
-            </div>
-            <div class="w-full">
-                <Label>
-                    Academics <i style="color: red;">*</i>
-                    {#if showVals}
-                        <MultiSelect class="mt-2" id="academics" items={academics} placeholder="Select your academics(s)" bind:value={newAcademics}/>
-                    {:else}
-                        <MultiSelect class="mt-2" id="academics" items={academics} placeholder="Select your academics(s)" bind:value={academicsSelected}/>
-                    {/if}
-                </Label>
-            </div>
-            <div class="sm:col-span-2">
-                <Label>
-                    Bio <i style="color: red;">*</i>
-                    {#if showVals}
-                        <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" bind:value={currMentor.bio}/>
-                    {:else}
-                        <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" required/>
-                    {/if}
-                </Label>
-            </div>
-            <Button color="green" type="submit">
-                {view}
-                {#if $isLoading}
-                    <Spinner color="green"/>
-                {/if}
-            </Button>
-            </div>
-        </form>
-        
-        <br>
-        {#if !showVals}
-            {#if $errorMessage.length > 1}
-                <Alert color="red">
-                    <span class="font-medium">Registration failed:</span>
-                    {$errorMessage}
-                </Alert>
-            {:else if $successMessage.length > 1}
-                <Alert color="blue">
-                    <span class="font-medium">Success:</span>
-                    {$successMessage}
-                </Alert>
-            {/if}
-        {:else}
-            {#if $errorMessage.length > 1}
-                <Alert color="red">
-                    <span class="font-medium">Mentor editing failed:</span>
-                    {$errorMessage}
-                </Alert>
-            {:else if $successMessage.length > 1}
-                <Alert color="blue">
-                    <span class="font-medium">Success:</span>
-                    {$successMessage}
-                </Alert>
-            {/if}
-        {/if}
-        
-        {#if $showSubmitImage || showVals}
-        
-            <Avatar size="xl" src={currMentor.profile_pic} border/>  
-        
-            <div class="w-full" style="margin-top:2rem;margin-bottom:2rem;">
-                <Label> Upload profile picture </Label>
-                <input style="border:1px solid black;border-radius:5px;" type="file" accept="image/*" required on:change={e => file = e.target.files[0]} />
-                <!-- <br> -->
-                <Button size="md" outline color="blue" on:click={async () => {
-                    console.log(file);
-                    await handleSubmitImage(file);
-                }}>
-                    Upload
-                    {#if $imgLoading}
-                        <Spinner size={5} color="blue"/>
+                </div>
+                <div class="w-full">
+                    <Label>
+                        Races
+                        {#if showVals}
+                            <MultiSelect id="races" options={listRaces} placeholder="Select your race(s)" bind:value={newRaces} selected={currMentor.races}></MultiSelect>
+                        {:else}
+                            <MultiSelect id="races" options={listRaces} placeholder="Select your race(s)" bind:value={racesSelected}></MultiSelect>
+                        {/if}
+                    </Label>
+                </div>
+                <div class="w-full">
+                    <Label>
+                        Religions
+                        {#if showVals}
+                        <MultiSelect id="religions" options={listReligions} placeholder="Select your religions(s)" bind:value={newReligions} selected={currMentor.religions}></MultiSelect>
+
+                        {:else}
+                            <MultiSelect id="religions" options={listReligions} placeholder="Select your religions(s)" bind:value={religionsSelected}></MultiSelect>
+                        {/if}
+                    </Label>
+                </div>
+                <div class="w-full">
+                    <Label>
+                        Gender
+                        {#if showVals}
+                            <MultiSelect id="gender" options={listGenders} placeholder="Select your gender(s)" bind:value={newGender} selected={currMentor.gender}></MultiSelect>
+                        {:else}
+                            <MultiSelect id="gender" options={listGenders} placeholder="Select your gender(s)" bind:value={genderSelected}></MultiSelect>
+                        {/if}
+                    </Label>
+                </div>
+                <div class="w-full">
+                    <Label>
+                        Languages
+                        {#if showVals}
+                            <MultiSelect id="languages" options={listLanguages} placeholder="Select your languages(s)" bind:value={newLanguages} selected={currMentor.languages}></MultiSelect>
+                        {:else}
+                            <MultiSelect id="languages" options={listLanguages} placeholder="Select your languages(s)" bind:value={languagesSelected}></MultiSelect>
+                        {/if}
+                    </Label>
+                </div>
+                <div class="w-full">
+                    <Label>
+                        Academics <i style="color: red;">*</i>
+                        {#if showVals}
+                            <MultiSelect id="academics" options={listAcademics} placeholder="Select your academics(s)" bind:value={newAcademics} selected={currMentor.academics}></MultiSelect>
+                        {:else}
+                            <MultiSelect id="academics" options={listAcademics} placeholder="Select your academics(s)" bind:value={academicsSelected}></MultiSelect>
+                        {/if}
+                    </Label>
+                </div>
+                <div class="sm:col-span-2">
+                    <Label>
+                        Bio <i style="color: red;">*</i>
+                        {#if showVals}
+                            <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" bind:value={currMentor.bio}/>
+                        {:else}
+                            <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" required/>
+                        {/if}
+                    </Label>
+                </div>
+                <Button color="green" type="submit">
+                    {view}
+                    {#if $isLoading}
+                        <Spinner size={5} color="green"/>
                     {/if}
                 </Button>
-            </div>
-        
+                </div>
+            </form>
+            
+            <br>
+            {#if !showVals}
+                {#if $errorMessage.length > 1}
+                    <Alert color="red">
+                        <span class="font-medium">Registration failed:</span>
+                        {$errorMessage}
+                    </Alert>
+                {:else if $successMessage.length > 1}
+                    <Alert color="blue">
+                        <span class="font-medium">Success:</span>
+                        {$successMessage}
+                    </Alert>
+                {/if}
+            {:else}
+                {#if $errorMessage.length > 1}
+                    <Alert color="red">
+                        <span class="font-medium">Mentor editing failed:</span>
+                        {$errorMessage}
+                    </Alert>
+                {:else if $successMessage.length > 1}
+                    <Alert color="blue">
+                        <span class="font-medium">Success:</span>
+                        {$successMessage}
+                    </Alert>
+                {/if}
+            {/if}
+            
+            {#if $showSubmitImage || showVals}
+            
+                <Avatar size="xl" src={currMentor.profile_pic} border/>  
+            
+                <div class="w-full" style="margin-top:2rem;margin-bottom:2rem;">
+                    <Label> Upload profile picture </Label>
+                    <input style="border:1px solid black;border-radius:5px;" type="file" accept="image/*" required on:change={e => file = e.target.files[0]} />
+                    <!-- <br> -->
+                    <Button size="md" outline color="blue" on:click={async () => {
+                        console.log(file);
+                        await handleSubmitImage(file);
+                    }}>
+                        Upload
+                        {#if $imgLoading}
+                            <Spinner size={5} color="blue"/>
+                        {/if}
+                    </Button>
+                </div>
+            
+            {/if}
+
         {/if}
 
 

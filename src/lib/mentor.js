@@ -1,5 +1,50 @@
 const SEND_URL = import.meta.env.VITE_URL
 
+export let listRaces = [
+    "Asian / South Asian",
+    "Black",
+    "Hispanic",
+    "White",
+    "Arab"
+]
+
+export let listReligions = [
+    "Muslim",
+    "Jewish", 
+    "Hindu",
+    "Buddhist",
+    "Atheist",
+    "Christian"
+]
+
+export let listGenders = [
+    "Male",
+    "Female",
+    "Non-binary"
+]
+
+export let listLanguages = [
+    "Amharic",
+    "Bangla",
+    "Spanish",
+    "Hindi",
+    "Portuguese",
+    "Chinese",
+    "Korean",
+    "Japanese"
+]
+
+export let listAcademics = [
+    "English",
+    "History",
+    "Chemistry",
+    "Math",
+    "Physics",
+    "Biology",
+    "Computer Science",
+    "ESL"
+]
+
 export let races = [
     { value: "Asian / South Asian", name: "Asian / South Asian" },
     { value: "Black", name: "Black" },
