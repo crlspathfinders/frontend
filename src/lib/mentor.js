@@ -12,7 +12,7 @@ export let religions = [
     { value: "Muslim", name: "Muslim" },
     { value: "Jewish", name: "Jewish" },
     { value: "Hindu", name: "Hindu" },
-    // { value: "Buddhist", name: "Buddhist" },
+    { value: "Buddhist", name: "Buddhist" },
     { value: "Atheist", name: "Atheist" },
     { value: "Christian", name: "Christian" },
 ]
@@ -27,20 +27,20 @@ export let languages = [
     { value: "Amharic", name: "Amharic" },
     { value: "Bangla", name: "Bangla" },
     { value: "Spanish", name: "Spanish" },
-    // { value: "Hindi", name: "Hindi" },
+    { value: "Hindi", name: "Hindi" },
     { value: "Portuguese", name: "Portuguese" },
     { value: "Chinese", name: "Chinese" },
-    // { value: "Korean", name: "Korean "},
-    // { value: "Japanese", name: "Japanese" }
+    { value: "Korean", name: "Korean "},
+    { value: "Japanese", name: "Japanese" }
 ]
 
 export let academics = [
     { value: "English", name: "English" },
     { value: "History", name: "History" },
-    // { value: "Chemistry", name: "Chemistry" },
+    { value: "Chemistry", name: "Chemistry" },
     { value: "Math", name: "Math" },
     { value: "Physics", name: "Physics" },
-    // { value: "Biology", name: "Biology" },
+    { value: "Biology", name: "Biology" },
     { value: "Computer Science", name: "Computer Science" }
 ]
 
