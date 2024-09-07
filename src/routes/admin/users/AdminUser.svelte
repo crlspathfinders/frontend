@@ -182,6 +182,7 @@
                             <th scope="col" class="px-4 py-3">Email</th>
                             <th scope="col" class="px-4 py-3">Joined Clubs</th>
                             <th scope="col" class="px-4 py-3">Is Leader</th>
+                            <th scope="col" class="px-4 py-3">Is Mentor-Eligible</th>
                             <th scope="col" class="px-4 py-3">Is Mentor</th>
                         </tr>
                     </thead>
@@ -220,10 +221,13 @@
                               <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1} | <b><u>{user.email}</u></b></th>
                               <td class="px-4 py-3">{user.joined_clubs}</td>
                               <td class="px-4 py-3">
-                                <Toggle color="green" checked={user.is_leader} on:change={toggleLeaderMentor(user.email, "Leader", !user.is_leader)}></Toggle>
+                                <Toggle color="green" checked={user.is_leader} on:change={handleToggleLeaderMentor(user.email, "Leader", !user.is_leader)}></Toggle>
                               </td>
                               <td class="px-4 py-3">
-                                <Toggle color="blue" checked={user.is_mentor} on:change={toggleLeaderMentor(user.email, "Mentor", !user.is_mentor)}></Toggle>
+                                <Toggle color="yellow" checked={user.mentor_eligible} on:change={handleToggleLeaderMentor(user.email, "Mentor-Eligible", !user.mentor_eligible)}></Toggle>
+                              </td>
+                              <td class="px-4 py-3">
+                                <Toggle color="blue" checked={user.is_mentor} on:change={handleToggleLeaderMentor(user.email, "Mentor", !user.is_mentor)}></Toggle>
                               </td>
                           </tr>
                         {/if}

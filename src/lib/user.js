@@ -1,5 +1,24 @@
 // import { getAuth, getIdToken } from "firebase/auth";
 import { auth } from './auth/firebaseConfig';
+import { user, logout } from "../stores/auth";
+
+let email;
+let loggedInUser;
+
+export function basicSetUp() {
+    user.subscribe(async value => {
+        if (value) {
+            email = value.email;
+            console.log(email);
+            loggedInUser = await getUserDocData(email);
+            console.log(loggedInUser);
+            wholeReady.set(true);
+            return [email, loggedInUser]
+        } else {
+            email = '';
+        }
+    });
+}
 
 const SEND_URL = import.meta.env.VITE_URL
 

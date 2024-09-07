@@ -40,14 +40,14 @@
                 <p class="text-xl">Admin Dashboard</p>
 
                 <Tabs tabStyle="underline">
-                    <TabItem open title="Clubs">
-                        <AdminClub></AdminClub>
+                    <TabItem open title="Users">
+                        <AdminUser></AdminUser>
                     </TabItem>
                     <TabItem title="Mentors">
                         <AdminMentor></AdminMentor>
                     </TabItem>
-                    <TabItem title="Users">
-                        <AdminUser></AdminUser>
+                    <TabItem title="Clubs">
+                        <AdminClub></AdminClub>
                     </TabItem>
                 </Tabs>
 

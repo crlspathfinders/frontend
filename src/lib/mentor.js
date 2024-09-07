@@ -37,7 +37,8 @@ export let languages = [
 export let academics = [
     { value: "English", name: "English" },
     { value: "History", name: "History" },
-    { value: "Chemistry", name: "Chemistry" },
+    // { value: "Chemistry", name: "Chemistry" },
+    { value: "Math", name: "Math" },
     { value: "Physics", name: "Physics" },
     // { value: "Biology", name: "Biology" },
     { value: "Computer Science", name: "Computer Science" }
@@ -162,11 +163,28 @@ export async function SetMentorImage(imgUrl, mentorEmail) {
 
     // try {
     const url = SEND_URL + "setmentorimg/";
-    let response = await fetch(url, {
+    const response = await fetch(url, {
         method: 'POST',
         headers: {"Content-type": "application/json"},
         body: JSON.stringify(toSend)
     });
     return response;
     // }
+}
+
+export async function sendMentorPitch(email, pitch) {
+    const toSend = {
+        mentor_email: email,
+        pitch
+    }
+    console.log(toSend);
+
+    const url = SEND_URL + "sendmentorpitch/";
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {"Content-type": "application/json"},
+        body: JSON.stringify(toSend)
+    });
+    console.log(response);
+    return response;
 }

@@ -17,9 +17,8 @@
 
     let email;
     let loggedInUser;
-    
-    onMount(() => {
-        wholeReady.set(false);
+
+    function basicSetUp() {
         user.subscribe(async value => {
             if (value) {
                 email = value.email;
@@ -31,6 +30,11 @@
                 email = '';
             }
         });
+    }
+    
+    onMount(() => {
+        wholeReady.set(false);
+        basicSetUp();
     });
 </script>
 
@@ -46,7 +50,7 @@
         </NavBrand>
         <NavHamburger />
         <NavUl {activeUrl} {activeClass} {nonActiveClass}>
-            {#if $user }
+            {#if $user}
                 <NavLi href="/">Home</NavLi>   
                 <NavLi href="/findaclub">Find a Club</NavLi>
                 <NavLi href="/findamentor">Find a Mentor</NavLi>
@@ -55,7 +59,7 @@
                 </NavLi>
                 <Dropdown class="w-44 z-20 text-gray-500">
                     <DropdownItem href="/account">Account</DropdownItem>
-                    {#if loggedInUser }
+                    {#if loggedInUser}
                         {#if loggedInUser.role != "Advisor"}
                             <DropdownItem href="/registeryourclub">Register Your Club</DropdownItem>
                             {#if loggedInUser.role != "Mentor" }
