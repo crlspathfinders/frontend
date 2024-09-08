@@ -8,11 +8,29 @@
     import { user } from '../../../stores/auth';
     import { toggleLoggedIn } from "../../../lib/auth/login";
     import { writable } from 'svelte/store';
+    import { googleSignUp } from "../../../lib/auth/googlesignup";
 
     let email;
     let password;
     let errorMessage = writable("");
     let loginLoading = writable(false);
+    let googleLoading = writable(false);
+
+    const handleGoogleSignIn = () => {
+      googleLoading.set(true);
+      try {
+        const res = googleSignUp();
+        if (res.status.localeCompare("Success") === 0) {
+          goto("/");
+        } else {
+          throw new Error(res.status);
+        }
+      } catch (error) {
+        errorMessage.set("Google signin failed. Try a different way.");
+      } finally {
+        googleLoading.set(false);
+      }
+    }
     
     async function login() {
       loginLoading.set(true);
@@ -47,14 +65,20 @@
           </Label>
           <div class="flex items-start">
             <Checkbox>Remember me</Checkbox>
-            <a href="/" class="ml-auto text-sm text-blue-700 hover:underline">Forgot password?</a>
+            <a href="/auth/login/forgotpassword" class="ml-auto text-sm text-blue-700 hover:underline">Forgot password?</a>
           </div>
-          <Button color="green" type="submit" class="w-full1">
+          <Button color="green" type="submit" class="w-full">
             Log in
             {#if $loginLoading}
               <Spinner color="green"/>
             {/if}
           </Button>
+          <!-- <Button outline color="blue" on:click={handleGoogleSignIn}>
+            Log in with Google
+            {#if $googleLoading}
+              <Spinner size={5} color="blue"/>
+            {/if}
+          </Button> -->
           <p class="text-sm font-light text-gray-500">
             Don’t have an account yet? <a href="/auth/signup" class="font-medium text-primary-600 hover:underline">Sign up</a>
           </p>

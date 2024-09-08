@@ -1,13 +1,15 @@
 <script>
     import { onMount } from 'svelte';
     import { Section } from 'flowbite-svelte-blocks';
-    import { Label, Input, Button, Select, Textarea, P, Spinner, Alert, Avatar, Heading } from 'flowbite-svelte';
+    import { Label, Input, Button, Select, Textarea, P, Spinner, Alert, Avatar, Heading, Popover } from 'flowbite-svelte';
     import { getCollectionDoc } from "$lib/api";
     import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions } from "../../lib/mentor";
     import { user } from "../../stores/auth";
     import { writable } from 'svelte/store';
     import { getUserDocData } from '../../lib/user';
     import MultiSelect from 'svelte-multiselect'
+    import { AccordionItem, Accordion } from 'flowbite-svelte';
+    import { List, Li } from 'flowbite-svelte';
 
     let isLoading = writable(false);
     let imgLoading = writable(false);
@@ -201,31 +203,64 @@
             <P class="mb-3" weight="light" color="text-gray-600">
                 Write a response as to why you want to be a mentor. Include what you can bring to the table and how you can ensure that your mentees will be supported to the best of your ability. Once you respond, we will read over your application and send you an email for the next steps.
             </P>
-            <P class="mb-3" weight="light" color="text-gray-600">
-                Thank you and send us an <a target="_blank" href="mailto:crlsclubfinders@gmail.com"><u>email</u></a> if you have any questions!
-            </P>
+            <Accordion flush>
+                <AccordionItem>
+                  <span slot="header" class="text-gray-600">Why should I become a mentor?</span>
+                  <p class="mb-2 text-gray-500">
+                    <List tag="ul" class="space-y-1 text-gray-500">
+                        <Li>Earn community service hours for your work.</Li>
+                        <Li>Strengthen your skills in a subject by teaching it to others.</Li>
+                        <Li>Help younger students with guidance as they enter high school.</Li>
+                    </List>
+                  </p>
+                </AccordionItem>
+                <AccordionItem>
+                  <span slot="header" class="text-gray-600">Who can become a mentor?</span>
+                  <p class="mb-2 text-gray-500">
+                    <List tag="ul" class="space-y-1 text-gray-500">
+                        <Li>Juniors & seniors.</Li>
+                        <List tag="ul" class="ps-10 mt-2 space-y-1 text-gray-500">
+                            <Li>If you are not a junior and senior but are still interested in becoming a mentor, fill out the below application and we will get back to you.</Li>
+                        </List>
+                        <Li>Upperclassmen interested in tutoring / mentoring younger students, helping them navigate a new school.</Li>
+                    </List>
+                  </p>
+                </AccordionItem>
+                <AccordionItem>
+                    <span slot="header" class="text-gray-600">Become involved</span>
+                    <p class="mb-2 text-gray-500">
+                      <List tag="ul" class="space-y-1 text-gray-500">
+                          <Li>If you are interested in partnering with PathFinders through a separate or related program, send us an <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Partnership"><u>email</u></a></Li>
+                      </List>
+                    </p>
+                  </AccordionItem>
+              </Accordion>
             <form>
-                <Textarea id="mentorpitch" rows="10" placeholder="I want to become a mentor because ..." bind:value={pitch}></Textarea>
-                <Button outline color="blue" on:click={handleMentorPitch}>
+                <Textarea id="mentorpitch" rows="10" placeholder="I want to become a mentor because ..." bind:value={pitch}></Textarea> 
+                <P class="mb-3" weight="light" color="text-gray-600">
+                    Thank you and send us an <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Question"><u>email</u></a> if you have any questions!
+                </P>
+                {#if $errorMessage.length > 1}
+                    <Alert color="red">
+                        <span class="font-medium">Application failed:</span>
+                        {$errorMessage}
+                    </Alert>
+                    <br>
+                {:else if $successMessage.length > 1}
+                    <Alert color="blue">
+                        <span class="font-medium">Success:</span>
+                        {$successMessage}
+                    </Alert>
+                    <br>
+                {/if}
+                <Button color="dark" class="w-full" on:click={handleMentorPitch}>
                     Submit
                     {#if $isLoading}
                         <Spinner size={5} color="blue"/>
                     {/if}
                 </Button>
+                <br><br>
             </form>
-
-            {#if $errorMessage.length > 1}
-                <Alert color="red">
-                    <span class="font-medium">Application failed:</span>
-                    {$errorMessage}
-                </Alert>
-            {:else if $successMessage.length > 1}
-                <Alert color="blue">
-                    <span class="font-medium">Success:</span>
-                    {$successMessage}
-                </Alert>
-            {/if}
-
         </div>
 
     
@@ -304,8 +339,9 @@
                     </Label>
                 </div>
                 <div class="sm:col-span-2">
-                    <Label>
+                    <Label id="b1">
                         Bio <i style="color: red;">*</i>
+                        <Popover class="w-64 text-sm font-light text-gray-700" triggeredBy="#b1">If you identify with anything that is not listed above, feel free to include it here.</Popover>
                         {#if showVals}
                             <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" bind:value={currMentor.bio}/>
                         {:else}

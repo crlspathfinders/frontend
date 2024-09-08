@@ -9,7 +9,7 @@
     import { writable } from 'svelte/store';
     import { Alert } from 'flowbite-svelte';
     import { goto } from "$app/navigation";
-
+    
     const SEND_URL = import.meta.env.VITE_URL
 
     let email;
