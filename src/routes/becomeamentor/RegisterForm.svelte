@@ -3,7 +3,7 @@
     import { Section } from 'flowbite-svelte-blocks';
     import { Label, Input, Button, Select, Textarea, P, Spinner, Alert, Avatar, Heading, Popover } from 'flowbite-svelte';
     import { getCollectionDoc } from "$lib/api";
-    import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions } from "../../lib/mentor";
+    import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions, retrieveDemographics } from "../../lib/mentor";
     import { user } from "../../stores/auth";
     import { writable } from 'svelte/store';
     import { getUserDocData } from '../../lib/user';
@@ -21,6 +21,9 @@
     let email = "";
     let loggedInUser;
 
+    let firstname;
+    let lastname;
+    let bi_o;
     let racesSelected = [];
     let religionsSelected = [];
     let genderSelected = [];
@@ -39,6 +42,8 @@
 
     let pitch = "";
 
+    let applicationTypeCount = 0;
+
     const handleMentorPitch = async () => {
         if (pitch.length < 2) {
             successMessage.set("");
@@ -50,7 +55,8 @@
             email = loggedInUser.email;
             await sendMentorPitch(email, pitch);
             errorMessage.set("");
-            successMessage.set("Your application has been sent. Expect a response in 1-3 days.");
+            successMessage.set("Your application has been sent. Expect a response in 1-2 days.");
+            pitch = "";
         } catch (error) {
             console.log("Failed to handlementorpitch: " + error);
             successMessage.set("");
@@ -101,7 +107,7 @@
 
             if (view.localeCompare("Register") === 0) {
                 if (academicsSelected.length < 1) {
-                    errorMessage.set("Please select at least one academic interest.");
+                    errorMessage.set("Please select at least one academic skill you are willing to teach others.");
                     showSubmitImage.set(false);
                     isLoading.set(false);
                     return -1;
@@ -110,6 +116,15 @@
                 console.log(mes);
                 errorMessage.set("");
                 successMessage.set("You are successfully registered as a mentor! Add a profile picture below:");
+                // Reset the inputs:
+                firstname = "";
+                lastname = "";
+                bi_o = "";
+                // racesSelected = [];
+                // religionsSelected = [];
+                // genderSelected = [];
+                // languagesSelected = [];
+                // academicsSelected = [];
                 showSubmitImage.set(true);
             } else if (view.localeCompare("Edit") === 0) {
                 await editMentor(firstName, lastName, bio, currMentor.email, newRaces, newReligions, newGender, newLanguages, newAcademics);
@@ -151,6 +166,7 @@
         importRaces = importRaces.races;
         console.log(importRaces);
         basicSetUp();
+        await retrieveDemographics();
 
         for (let i = 0; i < importRaces.length; i++) {
             const temp = {value: importRaces[i], name: importRaces[i]}
@@ -200,9 +216,6 @@
             <P class="mb-3" weight="light" color="text-gray-600">
                 By becoming a mentor, you agree to work one-on-one with freshmen or sophomores in one or more specialized areas of study. It is up to you and your mentee to decide what to study, where, and for how long.
             </P>
-            <P class="mb-3" weight="light" color="text-gray-600">
-                Write a response as to why you want to be a mentor. Include what you can bring to the table and how you can ensure that your mentees will be supported to the best of your ability. Once you respond, we will read over your application and send you an email for the next steps.
-            </P>
             <Accordion flush>
                 <AccordionItem>
                   <span slot="header" class="text-gray-600">Why should I become a mentor?</span>
@@ -210,6 +223,7 @@
                     <List tag="ul" class="space-y-1 text-gray-500">
                         <Li>Earn community service hours for your work.</Li>
                         <Li>Strengthen your skills in a subject by teaching it to others.</Li>
+                        <Li>Get valuable experience helping others learn and grow.</Li>
                         <Li>Help younger students with guidance as they enter high school.</Li>
                     </List>
                   </p>
@@ -220,7 +234,7 @@
                     <List tag="ul" class="space-y-1 text-gray-500">
                         <Li>Juniors & seniors.</Li>
                         <List tag="ul" class="ps-10 mt-2 space-y-1 text-gray-500">
-                            <Li>If you are not a junior and senior but are still interested in becoming a mentor, fill out the below application and we will get back to you.</Li>
+                            <Li>If you are not a junior or senior but are still interested in becoming a mentor, you can still fill out the below application and we will get back to you.</Li>
                         </List>
                         <Li>Upperclassmen interested in tutoring / mentoring younger students, helping them navigate a new school.</Li>
                     </List>
@@ -235,8 +249,18 @@
                     </p>
                   </AccordionItem>
               </Accordion>
+              <br>
+              <P class="mb-3" weight="light" color="text-gray-600">
+                  Write a response in the box below answering the following questions:
+                  <List tag="ul" class="space-y-1 text-gray-600">
+                      <Li>Why do you want to become a mentor?</Li>
+                      <Li>What do you bring to the table that sets you apart from other mentors?</Li>
+                      <Li>If you could go back to freshman year what would have made your transition to high school easier?</Li>
+                  </List>
+              </P>
+              <br>
             <form>
-                <Textarea id="mentorpitch" rows="10" placeholder="I want to become a mentor because ..." bind:value={pitch}></Textarea> 
+                <Textarea id="mentorpitch" rows="10" placeholder="I want to become a mentor because ..." bind:value={pitch} on:keypress={() => { applicationTypeCount ++; }}></Textarea> 
                 <P class="mb-3" weight="light" color="text-gray-600">
                     Thank you and send us an <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Question"><u>email</u></a> if you have any questions!
                 </P>
@@ -276,7 +300,7 @@
                     {#if showVals}
                         <Input type="text" id="firstname" placeholder="First Name" value={currMentor.firstname}/>
                     {:else}
-                        <Input type="text" id="firstname" placeholder="First Name" required/>
+                        <Input type="text" id="firstname" placeholder="First Name" bind:value={firstname} required/>
                     {/if}
                 </div>
                 <div class="w-full">
@@ -284,7 +308,7 @@
                     {#if showVals}
                         <Input type="text" id="lastname" placeholder="Last Name" value={currMentor.lastname}/>
                     {:else}
-                        <Input type="text" id="lastname" placeholder="Last Name" required/>
+                        <Input type="text" id="lastname" placeholder="Last Name" bind:value={lastname} required/>
                     {/if}
                 </div>
                 <div class="w-full">
@@ -345,7 +369,7 @@
                         {#if showVals}
                             <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" bind:value={currMentor.bio}/>
                         {:else}
-                            <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" required/>
+                            <Textarea id="bio" placeholder="Leave a short bio so mentees can get to know you." rows="4" name="bio" bind:value={bi_o} required/>
                         {/if}
                     </Label>
                 </div>

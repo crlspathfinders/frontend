@@ -9,6 +9,7 @@
     import { writable } from 'svelte/store';
     import { Alert } from 'flowbite-svelte';
     import { goto } from "$app/navigation";
+    import { getUserDocData, getCurrEmail, setCurrEmail } from '../../../lib/user';
     
     const SEND_URL = import.meta.env.VITE_URL
 
@@ -18,6 +19,22 @@
     let role;
     let signupLoading = writable(false);
     let errorMessage = writable("");
+
+    // let email;
+    let loggedInUser;
+
+    function basicSetUp() {
+        user.subscribe(async value => {
+            if (value) {
+                email = value.email;
+                console.log(email);
+                loggedInUser = await getUserDocData(email);
+                console.log(loggedInUser);
+            } else {
+                email = '';
+            }
+        });
+    }
 
     function checkInfo() {
       if (/^\d{2}/.test(email)) {
@@ -59,6 +76,7 @@
           const tryMakeUser = await makeUser(email, false, role, [], []);
 
           // const status = await tryMakeUser.JSON();
+          setCurrEmail(email);
           goto("/");
           return tryMakeUser;
         } else {

@@ -4,7 +4,7 @@
     import { page } from '$app/stores';
     import { user, logout } from "../stores/auth";
 	import { onMount } from "svelte";
-    import { getUserDocData } from "../lib/user";
+    import { getUserDocData, getCurrEmail, setCurrEmail } from "../lib/user";
     import VerifyClub from './VerifyClub.svelte';
     import { writable } from 'svelte/store';
 
@@ -14,6 +14,8 @@
     $: activeUrl = $page.url.pathname;
     let activeClass = 'text-white bg-gray-700 md:bg-transparent md:text-gray-700';
     let nonActiveClass = 'text-gray-400 hover:bg-gray-500 md:hover:bg-transparent md:border-0 md:hover:text-gray-500';
+
+    $: email = getCurrEmail();
 
     let email;
     let loggedInUser;
@@ -58,7 +60,7 @@
                     {email}<ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 inline" />
                 </NavLi>
                 <Dropdown class="w-44 z-20 text-gray-500">
-                    <DropdownItem href="/account">Account</DropdownItem>
+                    <!-- <DropdownItem href="/account">Account</DropdownItem> -->
                     {#if loggedInUser}
                         {#if loggedInUser.role != "Advisor"}
                             <DropdownItem href="/registeryourclub">Register Your Club</DropdownItem>

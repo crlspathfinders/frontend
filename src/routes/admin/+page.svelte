@@ -4,6 +4,7 @@
     import AdminClub from "./clubs/AdminClub.svelte"
     import AdminMentor from './mentors/AdminMentor.svelte';
     import AdminUser from './users/AdminUser.svelte';
+    import AdminAllInfo from './allinfo/AdminAllInfo.svelte';
     import { user } from '../../stores/auth';
     import { getUserDocData } from '../../lib/user';
     import { writable } from 'svelte/store';
@@ -48,6 +49,9 @@
                     </TabItem>
                     <TabItem title="Clubs">
                         <AdminClub></AdminClub>
+                    </TabItem>
+                    <TabItem title="All Info">
+                        <AdminAllInfo></AdminAllInfo>
                     </TabItem>
                 </Tabs>
 

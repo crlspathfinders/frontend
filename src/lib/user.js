@@ -5,6 +5,11 @@ import { user, logout } from "../stores/auth";
 let email;
 let loggedInUser;
 
+let currEmail = "";
+
+export function setCurrEmail(email) { currEmail = email; }
+export function getCurrEmail() { return currEmail; }
+
 export function basicSetUp() {
     user.subscribe(async value => {
         if (value) {
@@ -12,7 +17,6 @@ export function basicSetUp() {
             console.log(email);
             loggedInUser = await getUserDocData(email);
             console.log(loggedInUser);
-            wholeReady.set(true);
             return [email, loggedInUser]
         } else {
             email = '';

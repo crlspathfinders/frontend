@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Avatar, Toast, P, A, CardPlaceholder, Modal, Dropdown, Checkbox, Heading } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Avatar, Toast, P, A, CardPlaceholder, Modal, Dropdown, Checkbox, Heading, DropdownItem, Badge } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
     import { user } from "../../stores/auth";
@@ -10,7 +10,8 @@
     import RegisterForm from '../becomeamentor/RegisterForm.svelte';
     import { TableHeader } from 'flowbite-svelte-blocks';
     import { Search } from 'flowbite-svelte';
-    import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions } from "../../lib/mentor";
+    import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions, retrieveDemographics } from "../../lib/mentor";
+    import { ChevronRightOutline } from 'flowbite-svelte-icons';
 
     let wholeReady = writable(false);
     let showEditModal = writable(false);
@@ -95,6 +96,7 @@
             }
         });
         try {
+            await retrieveDemographics();
             mentors = await getCollection("Mentors");
             console.log(mentors);
             console.log("subscribe start");
@@ -114,17 +116,16 @@
 
 <style>
    .card-container {
-        padding: 3rem;
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    padding: 3rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
    }
 
-   /* .maincard {
-      background: #fff;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+   /* .mentorcard:hover {
+    transform: scale(1.02);
+    transition: all ease-in-out .08s;
+    box-shadow: inset;
    } */
 
    @media (max-width: 1200px) {
@@ -153,14 +154,14 @@
 {#if $wholeReady}
 
     <div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
-        <Heading tag="h4" customSize="text-4xl font-extrabold ">Find a mentor</Heading>
-        <P class="mb-2" weight="light" color="text-gray-500 dark:text-gray-400">
+        <Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-gray-100">Find a mentor</Heading>
+        <P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
             Below you can search for and filter juniors and seniors who you believe can best support your academic interests.
         </P>
-        <P class="mb-2" weight="light" color="text-gray-500 dark:text-gray-400">
+        <P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
             Through one-on-one support, you can learn about opportunities in Cambridge and CRLS, which classes to take, and how to best find success in highschool.
         </P>
-        <P class="mb-2" weight="light" color="text-gray-500 dark:text-gray-400">
+        <P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
             Simply click "message" for whichever mentor you believe can best help you achieve your goals. Send them an email and start your journey today.
         </P>
     </div>
@@ -169,85 +170,108 @@
         <TableHeader headerType="search">
             <Search bind:value={searching} slot="search" placeholder="Search {mentors.length} mentors" size="md"/>
             <div class=""></div> 
-            <Button color='alternative'>Academics</Button>
+            <Button outline color='blue'>Filters</Button>
             <Dropdown class="w-48 p-3 space-y-2 text-sm">
-                {#each listAcademics as r}
-                    {#if $filters.includes(r)}
-                        <Checkbox checked on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {:else}
-                        <Checkbox on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {/if}
-                {/each}
-            </Dropdown>
-            <Button color='alternative'>Race</Button>
-            <Dropdown class="w-48 p-3 space-y-2 text-sm">
-                {#each listRaces as r}
-                    {#if $filters.includes(r)}
-                        <Checkbox checked on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {:else}
-                        <Checkbox on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {/if}
-                {/each}
-            </Dropdown>
-            <Button color='alternative'>Religion</Button>
-            <Dropdown class="w-48 p-3 space-y-2 text-sm">
-                {#each listReligions as r}
-                    {#if $filters.includes(r)}
-                        <Checkbox checked on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {:else}
-                        <Checkbox on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {/if}
-                {/each}
-            </Dropdown>
-            <Button color='alternative'>Language</Button>
-            <Dropdown class="w-48 p-3 space-y-2 text-sm">
-                {#each listLanguages as r}
-                    {#if $filters.includes(r)}
-                        <Checkbox checked on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {:else}
-                        <Checkbox on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {/if}       
-                {/each}
-            </Dropdown>
-            <Button color='alternative'>Gender</Button>
-            <Dropdown class="w-48 p-3 space-y-2 text-sm">
-                {#each listGenders as r}
-                    {#if $filters.includes(r)}
-                        <Checkbox checked on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {:else}
-                        <Checkbox on:change={() => {
-                            toggleFilters(r)
-                            console.log($filters);
-                        }}><li>{r}</li></Checkbox>
-                    {/if}
-                {/each}
+                <DropdownItem class="flex items-center justify-between">
+                    Academics<ChevronRightOutline class="w-6 h-6 ms-2 text-primary-700 dark:text-white" />
+                  </DropdownItem>
+                <Dropdown placement="right-start"> 
+                    {#each listAcademics as r}
+                        <DropdownItem>
+                                {#if $filters.includes(r)}
+                            <Checkbox checked on:change={() => {
+                                toggleFilters(r)
+                                console.log($filters);
+                            }}><li>{r}</li></Checkbox>
+                                {:else}
+                                    <Checkbox on:change={() => {
+                                        toggleFilters(r)
+                                        console.log($filters);
+                                    }}><li>{r}</li></Checkbox>
+                                {/if}
+                        </DropdownItem>  
+                    {/each}
+                </Dropdown>
+                <DropdownItem class="flex items-center justify-between">
+                    Races<ChevronRightOutline class="w-6 h-6 ms-2 text-primary-700 dark:text-white" />
+                  </DropdownItem>
+                <Dropdown placement="right-start"> 
+                    {#each listRaces as r}
+                        <DropdownItem>
+                            {#if $filters.includes(r)}
+                                <Checkbox checked on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {:else}
+                                <Checkbox on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {/if}
+                        </DropdownItem>
+                    {/each}
+                </Dropdown>
+                <DropdownItem class="flex items-center justify-between">
+                    Religion<ChevronRightOutline class="w-6 h-6 ms-2 text-primary-700 dark:text-white" />
+                  </DropdownItem>
+                <Dropdown placement="right-start"> 
+                    {#each listReligions as r}
+                        <DropdownItem>
+                            {#if $filters.includes(r)}
+                                <Checkbox checked on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {:else}
+                                <Checkbox on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {/if}
+                        </DropdownItem>
+                    {/each}
+                </Dropdown>
+                <DropdownItem class="flex items-center justify-between">
+                    Language<ChevronRightOutline class="w-6 h-6 ms-2 text-primary-700 dark:text-white" />
+                  </DropdownItem>
+                <Dropdown placement="right-start"> 
+                    {#each listLanguages as r}
+                        <DropdownItem>
+                            {#if $filters.includes(r)}
+                                <Checkbox checked on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {:else}
+                                <Checkbox on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {/if}
+                        </DropdownItem>
+                    {/each}
+                </Dropdown>
+                <DropdownItem class="flex items-center justify-between">
+                    Genders<ChevronRightOutline class="w-6 h-6 ms-2 text-primary-700 dark:text-white" />
+                  </DropdownItem>
+                <Dropdown placement="right-start"> 
+                    {#each listGenders as r}
+                        <DropdownItem>
+                            {#if $filters.includes(r)}
+                                <Checkbox checked on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {:else}
+                                <Checkbox on:change={() => {
+                                    toggleFilters(r)
+                                    console.log($filters);
+                                }}><li>{r}</li></Checkbox>
+                            {/if}
+                        </DropdownItem>
+                    {/each}
+                </Dropdown>
             </Dropdown>
             <Button outline color="dark" on:click={() => {
                 filters.set([]);
@@ -255,9 +279,13 @@
         </TableHeader>   
         {#if $filters.length > 0}
         <br>
-            <P class="mb-2" weight="light" color="text-gray-700">
-                Filters: {$filters.join(", ")}
-            </P>
+            {#if $filters.length > 0}
+                {#each $filters as f}
+                    <div class="badge" style="margin-right: .2rem;">
+                        <Badge color="blue">{f}</Badge>
+                    </div>
+                {/each}
+            {/if}
         {/if}
     
     </div>
@@ -265,8 +293,10 @@
     <div class="card-container">
         {#each filteredMentors as m}
 
-            {#if labelIncludesSearchTerm(m.firstname, searching) ||labelIncludesSearchTerm(m.lastname, searching) || labelIncludesSearchTerm(m.bio, searching) ||
-            labelIncludesSearchTerm(m.firstname + " " + m.lastname, searching) }
+            {#if 
+                labelIncludesSearchTerm(m.firstname, searching) || labelIncludesSearchTerm(m.lastname, searching) || labelIncludesSearchTerm(m.bio, searching) ||
+                labelIncludesSearchTerm(m.firstname + " " + m.lastname, searching)
+            }
                
                 <Card padding="md">
                     <div class="flex flex-col items-center pb-4">
@@ -282,12 +312,12 @@
                             }}><PenOutline size="xs"></PenOutline></Button>
                         {/if}
                     </h5>
-                    <span class="text-sm text-gray-500">
-                        <center><u>Academic Interests:</u> <b>{m.academics.join(", ")}</b></center>
+                    <span class="text-sm text-gray-700">
+                        <center>Academic Interests: <b>{m.academics.join(", ")}</b></center>
                     </span>
                     <span class="text-sm text-gray-500">
                         {#if m.languages.length > 0}
-                            <center><i>Language I Speak:</i> {m.languages}</center>
+                            <center><i>Language I Speak:</i> {m.languages.join(", ")}</center>
                         {/if}
                     </span>
                     <span class="text-sm text-gray-500">

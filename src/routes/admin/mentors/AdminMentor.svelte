@@ -26,6 +26,12 @@
 
     let currEmail;
 
+    function handleBio(bio) {
+        if (bio.length > 50) {
+            return bio.substring(0, 50) + " ... ";
+        } return bio;
+    }
+
     function labelIncludesSearchTerm(label, searchTerm) {
       if (typeof label === 'string' && typeof searchTerm === 'string') {
         return label.toLowerCase().includes(searchTerm.toLowerCase());
@@ -130,7 +136,7 @@
                             <td class="px-4 py-3">{i + 1} | {m.firstname}</td>
                             <td class="px-4 py-3">{m.lastname}</td>
                             <td class="px-4 py-3"><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td>
-                            <td class="px-4 py-3">{m.bio}</td>
+                            <td class="px-4 py-3">{handleBio(m.bio)}</td>
                             <td class="px-4 py-3">{m.gender}</td>
                             <td class="px-4 py-3">{m.languages}</td>
                             <td class="px-4 py-3">{m.races}</td>
