@@ -216,22 +216,18 @@
                 <List tag="dl" class="text-gray-900 divide-y divide-gray-200">
 
                     <div class="flex flex-col pb-3">
-                      <DescriptionList tag="dt" class="mb-1">President</DescriptionList>
-                      <DescriptionList tag="dd"><a target="_blank" href="mailto:{clubInfo.president_email}"><b><u>{clubInfo.president_email}</u></b></a></DescriptionList>
+                      <DescriptionList tag="dt" class="mb-1">Presidents: </DescriptionList>
+                      <DescriptionList tag="dd">
+                        <a target="_blank" href="mailto:{clubInfo.president_email}"><u>{clubInfo.president_email}</u></a>
+                        {#each vice_presidents as vp, i}
+                            {#if vp.length > 0}
+                                <!-- <div class="flex flex-col pb-3"> -->
+                                   | <a target="_blank" href="mailto:{vp}"><u>{vp}</u></a>
+                                <!-- </div> -->
+                            {/if}
+                        {/each}
+                    </DescriptionList>
                     </div>
-        
-                    {#each vice_presidents as vp, i}
-        
-                        {#if vp.length > 0}
-        
-                            <div class="flex flex-col pb-3">
-                                <DescriptionList tag="dt" class="mb-1">Vice President {i + 1}</DescriptionList>
-                                <DescriptionList tag="dd"><a target="_blank" href="mailto:{vp}"><u>{vp}</u></a></DescriptionList>
-                            </div>
-        
-                        {/if}
-        
-                    {/each}
                 
                     <div class="flex flex-col pb-3">
                       <DescriptionList tag="dt" class="mb-1">Room</DescriptionList>

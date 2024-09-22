@@ -203,35 +203,35 @@
         {/if}
     </div>
     <div class="w-full">
-        <Label for="presidentemail" class="mb-2">President Email <i style="color: red;">*</i></Label> 
+        <Label for="presidentemail" class="mb-2">President Email 1<i style="color: red;">*</i></Label> 
         {#if showVals}
-            <Input type="text" id="presidentemail" placeholder="President email" value={currClub.president_email}/>
+            <Input type="text" id="presidentemail" placeholder="President email 1" value={currClub.president_email}/>
         {:else}
-            <Input type="text" id="presidentemail" placeholder="President email" required/>
+            <Input type="text" id="presidentemail" placeholder="President email 1" required/>
         {/if}
     </div>
     <div class="w-full">
-        <Label for="vicepresidentemail1" class="mb-2">Vice President Email 1</Label>
+        <Label for="vicepresidentemail1" class="mb-2">President Email 2</Label>
         {#if showVals}
-            <Input type="text" id="vicepresidentemail1" value={currClub.vice_presidents_emails[0]} placeholder="Vice President Email 1"/>
+            <Input type="text" id="vicepresidentemail1" value={currClub.vice_presidents_emails[0]} placeholder="President email 2"/>
         {:else}
-            <Input type="text" id="vicepresidentemail1" placeholder="Vice President Email 1"/>
+            <Input type="text" id="vicepresidentemail1" placeholder="President email 2"/>
         {/if}
     </div>
     <div class="w-full">
-        <Label for="vicepresidentemail2" class="mb-2">Vice President Email 2</Label>
+        <Label for="vicepresidentemail2" class="mb-2">President Email 3</Label>
         {#if showVals}
-            <Input type="text" id="vicepresidentemail2" value={currClub.vice_presidents_emails[1]} placeholder="Vice President Email 2"/>
+            <Input type="text" id="vicepresidentemail2" value={currClub.vice_presidents_emails[1]} placeholder="President email 3"/>
         {:else}
-            <Input type="text" id="vicepresidentemail2" placeholder="Vice President Email 2"/>
+            <Input type="text" id="vicepresidentemail2" placeholder="President email 3"/>
         {/if}
     </div>
     <div class="w-full">
-        <Label for="vicepresidentemail3" class="mb-2">Vice President Email 3</Label>
+        <Label for="vicepresidentemail3" class="mb-2">President Email 4</Label>
         {#if showVals}
-            <Input type="text" id="vicepresidentemail3" value={currClub.vice_presidents_emails[2]} placeholder="Vice President Email 3"/>
+            <Input type="text" id="vicepresidentemail3" value={currClub.vice_presidents_emails[2]} placeholder="President email 4"/>
         {:else}
-            <Input type="text" id="vicepresidentemail3" placeholder="Vice President Email 3"/>
+            <Input type="text" id="vicepresidentemail3" placeholder="President email 4"/>
         {/if}
     </div>
     <div class="w-full">
