@@ -75,7 +75,7 @@
 
 {#if $wholeReady}
   
-  <PeerMentorLinkTable view={"Edit"}></PeerMentorLinkTable>
+  <PeerMentorLinkTable view={"Edit"}></PeerMentorLinkTable> 
 
 {:else}
 
