@@ -150,16 +150,15 @@
 
 {/if}
 
-{#if $showToast}
+<!-- {#if $showToast}
 
     <div class="toastwrapper" style="z-index:10;">
         <Toast transition={fly} params={{ x: 200 }} position="bottom-right" color="green" class="mb-4">
-            <!-- <DownloadOutline slot="icon" class="w-6 h-6" /> -->
             Successfully joined / left club
         </Toast>
     </div>
 
-{/if}
+{/if} -->
 
 {#if ready}
 
@@ -207,6 +206,11 @@
                     {/if}
                 </Button>
             {/if}
+
+            <!-- Join the google classroom: -->
+             <Button pill color="blue">
+                <a target="_blank" href={clubInfo.google_classroom_link}>Join our Google Classroom!</a>
+             </Button>
         </div>
         <center><img height="300rem;" width="600rem;" style="margin-bottom:3rem;border-radius:10px;" src={clubInfo.club_img} alt={clubInfo.club_name}></center>
         <HeroBody>

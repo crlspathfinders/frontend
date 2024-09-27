@@ -79,6 +79,7 @@
                 const name = document.querySelector("#clubname").value;
                 const presEmail = document.querySelector("#presidentemail").value;
                 const roomNum = document.querySelector("#roomnumber").value;
+                const gClassLink = document.querySelector("#gclasslink").value;
                 const startTime = document.querySelector("#clubstarttime").value;
                 let status;
                 if (showVals) { status = "Approved"; }
@@ -95,14 +96,14 @@
                 console.log(veepsEmails);
 
                 if (view.localeCompare("Register") === 0) {
-                    const res = await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
+                    const res = await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, gClassLink, startTime, status, veepsEmails);
                     if (res.localeCompare("Failed") === 0) {
                         errorMessage.set("Failed");
                         return -1;
                     }
                 } else if (view.localeCompare("Edit") === 0) {
                     const secretPassword = document.querySelector("#secret_password").value;
-                    await editClub(advisor_email, currDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);
+                    await editClub(advisor_email, currDays, desc, name, presEmail, roomNum, gClassLink, startTime, status, veepsEmails, secretPassword);
                 }
                 errorMessage.set("");
                 if (!showVals) {
@@ -252,6 +253,14 @@
             <Input type="number" id="roomnumber" value={currClub.room_number} placeholder="Room Number"/>
         {:else}
             <Input type="number" id="roomnumber" placeholder="Room Number" required/>
+        {/if}
+    </div>
+    <div class="w-full">
+        <Label for="gclasslink" class="mb-2">Google Classroom Link <i style="color: red;">*</i></Label>
+        {#if showVals}
+            <Input type="text" id="gclasslink" value={currClub.googleclassroom_link} placeholder="Google Classroom Link"/>
+        {:else}
+            <Input type="text" id="gclasslink" placeholder="Google Classroom Link" required/>
         {/if}
     </div>
     <div class="w-full">

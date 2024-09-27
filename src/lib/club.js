@@ -1,6 +1,6 @@
 const SEND_URL = import.meta.env.VITE_URL
 
-export async function createClub(advisor_email, clubDays, club_description, club_name, president_email, room_number, start_time, status, vicePresidentsEmails) {
+export async function createClub(advisor_email, clubDays, club_description, club_name, president_email, room_number, gClassLink, start_time, status, vicePresidentsEmails) {
 
     let club_days = [];
     let vice_president_emails = []
@@ -20,6 +20,7 @@ export async function createClub(advisor_email, clubDays, club_description, club
         club_name: club_name,
         president_email: president_email,
         room_number: room_number,
+        google_classroom_link: gClassLink,
         secret_password: secret_password,
         start_time: start_time,
         status: status,
@@ -51,7 +52,7 @@ export async function createClub(advisor_email, clubDays, club_description, club
     }
 }
 
-export async function editClub(advisor_email, clubDays, club_description, club_name, president_email, room_number, start_time, status, vicePresidentsEmails, secret_password) {
+export async function editClub(advisor_email, clubDays, club_description, club_name, president_email, room_number, gClassLink, start_time, status, vicePresidentsEmails, secret_password) {
 
     let club_days = [];
     let vice_presidents_emails = []
@@ -69,6 +70,7 @@ export async function editClub(advisor_email, clubDays, club_description, club_n
         club_name: club_name,
         president_email: president_email,
         room_number: room_number,
+        google_classroom_link: gClassLink,
         secret_password: secret_password,
         start_time: start_time,
         status: status,

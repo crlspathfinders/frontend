@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import PeerMentorLinkTable from "./PeerMentorLinkTable.svelte";
     import { Heading, P} from 'flowbite-svelte';
 </script>

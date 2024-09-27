@@ -247,6 +247,7 @@
                             <th scope="col" class="px-4 py-3">Days</th>
                             <th scope="col" class="px-4 py-3">Description</th>
                             <th scope="col" class="px-4 py-3">Room</th>
+                            <th scope="col" class="px-4 py-3">Google Classroom</th>
                             <th scope="col" class="px-4 py-3">Password</th>
                             <th scope="col" class="px-4 py-3">Start Time</th>
                         </tr>
@@ -297,6 +298,7 @@
                               <td class="px-4 py-3">{club.club_days}</td>
                               <td class="px-4 py-3">{handleDescription(club.club_description)}</td>
                               <td class="px-4 py-3">{club.room_number}</td>
+                              <td class="px-4 py-3"><u><a target="_blank" href={club.google_classroom_link}>{club.google_classroom_link}</a></u></td>
                               <td class="px-4 py-3">{club.secret_password}</td>
                               <td class="px-4 py-3">{club.start_time}</td>
 
