@@ -367,7 +367,6 @@
           }}>
               Manage categories
           </Button>
-        <Button outline color='purple'>Filters</Button>
         {/if}
         <Button outline color='purple'>Filters</Button>
         <Dropdown class="w-48 p-3 space-y-2 text-sm">
