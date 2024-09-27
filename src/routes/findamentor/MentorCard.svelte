@@ -281,7 +281,7 @@
         <br>
             {#if $filters.length > 0}
                 {#each $filters as f}
-                    <div class="badge" style="margin-right: .2rem;">
+                    <div class="badge" style="margin-right:.2rem;">
                         <Badge color="blue">{f}</Badge>
                     </div>
                 {/each}
@@ -346,6 +346,12 @@
     </div>
 
 {:else}
+
+    <center>
+        <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
+            Loading Mentors ... <Spinner color="blue"/>
+        </div>
+    </center>
 
     <div class="card-container">
         <CardPlaceholder />

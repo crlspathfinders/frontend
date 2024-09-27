@@ -29,7 +29,7 @@ export async function createClub(advisor_email, clubDays, club_description, club
     console.log(toSend)
 
     try {
-        const url = SEND_URL + "createclub/"; 
+        const url = "http://127.0.0.1:8000/" + "createclub/"; 
         const res = await fetch(url, {
             method: "POST",
             headers: {"Content-type": "application/json"},
@@ -37,6 +37,11 @@ export async function createClub(advisor_email, clubDays, club_description, club
         });
         const resData = await res.json();
         const status = resData["status"];
+        // have to read the value of status and determine whether or not to proceed:
+        if (status.indexOf("Failed") >-1) {
+            return "Failed";
+        }
+
         console.log("Successfully retrieved message: " + status);
         // location.reload(); // Change later, etc.
         return status;

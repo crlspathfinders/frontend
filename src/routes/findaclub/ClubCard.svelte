@@ -191,6 +191,12 @@
 
 {:else}
 
+    <center>
+        <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
+            Loading Clubs ... <Spinner color="blue"/>
+        </div>
+    </center>
+
     <div class="card-container">
         <CardPlaceholder />
         <CardPlaceholder />

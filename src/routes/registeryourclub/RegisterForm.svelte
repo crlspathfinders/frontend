@@ -95,7 +95,11 @@
                 console.log(veepsEmails);
 
                 if (view.localeCompare("Register") === 0) {
-                    await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails)
+                    const res = await createClub(advisor_email, clubDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails);
+                    if (res.localeCompare("Failed") === 0) {
+                        errorMessage.set("Failed");
+                        return -1;
+                    }
                 } else if (view.localeCompare("Edit") === 0) {
                     const secretPassword = document.querySelector("#secret_password").value;
                     await editClub(advisor_email, currDays, desc, name, presEmail, roomNum, startTime, status, veepsEmails, secretPassword);

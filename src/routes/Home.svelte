@@ -65,6 +65,7 @@
       <span class="text-xs bg-primary-600 rounded-full text-white px-4 py-1.5 mr-3">New</span>
       <span class="text-sm font-medium">Flowbite is out! See what's new</span>
     </News> -->
+    <div style="margin-top:1rem;"></div>
     <HeroHeader>
       <svelte:fragment slot="h1">CRLS PathFinders</svelte:fragment>
       <svelte:fragment slot="paragraph">Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer.</svelte:fragment>
