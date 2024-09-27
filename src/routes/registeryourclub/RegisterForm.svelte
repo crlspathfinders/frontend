@@ -258,7 +258,7 @@
     <div class="w-full">
         <Label for="gclasslink" class="mb-2">Google Classroom Link <i style="color: red;">*</i></Label>
         {#if showVals}
-            <Input type="text" id="gclasslink" value={currClub.googleclassroom_link} placeholder="Google Classroom Link"/>
+            <Input type="text" id="gclasslink" value={currClub.google_classroom_link} placeholder="Google Classroom Link"/>
         {:else}
             <Input type="text" id="gclasslink" placeholder="Google Classroom Link" required/>
         {/if}
