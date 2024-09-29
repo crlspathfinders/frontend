@@ -1,12 +1,13 @@
 <script>
     import { onMount } from "svelte";
-    import { Heading, P, Search, Button, Modal, Spinner } from "flowbite-svelte";
+    import { Heading, P, Search, Button, Modal, Spinner, CardPlaceholder, Skeleton } from "flowbite-svelte";
     import { TableHeader } from 'flowbite-svelte-blocks';
     import { getCollection } from "../../lib/api";
     import { writable } from "svelte/store";
     import { Label, Input, Select, Textarea, MultiSelect, Badge, Dropdown, DropdownItem, Checkbox } from 'flowbite-svelte';
     import { addLink, deleteLink, editLink, makeSelectCategoriesOk, editCategories, addCategory, deleteCategory } from "../../lib/peermentor";
 
+    let allReady = writable(false);
     let deleteLinkConfirmModal = writable(false);
     let isLoading = writable(false);
     let showCreateLinkModal = writable(false);
@@ -71,6 +72,13 @@
         console.log("Failed to delete link: " + error);
       } finally {
         peerMentorLinks = await getCollection("PeerMentorLinks");
+        categories = await getCollection("Demographics");
+        for (let i = 0; i < categories.length; i++) {
+          if (categories[i].id == "PeerMentor") {
+            categories = categories[i].categories;
+          }
+        }
+        categories = makeSelectCategoriesOk(categories);
         isLoading.set(false);
       }
     }
@@ -187,16 +195,18 @@
     }
 
     onMount(async () => {
-        peerMentorLinks = await getCollection("PeerMentorLinks");
-        console.log(peerMentorLinks);
-        categories = await getCollection("Demographics");
-        for (let i = 0; i < categories.length; i++) {
-          if (categories[i].id == "PeerMentor") {
-            categories = categories[i].categories;
-          }
+      allReady.set(false);
+      peerMentorLinks = await getCollection("PeerMentorLinks");
+      console.log(peerMentorLinks);
+      categories = await getCollection("Demographics");
+      for (let i = 0; i < categories.length; i++) {
+        if (categories[i].id == "PeerMentor") {
+          categories = categories[i].categories;
         }
-        categories = makeSelectCategoriesOk(categories);
-        console.log(categories);
+      }
+      categories = makeSelectCategoriesOk(categories);
+      console.log(categories);
+      allReady.set(true);
     });
 
     export let view = "View";
@@ -351,119 +361,134 @@
 
 {/if}
 
-<section class="bg-gray-50 p-3 sm:p-5">
-    <div>
-      <TableHeader headerType="search">
-         <Search bind:value={searching} slot="search" placeholder="Search sponsorships" size="md"/>
-         <div class=""></div>
-         {#if view == "Edit"}
-            <Button outline color="purple" on:click={() => {
-                openShowCreateLinkModal();
+{#if $allReady}
+
+  <section class="bg-gray-50 p-3 sm:p-5">
+      <div>
+        <TableHeader headerType="search">
+          <Search bind:value={searching} slot="search" placeholder="Search" size="md"/>
+          <div class=""></div>
+          {#if view == "Edit"}
+              <Button outline color="purple" on:click={() => {
+                  openShowCreateLinkModal();
+              }}>
+                  Create link
+              </Button>
+              <Button outline color="purple" on:click={() => {
+                openShowManageLinkCategories();
             }}>
-                Create link
+                Manage categories
             </Button>
-            <Button outline color="blue" on:click={() => {
-              openShowManageLinkCategories();
-          }}>
-              Manage categories
-          </Button>
-        {/if}
-        <Button outline color='purple'>Filters</Button>
-        <Dropdown class="w-48 p-3 space-y-2 text-sm">
-          {#each categories as cat}
-            <DropdownItem class="flex items-center justify-between">
-              {#if $filtersSelected.includes(cat.name)}
-                <Checkbox checked on:change={() => {
+          {/if}
+          <Button outline color='purple'>Filters</Button>
+          <Dropdown class="w-48 p-3 space-y-2 text-sm">
+            {#each categories as cat}
+              <DropdownItem class="flex items-center justify-between">
+                {#if $filtersSelected.includes(cat.name)}
+                  <Checkbox checked on:change={() => {
+                      toggleFilters(cat.name)
+                  }}><li>{cat.name}</li>
+                  </Checkbox>
+                {:else}
+                  <Checkbox on:change={() => {
                     toggleFilters(cat.name)
-                }}><li>{cat.name}</li>
-                </Checkbox>
-              {:else}
-                <Checkbox on:change={() => {
-                  toggleFilters(cat.name)
-                  console.log($filtersSelected);
-                    }}><li>{cat.name}</li>
-                </Checkbox>
+                    console.log($filtersSelected);
+                      }}><li>{cat.name}</li>
+                  </Checkbox>
+                {/if}
+              </DropdownItem>
+            {/each}
+          </Dropdown>
+        </TableHeader>   
+        {#if $filtersSelected.length > 0}
+          <br>
+              {#if $filtersSelected.length > 0}
+                  {#each $filtersSelected as f}
+                      <div class="badge" style="margin-right:.2rem;">
+                          <Badge color="purple">{f}</Badge>
+                      </div>
+                  {/each}
               {/if}
-            </DropdownItem>
-          {/each}
-        </Dropdown>
-      </TableHeader>   
-      {#if $filtersSelected.length > 0}
-        <br>
-            {#if $filtersSelected.length > 0}
-                {#each $filtersSelected as f}
-                    <div class="badge" style="margin-right:.2rem;">
-                        <Badge color="blue">{f}</Badge>
-                    </div>
-                {/each}
-            {/if}
-        {/if} 
-    </div>
-    <br>
-    <div>
-        <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            {#if view == "Edit"}
-                                <th scope="col" class="px-4 py-3">Edit</th>
-                                <th scope="col" class="px-4 py-3">Delete</th>
+          {/if} 
+      </div>
+      <br>
+      <div>
+          <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+              <div class="overflow-x-auto">
+                  <table class="w-full text-sm text-left text-gray-500">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                          <tr>
+                              {#if view == "Edit"}
+                                  <th scope="col" class="px-4 py-3">Edit</th>
+                                  <th scope="col" class="px-4 py-3">Delete</th>
+                              {/if}
+
+                              <th scope="col" class="px-4 py-3">Name</th>
+                              <th scope="col" class="px-4 py-3">Link</th>
+                              <th scope="col" class="px-4 py-3">Categories</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        {#each filteredLinks as pml}
+                          {#if labelIncludesSearchTerm(pml.name, searching)}
+                          
+                            {#if pml.id != "Categories"}
+                              <tr class="border-b" style="padding:2rem;">
+                                  {#if view == "Edit"}
+                                      <td>
+                                          <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
+                                              currLinkName = pml.name;
+                                              currLinkUrl = pml.src;
+                                              oldLinkName = currLinkName;
+                                              openShowEditLinkModal();
+                                              currCats = pml.categories;
+                                          }}>Edit</Button>
+                                          </td>
+                                          <td class="px-2 py-1">
+                                          <Button style="margin-left:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => { 
+                                              currLinkName = pml.name;
+                                              opendeleteLinkConfirmModal(); 
+                                          }}>
+                                              Delete
+                                          </Button>
+                                      </td>
+                                  {/if}
+
+                                  <td class="px-2 py-1 text-gray-700" style="font-size:medium;padding:1rem;">
+                                    <b>{pml.name}</b>
+                                  </td>
+                                  <td class="px-2 py-1 text-gray-700">
+                                    <u><a target="_blank" href="{pml.src}">{pml.src}</a></u>
+                                  </td>
+                                  <td class="px-2 py-1">
+                                    <div class="catbadgewrapper" style="display:flex;">
+                                      {#each pml.categories as cat}
+                                        <div class="catbadge" style="margin-right:1rem;">
+                                          <Badge color="purple">{cat}</Badge>
+                                        </div>
+                                      {/each}
+                                    </div>
+                                </td>
+                              </tr>
                             {/if}
-
-                            <th scope="col" class="px-4 py-3">Name</th>
-                            <th scope="col" class="px-4 py-3">Link</th>
-                            <th scope="col" class="px-4 py-3">Categories</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      {#each filteredLinks as pml}
-                        {#if labelIncludesSearchTerm(pml.name, searching)}
-                        
-                          {#if pml.id != "Categories"}
-                            <tr class="border-b" style="padding:2rem;">
-                                {#if view == "Edit"}
-                                    <td>
-                                        <Button style="margin-left:1rem; margin-top:1rem;" outline color="dark" size="xs" on:click={() => {
-                                            currLinkName = pml.name;
-                                            currLinkUrl = pml.src;
-                                            oldLinkName = currLinkName;
-                                            openShowEditLinkModal();
-                                            currCats = pml.categories;
-                                        }}>Edit</Button>
-                                        </td>
-                                        <td class="px-2 py-1">
-                                        <Button style="margin-left:1rem; margin-top:1rem;" outline color="red" size="xs" on:click={() => { 
-                                            currLinkName = pml.name;
-                                            opendeleteLinkConfirmModal(); 
-                                        }}>
-                                            Delete
-                                        </Button>
-                                    </td>
-                                {/if}
-
-                                <td class="px-2 py-1 text-gray-700" style="font-size:medium;padding:1rem;">
-                                  <b>{pml.name}</b>
-                                </td>
-                                <td class="px-2 py-1 text-gray-700">
-                                  <u><a target="_blank" href="{pml.src}">{pml.src}</a></u>
-                                </td>
-                                <td class="px-2 py-1">
-                                  <div class="catbadgewrapper" style="display:flex;">
-                                    {#each pml.categories as cat}
-                                      <div class="catbadge" style="margin-right:1rem;">
-                                        <Badge color="blue">{cat}</Badge>
-                                      </div>
-                                    {/each}
-                                  </div>
-                              </td>
-                            </tr>
                           {/if}
-                        {/if}
-                      {/each}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-  </section>
+                        {/each}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+    </section>
+
+{:else}
+
+  <center>
+      <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
+          Loading Peer Mentor Links ... <Spinner color="blue"/>
+      </div>
+  </center>
+
+  <Skeleton size="sm" class="my-8" />
+
+
+{/if}
