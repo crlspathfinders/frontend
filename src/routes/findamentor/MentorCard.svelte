@@ -151,10 +151,12 @@
     <RegisterForm {view} {currMentor} {showVals}></RegisterForm>
 </Modal>
 
-{#if $wholeReady}
+<div class="wholementorwrapper" style="height:100vh;">
+
+    {#if $wholeReady}
 
     <div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
-        <Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-gray-100">Find a mentor</Heading>
+        <Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-red-900">Find a mentor</Heading>
         <P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
             Below you can search for and filter juniors and seniors who you believe can best support your academic interests.
         </P>
@@ -345,20 +347,22 @@
         {/each}
     </div>
 
-{:else}
+    {:else}
 
-    <center>
-        <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
-            Loading Mentors ... <Spinner color="blue"/>
+        <center>
+            <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
+                Loading Mentors ... <Spinner color="blue"/>
+            </div>
+        </center>
+
+        <div class="card-container">
+            <CardPlaceholder />
+            <CardPlaceholder />
+            <CardPlaceholder />
+            <CardPlaceholder />
+            <CardPlaceholder />
         </div>
-    </center>
 
-    <div class="card-container">
-        <CardPlaceholder />
-        <CardPlaceholder />
-        <CardPlaceholder />
-        <CardPlaceholder />
-        <CardPlaceholder />
-    </div>
+    {/if}
 
-{/if}
+</div>

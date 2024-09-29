@@ -128,7 +128,9 @@
 
 {/if}
 
-{#if $wholeReady}
+<div class="wholeclubwrapper" style="height:100vh;">
+
+    {#if $wholeReady}
 
     <div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
         <TableHeader headerType="search">
@@ -159,7 +161,7 @@
                                     handleClick(club.id);
                                 }}>
                                 Leave Club
-                                 {#if $isLoading} 
+                                {#if $isLoading} 
                                     {#if currClick == club.id}
                                         <Spinner size={4} color="red"/> 
                                     {/if}
@@ -189,7 +191,7 @@
         {/each}
     </div>
 
-{:else}
+    {:else}
 
     <center>
         <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
@@ -204,5 +206,7 @@
         <CardPlaceholder />
         <CardPlaceholder />
     </div>
+
+    {/if}
     
-{/if}
+</div>

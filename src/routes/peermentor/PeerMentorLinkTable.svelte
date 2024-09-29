@@ -361,7 +361,9 @@
 
 {/if}
 
-{#if $allReady}
+<div class="peermentorwrapper" style="height:100vh;">
+
+  {#if $allReady}
 
   <section class="bg-gray-50 p-3 sm:p-5">
       <div>
@@ -480,15 +482,17 @@
       </div>
     </section>
 
-{:else}
+  {:else}
 
-  <center>
-      <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
-          Loading Peer Mentor Links ... <Spinner color="blue"/>
-      </div>
-  </center>
+    <center>
+        <div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
+            Loading Peer Mentor Links ... <Spinner color="blue"/>
+        </div>
+    </center>
 
-  <Skeleton size="sm" class="my-8" />
+    <Skeleton size="sm" class="my-8" />
 
 
-{/if}
+  {/if}
+  
+</div>

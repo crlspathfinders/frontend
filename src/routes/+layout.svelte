@@ -4,6 +4,30 @@
     import { inject } from '@vercel/analytics'
 </script>
 
-<MainNav></MainNav>
+<style>
+    @media (prefers-color-scheme: dark) {
+      * {
+        color-scheme: light;
+        background-color: white;
+      }
+    }
+/* 
+    @media (prefers-color-scheme: dark) {
+    .dark .bg-gray-900,
+    .dark .bg-gray-800,
+    .dark .bg-gray-700,
+    .dark .bg-gray-600,
+    .dark .text-white,
+    .dark .text-gray-300 {
+        background-color: var(--tw-bg-opacity) white !important;
+        color: var(--tw-text-opacity) black !important;
+    }
+    } */
+  </style>
 
-<slot></slot>
+<div class="mainlayoutwrapper" style="height:100%;">
+    <MainNav></MainNav>
+    
+    <slot></slot>
+    
+</div>
