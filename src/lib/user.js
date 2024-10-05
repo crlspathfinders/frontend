@@ -107,6 +107,7 @@ export async function getUserDocData(email) {
 
 export async function toggleClub(userEmail, clubId) {
     const url = SEND_URL + "toggleclub/" + userEmail + "/" + clubId;
+    // SEND_URL = http://127.0.0.1:8000/
     try {
         const res = await fetch(url);
         if (!res.ok) { return "Failed to toggle club"; }

@@ -63,6 +63,7 @@
 
     onMount(async () => {
         wholeReady.set(false);
+        console.log("test print");
         try {
             user.subscribe(async value => {
                 if (value) {
