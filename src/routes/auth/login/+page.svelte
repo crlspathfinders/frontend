@@ -1,8 +1,8 @@
 <script>
     import LoginForm from "./LoginForm.svelte";
-    import Clerklogin from "../../../../clerk-javascript/clerklogin";
+    // import Clerklogin from "../../../../clerk-javascript/clerklogin";
 </script>
 
-<Clerklogin></Clerklogin>
+<!-- <Clerklogin></Clerklogin> -->
 
-<!-- <LoginForm></LoginForm> -->
+<LoginForm></LoginForm>
