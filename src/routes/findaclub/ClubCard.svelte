@@ -62,6 +62,7 @@
     }
 
     onMount(async () => {
+        // IDEAL: Check if local storage is full, bring in data if not (getCollection), if full then bring in from localStorage.
         wholeReady.set(false);
         console.log("test print");
         try {

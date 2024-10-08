@@ -132,6 +132,7 @@
     }
 
     onMount(async () => {
+      // TODO: if local storage is empty: pull from database - if its full, take from local storage
       wholeReady.set(false);
       try {
         clubs = await getCollection("Clubs");

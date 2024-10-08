@@ -30,7 +30,7 @@ export async function createClub(advisor_email, clubDays, club_description, club
     console.log(toSend)
 
     try {
-        const url = "http://127.0.0.1:8000/" + "createclub/"; 
+        const url = SEND_URL + "createclub/"; 
         const res = await fetch(url, {
             method: "POST",
             headers: {"Content-type": "application/json"},

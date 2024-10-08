@@ -50,3 +50,5 @@ export async function deleteDoc(collection, id) {
         return status;
     }
 }
+
+// TODO: Function that brings in data from local storage at a defined value
