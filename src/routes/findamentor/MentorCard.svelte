@@ -12,6 +12,7 @@
     import { Search } from 'flowbite-svelte';
     import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions, retrieveDemographics } from "../../lib/mentor";
     import { ChevronRightOutline } from 'flowbite-svelte-icons';
+    import { browser } from '$app/environment';
 
     let wholeReady = writable(false);
     let showEditModal = writable(false);
@@ -86,22 +87,43 @@
         return false;
     }
 
+    function retrieveValue(key) {
+        let result;
+        if (window.localStorage.getItem(key)) {
+            result = window.localStorage.getItem(key);
+            return result;
+        } 
+        return -1;
+    }
+
     onMount(async () => {
         wholeReady.set(false);
         user.subscribe(async value => {
             if (value) {
                 email = value.email;
-                userInfo = await getUserDocData(email);
+                userInfo = retrieveValue("userInfo");
+                if (window.localStorage.getItem("userInfo")) {
+                    userInfo = window.localStorage.getItem("userInfo");
+                } else {
+                    userInfo = await getUserDocData(email);
+                    window.localStorage.setItem("userInfo", userInfo);
+                }
                 console.log(userInfo);
             }
         });
         try {
-            await retrieveDemographics();
+            // if (window.localStorage.getItem("demographics")) {
+
+            // }
+            // await retrieveDemographics();
+            // if (window.localStorage.getItem("mentors")) {
+            //     mentors = window.localStorage.getItem("mentors");
+            // } else {
+            //     mentors = await getCollection("Mentors");
+            //     window.localStorage.setItem("mentors", mentors);
+            // }
             mentors = await getCollection("Mentors");
             console.log(mentors);
-            console.log("subscribe start");
-            
-            console.log("subscribe end");
         } catch(error) {
             console.log("Onmount failed: " + error);
         } finally {
