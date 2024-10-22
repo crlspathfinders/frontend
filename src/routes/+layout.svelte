@@ -2,6 +2,19 @@
     import "../app.css";
     import MainNav from "./MainNav.svelte";
     import { inject } from '@vercel/analytics'
+    import { page } from '$app/stores';
+    import { onMount } from 'svelte';
+
+    // Adds dynamic title to each page, paired with svelte:head below
+    const appName = "CRLS PathFinders"; 
+    $: title = appName + " | " + [appName, ...$page.url.pathname
+                                                                .split("/")
+                                                                .slice(1)
+                                                              ]
+                                                                .filter(Boolean)
+                                                                .findLast(Boolean)
+                                                                .replace(/-/g, " ")
+                                                                .replace(/\b\w/g, l => l.toUpperCase());
 </script>
 
 <style>
@@ -31,3 +44,7 @@
     <slot></slot>
     
 </div>
+
+<svelte:head>
+    <title>{title}</title>
+</svelte:head>
