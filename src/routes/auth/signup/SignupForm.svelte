@@ -101,15 +101,15 @@
               <h3 class="text-xl font-medium text-gray-900 p-0">Sign up</h3>
               <Label class="space-y-2">
                   <span>Your email</span>
-                  <Input bind:value={email} name="email" id="email" placeholder="name@cpsd.us" required/>
+                  <Input bind:value={email} name="email" id="email" placeholder="Enter @cpsd.us email" required/>
               </Label>
               <Label class="space-y-2">
                   <span>Your password</span>
-                  <Input bind:value={password} type="password" name="password" id="password" placeholder="•••••" required/>
+                  <Input bind:value={password} type="password" name="password" id="password" placeholder="Enter password" required/>
               </Label>
               <Label class="space-y-2">
                   <span>Confirm password</span>
-                  <Input bind:value={confirmPassword} type="password" name="confirmpassword" placeholder="•••••" required/>
+                  <Input bind:value={confirmPassword} type="password" name="confirmpassword" placeholder="Enter password" required/>
               </Label>
               <Button color="green" type="submit" class="w-full1">
                 Sign Up
@@ -120,7 +120,6 @@
           </form>
           {#if $errorMessage.length > 1}
             <Alert color="red">
-              <span class="font-medium">Signup failed:</span>
               {$errorMessage}
             </Alert>
           {/if}
