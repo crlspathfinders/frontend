@@ -40,7 +40,7 @@
         <h3 class="text-xl font-medium text-gray-900 p-0">Password Reset</h3>
         <Label class="space-y-2">
           <span>Your email</span>
-          <Input bind:value={email} type="email" name="email" placeholder="name@company.com" required />
+          <Input bind:value={email} type="email" name="email" placeholder="Enter @cpsd.us email" required />
         </Label>
         <Button color="green" type="submit" class="w-full1">
           Submit
@@ -51,7 +51,6 @@
       </form>
       {#if $errorMessage.length > 1}
         <Alert color="red">
-          <span class="font-medium">Password reset failed:</span>
           {$errorMessage}
         </Alert>
       {/if}

@@ -57,11 +57,11 @@
           <h3 class="text-xl font-medium text-gray-900 p-0">Login</h3>
           <Label class="space-y-2">
             <span>Your email</span>
-            <Input bind:value={email} type="email" name="email" placeholder="name@company.com" required />
+            <Input bind:value={email} type="email" name="email" placeholder="Enter @cpsd.us email" required />
           </Label>
           <Label class="space-y-2">
             <span>Your password</span>
-            <Input bind:value={password} type="password" name="password" placeholder="•••••" required />
+            <Input bind:value={password} type="password" name="password" placeholder="Enter password" required />
           </Label>
           <div class="flex items-start">
             <Checkbox>Remember me</Checkbox>
@@ -85,7 +85,6 @@
         </form>
         {#if $errorMessage.length > 1}
           <Alert color="red">
-            <span class="font-medium">Login failed:</span>
             {$errorMessage}
           </Alert>
         {/if}
