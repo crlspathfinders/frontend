@@ -1,5 +1,5 @@
 <script>
-    export let clubs = "";
+	export let clubs = '';
 </script>
 
 Clubs joined: {clubs}

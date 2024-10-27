@@ -1,5 +1,5 @@
 <script>
-    import SignupForm from "./SignupForm.svelte";
+	import SignupForm from './SignupForm.svelte';
 </script>
 
 <SignupForm></SignupForm>
