@@ -12,12 +12,14 @@
 	import { getUserDocData } from '../../../lib/user';
 	import { Li, List, DescriptionList } from 'flowbite-svelte';
 	import {
+		Popover,
 		Table,
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Badge
 	} from 'flowbite-svelte';
 	import { slide } from 'svelte/transition';
 	import { PenOutline, ImageOutline } from 'flowbite-svelte-icons';
@@ -179,46 +181,63 @@
 		<div
 			class="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4"
 		>
-			{#if userClubs.includes(clubId)}
-				<center>
-					<ButtonGroup>
-						<Button
-							pill
-							color="red"
-							on:click={() => {
-								// currClick = club.id;
-								handleClick(email, clubId);
-							}}
-						>
-							Leave Club
-							{#if $isLoading}
-								<Spinner size={4} color="red" />
+			{#if $user}
+				{#if userClubs.includes(clubId)}
+					<center>
+						<ButtonGroup>
+							<Button
+								pill
+								color="red"
+								on:click={() => {
+									// currClick = club.id;
+									handleClick(email, clubId);
+								}}
+							>
+								Leave Club
+								{#if $isLoading}
+									<Spinner size={4} color="red" />
+								{/if}
+							</Button>
+							{#if clubInfo.president_email == userInfo.email || clubInfo.vice_presidents_emails.includes(userInfo.email) || clubInfo.advisor_email == userInfo.emai}
+								<Button pill color="blue" on:click={openshowEditModal}>
+									Edit <PenOutline></PenOutline>
+								</Button>
+								<Button pill color="purple" on:click={openshowImageModal}>
+									Upload Image <ImageOutline></ImageOutline>
+								</Button>
 							{/if}
-						</Button>
-						{#if clubInfo.president_email == userInfo.email || clubInfo.vice_presidents_emails.includes(userInfo.email) || clubInfo.advisor_email == userInfo.emai}
-							<Button pill color="blue" on:click={openshowEditModal}>
-								Edit <PenOutline></PenOutline>
-							</Button>
-							<Button pill color="purple" on:click={openshowImageModal}>
-								Upload Image <ImageOutline></ImageOutline>
-							</Button>
+						</ButtonGroup>
+					</center>
+				{:else}
+					<Button
+						pill
+						color="green"
+						on:click={() => {
+							// currClick = club.id;
+							handleClick(email, clubId);
+						}}
+					>
+						Join Club
+						{#if $isLoading}
+							<Spinner size={4} color="green" />
 						{/if}
-					</ButtonGroup>
-				</center>
+					</Button>
+				{/if}
+
 			{:else}
-				<Button
-					pill
-					color="green"
-					on:click={() => {
-						// currClick = club.id;
-						handleClick(email, clubId);
-					}}
-				>
+
+				<Button disabled pill color="green" id="disabledjoinclubbutton">
 					Join Club
-					{#if $isLoading}
-						<Spinner size={4} color="green" />
-					{/if}
 				</Button>
+
+				<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledjoinclubbutton">
+					<p class="text-gray-800">
+						You can only join clubs when you have an account!
+						<br><br>
+						<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+					</p>
+				</Popover>
+
 			{/if}
 
 			<!-- Join the google classroom: -->

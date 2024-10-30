@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { retrieveUserInfo } from '$lib/cache';
 	import {
+		Popover,
 		Card,
 		Button,
 		ButtonGroup,
@@ -101,38 +102,26 @@
 		return false;
 	}
 
-	function filtersIncluded(mentor) {
-		console.log(mentor);
-		let all_info = [];
-		if (mentor.academics.length > 0) {
-			all_info.push(mentor.academics);
-		}
-		if (mentor.gender.length > 0) {
-			all_info.push(mentor.gender);
-		}
-		if (mentor.languages.length > 0) {
-			all_info.push(mentor.languages);
-		}
-		if (mentor.races.length > 0) {
-			all_info.push(mentor.races);
-		}
-		if (mentor.religions.length > 0) {
-			all_info.push(mentor.religions);
-		}
-		console.log(all_info);
-		console.log($filters.length);
-		// if any of these are in filters, then return true.
-		for (let i = 0; i < all_info.length; i++) {
-			for (let j = 0; j < $filters.length; j++) {
-				if (all_info[i].localeCompare($filters[j]) === 0) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    function filtersIncluded(mentor) {
+        console.log(mentor);
+        let all_info = [];
+        if (mentor.academics.length > 0) { all_info.push(mentor.academics); }
+        if (mentor.gender.length > 0) { all_info.push(mentor.gender); }
+        if (mentor.languages.length > 0) { all_info.push(mentor.languages); }
+        if (mentor.races.length > 0) { all_info.push(mentor.races); }
+        if (mentor.religions.length > 0) { all_info.push(mentor.religions); }
+        console.log(all_info);
+        console.log($filters.length);        
+        // if any of these are in filters, then return true.
+        for (let i = 0; i < all_info.length; i++) {
+            for (let j = 0; j < $filters.length; j++) {
+                if (all_info[i].localeCompare($filters[j]) === 0) {return true};
+            }
+        }
+        return false;
+    }
 
-	onMount(async () => {
+  onMount(async () => {
 		wholeReady.set(false);
 		// user.subscribe(async (value) => {
 		// 	if (value) {
@@ -389,13 +378,26 @@
 								<center>{m.bio}</center>
 							</span>
 							<div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
-								<Button outline color="blue" class="">
-									<A
-										target="_blank"
-										href="https://mail.google.com/mail/?view=cm&fs=1&to={m.email}&su=CRLS%20PathFinders%20Mentee"
-										class="font-medium hover:underline">Message</A
-									>
-								</Button>
+								{#if $user}
+									<Button outline color="blue" class="">
+										<A
+											target="_blank"
+											href="https://mail.google.com/mail/?view=cm&fs=1&to={m.email}&su=CRLS%20PathFinders%20Mentee"
+											class="font-medium hover:underline">Message</A
+										>
+									</Button>
+								{:else}
+									<Button disabled outline color="blue" id="disabledmessagebutton" class="">
+										Message
+									</Button>
+									<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledmessagebutton">
+										<p class="text-gray-800">
+											You can only message mentors when you have an account!
+											<br><br>
+											<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+										</p>
+									</Popover>
+								{/if}
 							</div>
 						</div>
 					</Card>

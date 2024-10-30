@@ -53,6 +53,21 @@
 					</Button>
 				</a>
 			{:else}
+				<a href="/findaclub">
+					<Button size="xl" color="yellow" class="inline-flex items-center justify-center mr-3">
+						Find a club<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+					</Button>
+				</a>
+				<a href="/findamentor">
+					<Button size="xl" color="purple" class="inline-flex items-center justify-center mr-3">
+						Find a mentor<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+					</Button>
+				</a>
+				<!-- <a href="/becomeamentor">
+					<Button size="xl" color="yellow" class="inline-flex items-center justify-center mr-3">
+						Become a mentor<ArrowRightOutline size="md" class="ml-2 -mr-1" />
+					</Button>
+				</a> -->
 				<a href="/auth/signup">
 					<Button size="xl" color="green" class="inline-flex items-center justify-center mr-3">
 						Sign Up<ArrowRightOutline size="md" class="ml-2 -mr-1" />
