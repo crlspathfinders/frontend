@@ -18,16 +18,20 @@
 	let loggedInUser;
 
 	function basicSetUp() {
-		user.subscribe(async (value) => {
-			if (value) {
-				email = value.email;
-				console.log(email);
-				loggedInUser = await getUserDocData(email);
-				console.log(loggedInUser);
-			} else {
-				email = '';
-			}
-		});
+		user.subscribe(async value => {
+           if (value) {
+               email = value.email;
+               userInfo = window.localStorage.getItem("userInfo");
+               if (window.localStorage.getItem("userInfo")) {
+                  userInfo = window.localStorage.getItem("userInfo");
+               } else {
+                   userInfo = await getUserDocData(email);
+                   window.localStorage.setItem("userInfo", userInfo);
+               }
+               console.log(userInfo);
+           }
+       });
+
 	}
 
 	onMount(() => {

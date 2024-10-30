@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { retrieveUserInfo } from '$lib/cache';
 	import {
 		Popover,
 		Card,
@@ -120,28 +121,32 @@
         return false;
     }
 
-    onMount(async () => {
-        wholeReady.set(false);
-        user.subscribe(async value => {
-            if (value) {
-                email = value.email;
-                userInfo = await getUserDocData(email);
-                console.log(userInfo);
-            }
-        });
-        try {
-            await retrieveDemographics();
-            mentors = await getCollection("Mentors");
-            console.log(mentors);
-            console.log("subscribe start");
-            
-            console.log("subscribe end");
-        } catch(error) {
-            console.log("Onmount failed: " + error);
-        } finally {
-            wholeReady.set(true);
-        }
-    });
+  onMount(async () => {
+		wholeReady.set(false);
+		// user.subscribe(async (value) => {
+		// 	if (value) {
+		// 		email = value.email;
+		// 		userInfo = await getUserDocData(email);
+		// 		console.log(userInfo);
+		// 	}
+		// });
+		try {
+			if (!localStorage.getItem('userInfo')){ userInfo = await retrieveUserInfo();}
+			else {userInfo = localStorage.getItem('userInfo');}
+			console.log(userInfo);
+
+			await retrieveDemographics();
+			mentors = await getCollection('Mentors');
+			console.log(mentors);
+			console.log('subscribe start');
+
+			console.log('subscribe end');
+		} catch (error) {
+			console.log('Onmount failed: ' + error);
+		} finally {
+			wholeReady.set(true);
+		}
+	});
 
 	const openshowEditModal = () => showEditModal.set(true);
 	const closeshowEditModal = () => showEditModal.set(false);
