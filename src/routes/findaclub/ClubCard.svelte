@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder, Search } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder, Search, Popover } from 'flowbite-svelte';
     import { TableHeader } from 'flowbite-svelte-blocks';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
@@ -123,41 +123,58 @@
 								<Button pill color="yellow">
 									<a href="/findaclub/{club.id}">View Club</a>
 								</Button>
-								{#if myClubs.includes(club.id)}
-									<Button
-										pill
-										color="red"
-										on:click={() => {
-											currClick = club.id;
-											handleClick(club.id);
-										}}
-									>
-										Leave Club
-										{#if $isLoading}
-											{#if currClick == club.id}
-												<Spinner size={4} color="red" />
+								{#if $user}
+									{#if myClubs.includes(club.id)}
+										<Button
+											pill
+											color="red"
+											on:click={() => {
+												currClick = club.id;
+												handleClick(club.id);
+											}}
+										>
+											Leave Club
+											{#if $isLoading}
+												{#if currClick == club.id}
+													<Spinner size={4} color="red" />
+												{/if}
 											{/if}
-										{/if}
-									</Button>
+										</Button>
+									{:else}
+										<Button
+											pill
+											color="green"
+											on:click={() => {
+												currClick = club.id;
+												handleClick(club.id);
+											}}
+										>
+											Join Club
+											{#if $isLoading}
+												{#if currClick == club.id}
+													<Spinner size={4} color="green" />
+												{/if}
+											{/if}
+										</Button>
+									{/if}
+
 								{:else}
-									<Button
-										pill
-										color="green"
-										on:click={() => {
-											currClick = club.id;
-											handleClick(club.id);
-										}}
-									>
+
+									<Button disabled pill color="green" id="disabledjoinclubbutton">
 										Join Club
-										{#if $isLoading}
-											{#if currClick == club.id}
-												<Spinner size={4} color="green" />
-											{/if}
-										{/if}
 									</Button>
+
+									<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledjoinclubbutton">
+										<p class="text-gray-800">
+											You can only join clubs when you have an account!
+											<br><br>
+											<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+										</p>
+									</Popover>
+									
 								{/if}
 							</ButtonGroup>
-							<br /><br />
+							<br/> <br/>
 							<Badge color="dark">{club.members.length} members</Badge>
 						</Card>
 					</div>

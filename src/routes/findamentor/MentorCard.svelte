@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import {
+		Popover,
 		Card,
 		Button,
 		ButtonGroup,
@@ -372,13 +373,26 @@
 								<center>{m.bio}</center>
 							</span>
 							<div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
-								<Button outline color="blue" class="">
-									<A
-										target="_blank"
-										href="https://mail.google.com/mail/?view=cm&fs=1&to={m.email}&su=CRLS%20PathFinders%20Mentee"
-										class="font-medium hover:underline">Message</A
-									>
-								</Button>
+								{#if $user}
+									<Button outline color="blue" class="">
+										<A
+											target="_blank"
+											href="https://mail.google.com/mail/?view=cm&fs=1&to={m.email}&su=CRLS%20PathFinders%20Mentee"
+											class="font-medium hover:underline">Message</A
+										>
+									</Button>
+								{:else}
+									<Button disabled outline color="blue" id="disabledmessagebutton" class="">
+										Message
+									</Button>
+									<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledmessagebutton">
+										<p class="text-gray-800">
+											You can only message mentors when you have an account!
+											<br><br>
+											<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+										</p>
+									</Popover>
+								{/if}
 							</div>
 						</div>
 					</Card>
