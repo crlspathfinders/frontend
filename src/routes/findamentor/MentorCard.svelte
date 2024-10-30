@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { retrieveUserInfo } from '$lib/cache';
 	import {
 		Card,
 		Button,
@@ -133,14 +134,18 @@
 
 	onMount(async () => {
 		wholeReady.set(false);
-		user.subscribe(async (value) => {
-			if (value) {
-				email = value.email;
-				userInfo = await getUserDocData(email);
-				console.log(userInfo);
-			}
-		});
+		// user.subscribe(async (value) => {
+		// 	if (value) {
+		// 		email = value.email;
+		// 		userInfo = await getUserDocData(email);
+		// 		console.log(userInfo);
+		// 	}
+		// });
 		try {
+			if (!localStorage.getItem('userInfo')){ userInfo = await retrieveUserInfo();}
+			else {userInfo = localStorage.getItem('userInfo');}
+			console.log(userInfo);
+
 			await retrieveDemographics();
 			mentors = await getCollection('Mentors');
 			console.log(mentors);
