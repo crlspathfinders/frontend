@@ -1,9 +1,7 @@
 <script>
-    export let userInfo = {};
- 
+	export let userInfo = {};
 </script>
 
 Email: {userInfo.email}
-<br><br>
+<br /><br />
 Role: {userInfo.role}
-
