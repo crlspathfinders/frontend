@@ -1,14 +1,24 @@
 <script>
-    import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder, Search, Popover } from 'flowbite-svelte';
-    import { TableHeader } from 'flowbite-svelte-blocks';
-    import { ArrowRightOutline } from 'flowbite-svelte-icons';
-    import { getCollection } from "$lib/api";
-    import { user } from "../../stores/auth";
-    import { getUserDocData, toggleClub } from "../../lib/user";
-    import { writable } from 'svelte/store';
-    import { fly } from 'svelte/transition';
-    import { Badge } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
+	import {
+		Card,
+		Button,
+		ButtonGroup,
+		Spinner,
+		Toast,
+		P,
+		CardPlaceholder,
+		Search,
+		Popover
+	} from 'flowbite-svelte';
+	import { TableHeader } from 'flowbite-svelte-blocks';
+	import { ArrowRightOutline } from 'flowbite-svelte-icons';
+	import { getCollection } from '$lib/api';
+	import { user } from '../../stores/auth';
+	import { getUserDocData, toggleClub } from '../../lib/user';
+	import { writable } from 'svelte/store';
+	import { fly } from 'svelte/transition';
+	import { Badge } from 'flowbite-svelte';
 
 	let wholeReady = writable(false);
 	let inClubs = writable([]);
@@ -62,29 +72,28 @@
 		}
 	};
 
-    onMount(async () => {
-        // IDEAL: Check if local storage is full, bring in data if not (getCollection), if full then bring in from localStorage.
-        wholeReady.set(false);
-        console.log("test print");
-        try {
-            user.subscribe(async value => {
-                if (value) {
-                    email = value.email;
-                    userInfo = await getUserDocData(email);
-                    console.log(userInfo);
-                    myClubs = userInfo.joined_clubs;
-                    inClubs.set(myClubs);
-                    console.log(myClubs);
-                }
-            });
-            clubs = await getCollection("Clubs");
-        } catch (error) {
-            console.log("Onmount failed: " + error);
-        } finally {
-            wholeReady.set(true);
-        }
-    });
-
+	onMount(async () => {
+		// IDEAL: Check if local storage is full, bring in data if not (getCollection), if full then bring in from localStorage.
+		wholeReady.set(false);
+		console.log('test print');
+		try {
+			user.subscribe(async (value) => {
+				if (value) {
+					email = value.email;
+					userInfo = await getUserDocData(email);
+					console.log(userInfo);
+					myClubs = userInfo.joined_clubs;
+					inClubs.set(myClubs);
+					console.log(myClubs);
+				}
+			});
+			clubs = await getCollection('Clubs');
+		} catch (error) {
+			console.log('Onmount failed: ' + error);
+		} finally {
+			wholeReady.set(true);
+		}
+	});
 </script>
 
 {#if $showToast}
@@ -157,24 +166,24 @@
 											{/if}
 										</Button>
 									{/if}
-
 								{:else}
+									<Button disabled pill color="green" id="disabledjoinclubbutton">Join Club</Button>
 
-									<Button disabled pill color="green" id="disabledjoinclubbutton">
-										Join Club
-									</Button>
-
-									<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledjoinclubbutton">
+									<Popover
+										class="w-64 text-sm font-light "
+										title="Make an account first!"
+										triggeredBy="#disabledjoinclubbutton"
+									>
 										<p class="text-gray-800">
 											You can only join clubs when you have an account!
-											<br><br>
-											<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+											<br /><br />
+											<u><a href="/auth/login">Log in</a></u> or
+											<u><a href="/auth/signup">Sign up</a></u>
 										</p>
 									</Popover>
-									
 								{/if}
 							</ButtonGroup>
-							<br/> <br/>
+							<br /> <br />
 							<Badge color="dark">{club.members.length} members</Badge>
 						</Card>
 					</div>

@@ -49,9 +49,11 @@
 	}
 </script>
 
-<Section name="login">
+<Section name="login" class="flex justify-center items-center min-h-screen">
 	<Register>
-		<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+		<div
+			class="p-6 space-y-4 md:space-y-6 sm:p-8 max-w-md w-full bg-white rounded-lg shadow-md border border-gray-300 mx-auto"
+		>
 			<form
 				class="flex flex-col space-y-6"
 				on:submit={() => {
