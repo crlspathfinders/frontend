@@ -124,6 +124,7 @@
   onMount(async () => {
 		wholeReady.set(false);
 		try {
+			// GOOD CODE:
 			if (!localStorage.getItem("userInfo")) {
 				console.log("userinfo not in storage");
 				userInfo = await retrieveUserInfo();
@@ -132,23 +133,22 @@
 				console.log("userinfo already in storage");
 				userInfo = localStorage.getItem('userInfo');
 			}
-			console.log(userInfo);
 
+			// GOOD: (uncomment to see in action):
+
+			// if (!localStorage.getItem("mentorInfo")) {
+			// 	console.log("mentors not in locstor");
+			// 	mentors = await retrieveCollectionInfo("Mentors");
+			// 	mentors = JSON.parse(mentors);
+			// } else {
+			// 	console.log("mentors in locstor");
+			// 	mentors = JSON.parse(localStorage.getItem("mentorInfo"));
+			// }
+
+			mentors = await getCollection("Mentors");
+			
 			await retrieveDemographics(); // TODO: Call retrieveCollectionInfo function here - if works this page should load instantly!
 
-			console.log("retrieved");
-
-			if (!localStorage.getItem("mentorInfo")) {
-				console.log("mentors not in locstor");
-				mentors = await retrieveCollectionInfo("Mentors");
-				mentors = JSON.parse(mentors);
-			} else {
-				console.log("mentors in locstor");
-				mentors = JSON.parse(localStorage.getItem("mentorInfo"));
-			}
-			console.log('subscribe start');
-
-			console.log('subscribe end');
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {

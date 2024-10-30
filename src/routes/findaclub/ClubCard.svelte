@@ -66,6 +66,7 @@
     onMount(async () => {
         wholeReady.set(false);
         try {
+			// GOOD CODE:
 			if (!localStorage.getItem("userInfo")) {
 				console.log("userinfo not in storage");
 				userInfo = await retrieveUserInfo();
@@ -80,15 +81,17 @@
 				myClubs = userInfo.joined_clubs;
 				inClubs.set(myClubs);
 			}
-			if (!localStorage.getItem("clubsInfo")) {
-				console.log("clubs not in locstor");
-				clubs = await retrieveCollectionInfo("Clubs");
-				clubs = JSON.parse(clubs);
-			} else {
-				console.log("clubs in locstor");
-				clubs = JSON.parse(localStorage.getItem("clubsInfo"));
-			}
-            // clubs = await getCollection("Clubs");
+
+			// GOOD CODE: (uncomment to see in action):
+			// if (!localStorage.getItem("clubsInfo")) {
+			// 	console.log("clubs not in locstor");
+			// 	clubs = await retrieveCollectionInfo("Clubs");
+			// 	clubs = JSON.parse(clubs);
+			// } else {
+			// 	console.log("clubs in locstor");
+			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
+			// }
+            clubs = await getCollection("Clubs");
         } catch (error) {
             console.log("Onmount failed: " + error);
         } finally {
