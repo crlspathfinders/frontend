@@ -9,6 +9,7 @@
     import { writable } from 'svelte/store';
     import { fly } from 'svelte/transition';
     import { Badge } from 'flowbite-svelte';
+	import { retrieveUserInfo, retrieveCollectionInfo } from '$lib/cache';
 
 	let wholeReady = writable(false);
 	let inClubs = writable([]);
@@ -63,21 +64,31 @@
 	};
 
     onMount(async () => {
-        // IDEAL: Check if local storage is full, bring in data if not (getCollection), if full then bring in from localStorage.
         wholeReady.set(false);
-        console.log("test print");
         try {
-            user.subscribe(async value => {
-                if (value) {
-                    email = value.email;
-                    userInfo = await getUserDocData(email);
-                    console.log(userInfo);
-                    myClubs = userInfo.joined_clubs;
-                    inClubs.set(myClubs);
-                    console.log(myClubs);
-                }
-            });
-            clubs = await getCollection("Clubs");
+			if (!localStorage.getItem("userInfo")) {
+				console.log("userinfo not in storage");
+				userInfo = await retrieveUserInfo();
+				userInfo = JSON.parse(userInfo);
+				myClubs = userInfo.joined_clubs;
+				inClubs.set(myClubs);
+			}
+			else {
+				console.log("userinfo already in storage");
+				userInfo = localStorage.getItem('userInfo');
+				userInfo = JSON.parse(userInfo);
+				myClubs = userInfo.joined_clubs;
+				inClubs.set(myClubs);
+			}
+			if (!localStorage.getItem("clubsInfo")) {
+				console.log("clubs not in locstor");
+				clubs = await retrieveCollectionInfo("Clubs");
+				clubs = JSON.parse(clubs);
+			} else {
+				console.log("clubs in locstor");
+				clubs = JSON.parse(localStorage.getItem("clubsInfo"));
+			}
+            // clubs = await getCollection("Clubs");
         } catch (error) {
             console.log("Onmount failed: " + error);
         } finally {

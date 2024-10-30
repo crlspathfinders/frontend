@@ -2,6 +2,7 @@ import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 import { user } from '../stores/auth';
 import { getUserDocData } from '$lib/user';
+import { getCollection } from "$lib/api";
 
 const cachedData = writable({
 	userInfo: null,
@@ -61,13 +62,16 @@ export async function retrieveUserInfo() {
 	return userInfo;
 }
 
-export async function fetchClubs() {
-	let clubs = cachedData.clubs; // Access current store value.
+export async function retrieveCollectionInfo(collection) {
+	let collectionInfo;
+	console.log("starting " + collection + " function");
 
-	if (!clubs) {
-		// If not in cache, fetch it.
-		clubs = await getCollection('Clubs');
-		updateCache('clubs', clubs);
+	try {
+		collectionInfo = await getCollection(collection);
+		updateCache(collection.toLowerCase() + "Info", collectionInfo);
+	} catch {
+		return "Failed to get collectionInfo";
 	}
-	return clubs;
+
+	return collectionInfo;
 }

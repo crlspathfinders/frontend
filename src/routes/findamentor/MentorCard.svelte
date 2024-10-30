@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { retrieveUserInfo } from '$lib/cache';
+	import { retrieveUserInfo, retrieveCollectionInfo } from '$lib/cache';
 	import {
 		Popover,
 		Card,
@@ -123,21 +123,29 @@
 
   onMount(async () => {
 		wholeReady.set(false);
-		// user.subscribe(async (value) => {
-		// 	if (value) {
-		// 		email = value.email;
-		// 		userInfo = await getUserDocData(email);
-		// 		console.log(userInfo);
-		// 	}
-		// });
 		try {
-			if (!localStorage.getItem('userInfo')){ userInfo = await retrieveUserInfo();}
-			else {userInfo = localStorage.getItem('userInfo');}
+			if (!localStorage.getItem("userInfo")) {
+				console.log("userinfo not in storage");
+				userInfo = await retrieveUserInfo();
+			}
+			else {
+				console.log("userinfo already in storage");
+				userInfo = localStorage.getItem('userInfo');
+			}
 			console.log(userInfo);
 
-			await retrieveDemographics();
-			mentors = await getCollection('Mentors');
-			console.log(mentors);
+			await retrieveDemographics(); // TODO: Call retrieveCollectionInfo function here - if works this page should load instantly!
+
+			console.log("retrieved");
+
+			if (!localStorage.getItem("mentorInfo")) {
+				console.log("mentors not in locstor");
+				mentors = await retrieveCollectionInfo("Mentors");
+				mentors = JSON.parse(mentors);
+			} else {
+				console.log("mentors in locstor");
+				mentors = JSON.parse(localStorage.getItem("mentorInfo"));
+			}
 			console.log('subscribe start');
 
 			console.log('subscribe end');

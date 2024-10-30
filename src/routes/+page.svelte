@@ -16,6 +16,7 @@
 
 	let email;
 	let loggedInUser;
+	let userInfo;
 
 	function basicSetUp() {
 		user.subscribe(async value => {
