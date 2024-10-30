@@ -96,8 +96,12 @@
 				<DropdownItem on:click={logout} href="/">Sign Out</DropdownItem>
 			</Dropdown>
 		{:else}
-			<NavLi class="text-gray-800" href="/auth/login">Log In</NavLi>
-			<NavLi class="text-gray-800" href="/auth/signup">Sign Up</NavLi>
+			<NavLi href="/">Home</NavLi>
+			<NavLi href="/findaclub">Find a Club</NavLi>
+			<NavLi href="/findamentor">Find a Mentor</NavLi>
+			<NavLi href="/peermentor">Peer Mentor</NavLi>
+			<NavLi href="/auth/login">Log In</NavLi>
+			<NavLi href="/auth/signup">Sign Up</NavLi>
 		{/if}
 	</NavUl>
 </Navbar>
