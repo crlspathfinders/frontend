@@ -9,6 +9,7 @@
     import { writable } from 'svelte/store';
     import { fly } from 'svelte/transition';
     import { Badge } from 'flowbite-svelte';
+    import { browser } from '$app/environment';
 
     let wholeReady = writable(false);
     let inClubs = writable([]);
@@ -76,6 +77,14 @@
                     console.log(myClubs);
                 }
             });
+            // if (window.localStorage.getItem("clubs")) {
+            //     clubs = window.localStorage.getItem("clubs");
+            //     console.log(window.localStorage.getItem("clubs"));
+            // } else {
+            //     clubs = await getCollection("Clubs");
+            //     window.localStorage.setItem("clubs", clubs);
+            //     console.log(window.localStorage.getItem("clubs"));
+            // }
             clubs = await getCollection("Clubs");
         } catch (error) {
             console.log("Onmount failed: " + error);

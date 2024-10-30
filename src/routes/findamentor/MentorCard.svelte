@@ -12,7 +12,6 @@
     import { Search } from 'flowbite-svelte';
     import { createMentor, editMentor, races, religions, genders, languages, academics, UploadMentorImage, SetMentorImage, sendMentorPitch, listAcademics, listGenders, listLanguages, listRaces, listReligions, retrieveDemographics } from "../../lib/mentor";
     import { ChevronRightOutline } from 'flowbite-svelte-icons';
-    import { browser } from '$app/environment';
 
     let wholeReady = writable(false);
     let showEditModal = writable(false);
