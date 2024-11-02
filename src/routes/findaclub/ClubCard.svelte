@@ -9,7 +9,7 @@
     import { writable } from 'svelte/store';
     import { fly } from 'svelte/transition';
     import { Badge } from 'flowbite-svelte';
-	import { retrieveUserInfo, retrieveCollectionInfo } from '$lib/cache';
+	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 
 	let wholeReady = writable(false);
 	let inClubs = writable([]);
@@ -37,6 +37,7 @@
 		return false;
 	}
 
+	// Only shows the first 100 characters of the description
 	function handleDescription(desc) {
 		if (desc.length > 100) {
 			return desc.substring(0, 100) + ' ... ';
@@ -44,10 +45,16 @@
 		return desc;
 	}
 
+	// This function is used to join / leave a club. It takes the club's unique id as a parameter.
 	const handleClick = async (clubId) => {
 		try {
 			isLoading.set(true);
+			// Calls the toggleClub function that is defined in the api/user file, not api/club file, because it's really the user leaving the club, not the other way around.
 			const res = await toggleClub(email, clubId);
+			// Brings in the current user's information.
+			userInfo = await getUserDocData(email);
+			// Calls the updateCache function from lib/cache.js to update the userInfo whenever they join/leave a club.
+			updateCache("userInfo", userInfo);
 		} catch (error) {
 			console.log('Failed to toggle club! ' + error);
 		} finally {
@@ -55,11 +62,7 @@
 			userInfo = await getUserDocData(email);
 			myClubs = userInfo.joined_clubs;
 			inClubs.set(myClubs);
-			clubs = await getCollection('Clubs');
-			setTimeout(() => {
-				showToast.set(false);
-			}, 3000);
-			showToast.set(true);
+			clubs = await getCollection('Clubs'); // TO-DO: Change into caching, etc.
 		}
 	};
 
@@ -72,6 +75,7 @@
 				userInfo = await retrieveUserInfo();
 				userInfo = JSON.parse(userInfo);
 				myClubs = userInfo.joined_clubs;
+				email = userInfo.email;
 				inClubs.set(myClubs);
 			}
 			else {
@@ -79,6 +83,7 @@
 				userInfo = localStorage.getItem('userInfo');
 				userInfo = JSON.parse(userInfo);
 				myClubs = userInfo.joined_clubs;
+				email = userInfo.email;
 				inClubs.set(myClubs);
 			}
 

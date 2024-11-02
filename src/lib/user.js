@@ -126,6 +126,7 @@ export async function toggleClub(userEmail, clubId) {
 		}
 
 		const resData = await res.json();
+		console.log(resData);
 		return resData;
 	} catch (error) {
 		return 'Failed to toggle club: ' + error;
