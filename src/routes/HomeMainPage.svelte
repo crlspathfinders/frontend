@@ -1,0 +1,181 @@
+<script>
+  import { Heading, P, Mark, Span, Button, Popover } from 'flowbite-svelte';
+  import { user } from "../stores/auth";
+</script>
+
+<style>
+  .maincontainer {
+    padding: 2rem;
+    height: 200vh;
+    background-image: url("https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfindersbackground.png?alt=media&token=cc40fc16-7758-4210-aee4-4827acfa2655");
+  }
+
+  .infocontainer {
+    margin-top: 1rem;
+    padding: 1rem;
+    height: 100%;
+  }
+
+  .specinfo {
+    border: 2px dotted brown;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  
+  .spectext {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 50%;
+  }
+
+  .specimg {
+    max-width: 20%;
+    max-height: 20%;
+    min-width: 10%;
+    min-height: 10%;
+  }
+
+  @media (max-width: 768px) {
+  .maincontainer {
+    padding: 1.5rem;
+    height: 150vh;
+  }
+
+  .infocontainer {
+    margin-top: 0.8rem;
+    padding: 0.8rem;
+  }
+
+  .spectext {
+    max-width: 70%;
+  }
+
+  .specimg {
+    max-width: 30%;
+  }
+}
+
+/* Small screens (mobile) */
+@media (max-width: 480px) {
+  .maincontainer {
+    padding: 1rem;
+    height: 100vh;
+    background-position: top;
+  }
+
+  .infocontainer {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .specinfo {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .spectext {
+    padding: 1rem;
+    max-width: 100%;
+  }
+
+  .specimg {
+    max-width: 50%;
+  }
+}
+</style>
+
+<div class="wholerapper bg-gray-100" style="height: 100%;">
+  <div class="maincontainer bg-gray-100" style="height: 100%;">
+    <div class="titlecontainer">
+      <Heading tag="h1" class="mb-4">
+        <center>
+          CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders</Span>
+        </center>
+      </Heading>
+      <P size="lg">
+        Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer.
+      </P>
+    </div>
+    <!-- This shouldn't be hard-coded! (Will fix later on.) -->
+    <div class="infocontainer">
+      <div class="specinfo" id="clubinfo">
+        <div class="specimg" id="clubimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_schoolclubvectorart-removebg-preview.png?alt=media&token=e6aad0e6-0a80-4890-a04d-b4c380669cc9" alt="club">
+        </div>
+        <div class="spectext" id="clubtext">
+            <P size="lg">
+              <center>
+                Find different clubs that suit your interests. Ranging from sports to drones to art to culture, there are so many different clubs available at our school!
+                <br><br>
+                <Button outline color="red"><a href="/findaclub">Explore Clubs</a></Button>
+              </center>
+            </P>
+        </div>
+      </div>
+      <div class="specinfo" id="mentorinfo">
+        <div class="spectext" id="mentortext">
+          <P size="lg">
+            <center>
+              Whether you're having trouble in a class, preparing for an upcoming exam, or just need some guidance on high school, you can connect to and pair with one of our mentors.
+              <br>
+              Message someome who you best believe matches your interests and can help you support your goals.
+              <br><br>
+              <Button outline color="red"><a href="/findamentor">Explore Mentors</a></Button>
+            </center>
+          </P>
+        </div>
+        <div class="specimg" id="mentorimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_mentorimg-removebg-preview.png?alt=media&token=b619a6cf-29a3-4cfe-a1d1-05e3de85ec27" alt="mentor">
+        </div>
+      </div>
+      <div class="specinfo" id="pmlinfo">
+        <div class="specimg" id="mentorimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_opportunitiesclipart-removebg-preview.png?alt=media&token=d8efa34e-d006-478b-b2a2-e9e743c788a0" alt="peermentor">
+        </div>
+        <div class="spectext" id="pmltext">
+          <P size="lg">
+            <center>
+              Looking for opportunities in CRLS or Cambridge? Check out our list of available opportunities to see which one interests you the most!
+              <br>
+              Also keep an eye on this page for peer-shadowing. Once course selection rolls around, you are able to shadow a class you might be interested in taking.
+              <br><br>
+              <Button outline color="red"><a href="/peermentor">Explore Opportunities</a></Button>
+            </center>
+          </P>
+        </div>
+      </div>
+      <div class="specinfo" id="helpoutinfo">
+        <div class="spectext" id="helpouttext">
+          <P size="lg">
+            <center>
+              Want to help out? Whether that's becoming a mentor, joining our management team or website development team, follow the links below to reach out!
+              <br>
+              Mentors recieve community service hours for their work as well!
+              <br><br>
+              {#if $user}
+                <Button outline color="red"><a href="/becomeamentor">Become a mentor</a></Button>
+              {:else}
+                <Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledbecomeamentorbutton">
+                  <p class="text-gray-800">
+                    You can only become a mentor when you have an account!
+                    <br><br>
+                    <u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+                  </p>
+                </Popover>
+                <Button disabled outline color="red" id="disabledbecomeamentorbutton">Become a mentor</Button>
+              {/if}
+              <Button outline color="red"><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">Send us an email</a></Button>
+            </center>
+          </P>
+        </div>
+        <div class="specimg" id="mentorimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_reachout_clipart-removebg-preview.png?alt=media&token=e52c1d3c-32fc-4672-a1e7-63b6dcd22c09" alt="peermentor">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -56,11 +56,10 @@
 
 <!-- {#if $wholeReady} -->
 
-<Navbar let:NavContainer color="blue">
+<Navbar let:NavContainer color="black">
 	<NavBrand href="/">
-		<span class="self-center whitespace-nowrap text-xl font-semibold text-black"
-			>CRLS PathFinders</span
-		>
+		<!-- <img src="/images/flowbite-svelte-icon-logo.svg" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" /> -->
+		<span class="self-center whitespace-nowrap text-xl font-semibold text-black">CRLS PathFinders</span>
 	</NavBrand>
 	<NavHamburger />
 	<NavUl {activeUrl} {activeClass} {nonActiveClass}>

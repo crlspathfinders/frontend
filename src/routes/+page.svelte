@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import Home from './Home.svelte';
+	import HomeMainPage from './HomeMainPage.svelte';
 	import { getLoggedIn, toggleLoggedIn } from '../lib/auth/login';
 	import { Toast } from 'flowbite-svelte';
 	import {
@@ -32,7 +33,8 @@
 </script>
 
 <div class="mainwrapper">
-	<Home></Home>
+	<!-- <Home></Home> -->
+	 <HomeMainPage></HomeMainPage>
 </div>
 
 <style>
