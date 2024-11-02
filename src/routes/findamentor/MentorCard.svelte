@@ -395,7 +395,11 @@
 					<Card padding="md">
 						<div class="flex flex-col items-center pb-4">
 							<!-- The profile pic of each mentor shown first. -->
-							<Avatar size="xl" src={m.profile_pic} border class="ring-blue-400" />
+							{#if m.email == email}
+								<Avatar size="xl" src={m.profile_pic} border class="ring-yellow-400" />
+							{:else}
+								<Avatar size="xl" src={m.profile_pic} border class="ring-blue-400" />
+							{/if}
 							<h5 class="mb-1 text-xl font-medium text-gray-900">
 								<!-- The information of each mentor listed out. -->
 								 <!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->

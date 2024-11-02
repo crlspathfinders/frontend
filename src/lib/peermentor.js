@@ -1,12 +1,14 @@
 const SEND_URL = import.meta.env.VITE_URL;
 
-export async function addLink(linkname, linkurl, categories) {
+export async function addLink(linkname, linkurl, categories, bio, deadline) {
 	const url = SEND_URL + 'addlink/';
 
 	const toSend = {
 		link_name: linkname,
 		link_url: linkurl,
-		categories
+		categories,
+		bio,
+		deadline
 	};
 
 	try {
@@ -35,14 +37,16 @@ export async function deleteLink(linkName) {
 	}
 }
 
-export async function editLink(oldName, newName, newUrl, categories) {
+export async function editLink(oldName, newName, newUrl, categories, bio, deadline) {
 	const url = SEND_URL + 'editlink/';
 
 	const toSend = {
 		old_name: oldName,
 		new_name: newName,
 		new_url: newUrl,
-		categories
+		categories,
+		bio,
+		deadline
 	};
 
 	console.log(toSend);

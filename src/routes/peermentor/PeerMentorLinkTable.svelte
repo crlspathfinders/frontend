@@ -60,6 +60,11 @@
 	let currLinkName = '';
 	let currLinkUrl = '';
 
+	let bio = "";
+	let deadline = "";
+	let currBio = "";
+	let currDeadline = "";
+
 	function toggleFilters(item) {
 		filtersSelected.update((currentItems) => {
 			// Check if the item exists in the array
@@ -113,10 +118,12 @@
 		try {
 			// const correctedCats = selectedCategories.join(", ");
 			// console.log(correctedCats);
-			await addLink(linkName, linkUrl, selectedCategories);
+			await addLink(linkName, linkUrl, selectedCategories, bio, deadline);
 			console.log('Successfully added link');
 			linkName = '';
 			linkUrl = '';
+			bio = '';
+			deadline = '';
 		} catch (error) {
 			console.log('Failed to add link');
 		} finally {
@@ -128,12 +135,14 @@
 	const handleEditLink = async () => {
 		isLoading.set(true);
 		try {
-			await editLink(oldLinkName, currLinkName, currLinkUrl, currCats);
+			await editLink(oldLinkName, currLinkName, currLinkUrl, currCats, currBio, currDeadline);
 			console.log('Successfully edited link');
 			currLinkName = '';
 			currLinkUrl = '';
 			oldLinkName = '';
 			selectedCategories = [];
+			currBio = '';
+			currDeadline = '';
 		} catch (error) {
 			console.log('Failed to edit link');
 		} finally {
@@ -174,6 +183,8 @@
 						currLinkName = peerMentorLinks[i].name;
 						currLinkUrl = peerMentorLinks[i].src;
 						currCats = currPMLCats;
+						currBio = peerMentorLinks[i].bio;
+						currDeadline = peerMentorLinks[i].deadline;
 						await handleEditLink();
 					}
 				}
@@ -290,6 +301,26 @@
 					required
 				/>
 			</div>
+			<div class="w-full">
+				<Label for="linkurl" class="mb-2">Deadline</Label>
+				<Input
+					type="text"
+					id="deadline"
+					placeholder="May 10, 2025"
+					bind:value={deadline}
+					required
+				/>
+			</div>
+			<div class="w-full">
+				<Label for="linkbio" class="mb-2">Bio</Label>
+				<Textarea
+					id="linkbio"
+					rows="10"
+					placeholder="Link Bio"
+					bind:value={bio}
+					required
+				></Textarea>
+			</div>
 			<br />
 			<Button outline color="purple" type="submit" class="w-32">
 				Add link
@@ -303,7 +334,7 @@
 
 <!-- Edit link: -->
 {#if $showEditLinkModal}
-	<Modal title="Add a link" open={$showEditLinkModal} on:close={closeshowEditLinkModal}>
+	<Modal title="Add a link!" open={$showEditLinkModal} on:close={closeshowEditLinkModal}>
 		<form on:submit={handleEditLink}>
 			<div class="w-full">
 				<Label for="category" class="mb-2">Category</Label>
@@ -322,6 +353,26 @@
 					bind:value={currLinkUrl}
 					required
 				/>
+			</div>
+			<div class="w-full">
+				<Label for="linkurl" class="mb-2">Deadline</Label>
+				<Input
+					type="text"
+					id="deadline"
+					placeholder="May 10, 2025"
+					bind:value={currDeadline}
+					required
+				/>
+			</div>
+			<div class="w-full">
+				<Label for="linkbio" class="mb-2">Bio</Label>
+				<Textarea
+					id="linkbio"
+					rows="10"
+					placeholder="Link Bio"
+					bind:value={currBio}
+					required
+				></Textarea>
 			</div>
 			<br />
 			<Button outline color="purple" type="submit" class="w-32">
@@ -460,6 +511,13 @@
 							</DropdownItem>
 						{/each}
 					</Dropdown>
+					<Button
+						outline
+						color="dark"
+						on:click={() => {
+							filtersSelected.set([]);
+						}}>Reset filters</Button
+					>
 				</TableHeader>
 				{#if $filtersSelected.length > 0}
 					<br />
@@ -485,8 +543,10 @@
 									{/if}
 
 									<th scope="col" class="px-4 py-3">Name</th>
+									<th scope="col" class="px-4 py-3">Bio</th>
 									<th scope="col" class="px-4 py-3">Link</th>
 									<th scope="col" class="px-4 py-3">Categories</th>
+									<th scope="col" class="px-4 py-3">Deadline</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -505,6 +565,8 @@
 																currLinkName = pml.name;
 																currLinkUrl = pml.src;
 																oldLinkName = currLinkName;
+																currBio = pml.bio;
+																currDeadline = pml.deadline;
 																openShowEditLinkModal();
 																currCats = pml.categories;
 															}}>Edit</Button
@@ -530,16 +592,22 @@
 													<b>{pml.name}</b>
 												</td>
 												<td class="px-2 py-1 text-gray-700">
+													<b>{pml.bio}</b>
+												</td>
+												<td class="px-2 py-1 text-gray-700">
 													<u><a target="_blank" href={pml.src}>{pml.src}</a></u>
 												</td>
 												<td class="px-2 py-1">
-													<div class="catbadgewrapper" style="display:flex;">
+													<div class="catbadgewrapper">
 														{#each pml.categories as cat}
-															<div class="catbadge" style="margin-right:1rem;">
+															<div class="catbadge" style="margin-top:1rem;">
 																<Badge color="purple">{cat}</Badge>
 															</div>
 														{/each}
 													</div>
+												</td>
+												<td class="px-2 py-1 text-gray-700">
+													<b>{pml.deadline}</b>
 												</td>
 											</tr>
 										{/if}
