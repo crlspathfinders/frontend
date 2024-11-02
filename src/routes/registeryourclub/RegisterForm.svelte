@@ -39,10 +39,18 @@
 		{ value: 'Friday', name: 'Friday' }
 	];
 
+	function checkIsAdvisor(email) {
+		console.log(email);
+		console.log(typeof email.charAt(0));
+		if (typeof email.charAt(0) == Number) {
+			console.log("failed");
+		}
+	}
+
 	const checkAllInfo = async () => {
-		const advisor_email = document.querySelector('#advisoremail').value;
-		const name = document.querySelector('#clubname').value;
-		const presEmail = document.querySelector('#presidentemail').value;
+		// const advisor_email = document.querySelector('#advisoremail').value;
+		// const name = document.querySelector('#clubname').value;
+		// const presEmail = document.querySelector('#presidentemail').value;
 		let veepsEmails = [];
 		for (let i = 1; i < 4; i++) {
 			try {
@@ -54,12 +62,28 @@
 		}
 
 		// Make sure advisor is already signed up with role "Advisor":
-		const advisor = await getUserDocData(advisor_email);
-		console.log(advisor);
-		if (!advisor) {
-			errorMessage.set(
-				'Your advisor needs to have already made an account with CRLS PathFinders prior to registering your club.'
-			);
+		// const advisor = await getUserDocData(advisor_email);
+		// checkIsAdvisor(advisor_email);
+		// console.log(advisor);
+		// if (!advisor) {
+		// 	errorMessage.set(
+		// 		'Your advisor needs to have already made an account with CRLS PathFinders prior to registering your club.'
+		// 	);
+		// 	return false;
+		// }
+
+		console.log(advisor_email);
+		console.log(advisor_email[0]);
+		console.log(isNaN(advisor_email[0]));
+		console.log(isNaN(advisor_email[4]));
+
+		if (!isNaN(advisor_email[0])) {
+			errorMessage.set("Make sure to use your advisor's correct email!");
+			return false;
+		}
+
+		if (advisor_email.indexOf("@cpsd.us") === -1) {
+			errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
 			return false;
 		}
 
@@ -73,6 +97,7 @@
 		}
 
 		// Make sure presEmail == currLoggedIn.email
+		console.log(loggedInEmail, presEmail);
 		if (loggedInEmail.localeCompare(presEmail) !== 0) {
 			errorMessage.set('Only the president of ' + name + ' can register.');
 			return false;
@@ -81,18 +106,26 @@
 		return true;
 	};
 
+	let desc;
+	let name;
+	let advisor_email;
+	let presEmail;
+	let roomNum;
+	let gClassLink;
+	let startTime;
+
 	const handleSubmit = async () => {
 		isLoading.set(true);
 		if ((await checkAllInfo()) || showVals) {
 			try {
-				const advisor_email = document.querySelector('#advisoremail').value;
-				console.log(currClub.club_days);
-				const desc = document.querySelector('#clubdescription').value;
-				const name = document.querySelector('#clubname').value;
-				const presEmail = document.querySelector('#presidentemail').value;
-				const roomNum = document.querySelector('#roomnumber').value;
-				const gClassLink = document.querySelector('#gclasslink').value;
-				const startTime = document.querySelector('#clubstarttime').value;
+				// const advisor_email = document.querySelector('#advisoremail').value;
+				// console.log(currClub.club_days);
+				// const desc = document.querySelector('#clubdescription').value;
+				// const name = document.querySelector('#clubname').value;
+				// const presEmail = document.querySelector('#presidentemail').value;
+				// const roomNum = document.querySelector('#roomnumber').value;
+				// const gClassLink = document.querySelector('#gclasslink').value;
+				// const startTime = document.querySelector('#clubstarttime').value;
 				let status;
 				if (showVals) {
 					status = 'Approved';
@@ -147,7 +180,7 @@
 				if (!showVals) {
 					successMessage.set(
 						name +
-							' has been successfully registered. In order to view your club on the website, your advisor first needs to verify it. They should have gotten an email with a code to verify the club. Once they do so, ' +
+							' has been successfully registered. In order to view your club on the website, your advisor should have gotten an email with a code to verify the club. They can either input the verification code themselves (they would need an account on the site), or you can ask them to send it to you to enter. Once they do so, ' +
 							name +
 							' will be visible on the PathFinders website.'
 					);
@@ -160,6 +193,8 @@
 				errorMessage.set('' + error);
 				console.log('Failed to edit club: ' + error);
 			} finally {
+				advisor_email = "";
+
 				isLoading.set(false);
 			}
 		} else {
@@ -246,7 +281,7 @@
 			{#if showVals}
 				<Input type="text" id="clubname" placeholder="Type club name" value={currClub.club_name} />
 			{:else}
-				<Input type="text" id="clubname" placeholder="Type club name" required />
+				<Input type="text" id="clubname" placeholder="Type club name" required bind:value={name}/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -259,7 +294,7 @@
 					value={currClub.president_email}
 				/>
 			{:else}
-				<Input type="text" id="presidentemail" placeholder="President email 1" required />
+				<Input type="text" id="presidentemail" placeholder="President email 1" required bind:value={presEmail}/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -311,7 +346,7 @@
 					placeholder="Advisor Email"
 				/>
 			{:else}
-				<Input type="text" id="advisoremail" placeholder="Advisor Email" required />
+				<Input type="text" id="advisoremail" placeholder="Advisor Email" required bind:value={advisor_email}/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -324,7 +359,7 @@
 					placeholder="Room Number"
 				/>
 			{:else}
-				<Input type="number" id="roomnumber" placeholder="Room Number" required />
+				<Input type="number" id="roomnumber" placeholder="Room Number" required bind:value={roomNum}/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -338,7 +373,7 @@
 					placeholder="Google Classroom Link"
 				/>
 			{:else}
-				<Input type="text" id="gclasslink" placeholder="Google Classroom Link" required />
+				<Input type="text" id="gclasslink" placeholder="Google Classroom Link" required bind:value={gClassLink}/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -372,7 +407,7 @@
 					type="time"
 					id="clubstarttime"
 					placeholder="12"
-					value={currClub.start_time}
+					bind:value={startTime}
 					required
 				/>
 			{/if}
@@ -394,19 +429,23 @@
 					rows="4"
 					name="description"
 					required
+					bind:value={desc}
 				/>
 			{/if}
 		</div>
 		{#if showVals}
 			<input type="text" id="secret_password" value={currClub.secret_password} hidden readonly />
 		{/if}
-		<Button color="green" type="submit">
-			{#if $isLoading}
+		{#if $isLoading}
+			<Button disabled color="green" type="submit">
 				Loading .. <Spinner color="green" />
-			{:else}
+			</Button>
+		{:else}
+			<Button color="green" type="submit">
 				{view} Club
-			{/if}
-		</Button>
+			</Button>
+		{/if}
+
 	</div>
 	<br />
 	<br /><br />

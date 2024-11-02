@@ -83,7 +83,7 @@
 					{#if loggedInUser.role == 'Admin' || loggedInUser.role == 'Super Admin'}
 						<DropdownItem href="/admin">Admin</DropdownItem>
 					{/if}
-					{#if loggedInUser.role == 'Advisor' || loggedInUser.role == 'Super Admin'}
+					{#if loggedInUser.role == 'Advisor' || loggedInUser.role == 'Super Admin' || loggedInUser.is_leader}
 						<DropdownItem
 							href="#"
 							on:click={() => {
