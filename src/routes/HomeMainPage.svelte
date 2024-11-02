@@ -1,13 +1,14 @@
 <script>
-  import { Heading, P, Mark, Span, Button, Popover } from 'flowbite-svelte';
+  import { Heading, P, Mark, Span, Button, Popover, ButtonGroup, Hr } from 'flowbite-svelte';
   import { user } from "../stores/auth";
+  import { FireOutline } from "flowbite-svelte-icons";
 </script>
 
 <style>
   .maincontainer {
     padding: 2rem;
     height: 200vh;
-    background-image: url("https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfindersbackground.png?alt=media&token=cc40fc16-7758-4210-aee4-4827acfa2655");
+    /* background-image: url("https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfindersbackground.png?alt=media&token=cc40fc16-7758-4210-aee4-4827acfa2655"); */
   }
 
   .infocontainer {
@@ -57,6 +58,10 @@
   .specimg {
     max-width: 30%;
   }
+
+  /* #becomeamentorbutton {
+    margin-bottom: 1rem;
+  } */
 }
 
 /* Small screens (mobile) */
@@ -85,6 +90,10 @@
   .specimg {
     max-width: 50%;
   }
+
+  /* #becomeamentorbutton {
+    margin-bottom: 1rem;
+  } */
 }
 </style>
 
@@ -96,15 +105,20 @@
           CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders</Span>
         </center>
       </Heading>
+      <br>
       <P size="lg">
-        Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer.
+        <center>
+          Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer (<u><a target="_blank" href="https://docs.google.com/document/d/1YI2v0bbCvRPl7p3QwTcCgFys6XdEaYL5b8neRynenPI/edit?tab=t.0">read more about our mission statement here</a></u>).
+          <Hr classHr="w-48 h-1 mx-auto my-4 rounded md:my-15 bg-gray-500" />
+          Scroll below to see the various parts of our program!
+        </center>
       </P>
     </div>
     <!-- This shouldn't be hard-coded! (Will fix later on.) -->
     <div class="infocontainer">
       <div class="specinfo" id="clubinfo">
         <div class="specimg" id="clubimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_schoolclubvectorart-removebg-preview.png?alt=media&token=e6aad0e6-0a80-4890-a04d-b4c380669cc9" alt="club">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_clubs_vectorart-removebg-preview.png?alt=media&token=013256c9-7d45-4cad-a8e1-81ca44337f8f" alt="club">
         </div>
         <div class="spectext" id="clubtext">
             <P size="lg">
@@ -156,19 +170,22 @@
               <br>
               Mentors recieve community service hours for their work as well!
               <br><br>
-              {#if $user}
-                <Button outline color="red"><a href="/becomeamentor">Become a mentor</a></Button>
-              {:else}
-                <Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledbecomeamentorbutton">
-                  <p class="text-gray-800">
-                    You can only become a mentor when you have an account!
-                    <br><br>
-                    <u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
-                  </p>
-                </Popover>
-                <Button disabled outline color="red" id="disabledbecomeamentorbutton">Become a mentor</Button>
-              {/if}
-              <Button outline color="red"><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">Send us an email</a></Button>
+              <ButtonGroup>
+                {#if $user}
+                  <Button outline color="red"><a href="/becomeamentor">Become a mentor</a></Button>
+                  <!-- <div id="becomeamentorbutton"></div> -->
+                {:else}
+                  <Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledbecomeamentorbutton">
+                    <p class="text-gray-800">
+                      You can only become a mentor when you have an account!
+                      <br><br>
+                      <u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+                    </p>
+                  </Popover>
+                  <Button disabled outline color="red" id="disabledbecomeamentorbutton">Become a mentor</Button>
+                {/if}
+                <Button outline color="red"><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">Send us an email</a></Button>
+              </ButtonGroup>
             </center>
           </P>
         </div>
