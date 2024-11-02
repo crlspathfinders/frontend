@@ -116,21 +116,10 @@
     </div>
     <!-- This shouldn't be hard-coded! (Will fix later on.) -->
     <div class="infocontainer">
-      <div class="specinfo" id="clubinfo">
-        <div class="specimg" id="clubimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_clubs_vectorart-removebg-preview.png?alt=media&token=013256c9-7d45-4cad-a8e1-81ca44337f8f" alt="club">
-        </div>
-        <div class="spectext" id="clubtext">
-            <P size="lg">
-              <center>
-                Find different clubs that suit your interests. Ranging from sports to drones to art to culture, there are so many different clubs available at our school!
-                <br><br>
-                <Button outline color="red"><a href="/findaclub">Explore Clubs</a></Button>
-              </center>
-            </P>
-        </div>
-      </div>
       <div class="specinfo" id="mentorinfo">
+        <div class="specimg" id="mentorimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_mentorimg-removebg-preview.png?alt=media&token=b619a6cf-29a3-4cfe-a1d1-05e3de85ec27" alt="mentor">
+        </div>
         <div class="spectext" id="mentortext">
           <P size="lg">
             <center>
@@ -142,8 +131,19 @@
             </center>
           </P>
         </div>
-        <div class="specimg" id="mentorimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_mentorimg-removebg-preview.png?alt=media&token=b619a6cf-29a3-4cfe-a1d1-05e3de85ec27" alt="mentor">
+      </div>
+      <div class="specinfo" id="clubinfo">
+        <div class="spectext" id="clubtext">
+            <P size="lg">
+              <center>
+                Find different clubs that suit your interests. Ranging from sports to drones to art to culture, there are so many different clubs available at our school!
+                <br><br>
+                <Button outline color="red"><a href="/findaclub">Explore Clubs</a></Button>
+              </center>
+            </P>
+        </div>
+        <div class="specimg" id="clubimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_clubs_vectorart-removebg-preview.png?alt=media&token=013256c9-7d45-4cad-a8e1-81ca44337f8f" alt="club">
         </div>
       </div>
       <div class="specinfo" id="pmlinfo">
