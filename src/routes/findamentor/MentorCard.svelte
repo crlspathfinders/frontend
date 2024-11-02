@@ -196,13 +196,13 @@
 </Modal>
 
 <!-- This div holds all of the information. -->
-<div class="wholementorwrapper" style="height:100vh;">
+<div class="wholementorwrapper bg-gray-100" style="height:100%;">
 	<!-- The data is only shown when wholeReady is true (which means all of the data has been successfully requested). Remember that the wholeReady is a boolean store variable. To access the value of a store variable, we put the dollar sign $ before the name of the variable, indicating reactivity. -->
 	{#if $wholeReady}
 		<div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
 			<!-- This is all data that should NOT be hard-coded, but we will fix this later once the more pressing issues are solved. -->
 			<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-red-900">
-				Find a mentor
+				Find a mentor!
 			</Heading>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 				Below you can search for and filter juniors and seniors who you believe can best support

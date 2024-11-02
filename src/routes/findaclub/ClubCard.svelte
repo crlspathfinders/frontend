@@ -73,15 +73,17 @@
 			if (!localStorage.getItem("userInfo")) {
 				console.log("userinfo not in storage");
 				userInfo = await retrieveUserInfo();
-				userInfo = JSON.parse(userInfo);
-				myClubs = userInfo.joined_clubs;
-				email = userInfo.email;
-				inClubs.set(myClubs);
+				// userInfo = JSON.parse(userInfo);
+				// myClubs = userInfo.joined_clubs;
+				// email = userInfo.email;
+				// inClubs.set(myClubs);
+				
 			}
 			else {
 				console.log("userinfo already in storage");
 				userInfo = localStorage.getItem('userInfo');
 				userInfo = JSON.parse(userInfo);
+				console.log(userInfo);
 				myClubs = userInfo.joined_clubs;
 				email = userInfo.email;
 				inClubs.set(myClubs);
@@ -115,7 +117,7 @@
 	</div>
 {/if}
 
-<div class="wholeclubwrapper" style="height:100vh;">
+<div class="wholeclubwrapper bg-gray-100" style="height:100%;">
 	{#if $wholeReady}
 		<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
 			<TableHeader headerType="search">

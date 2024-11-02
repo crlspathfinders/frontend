@@ -17,7 +17,7 @@
 			.replace(/\b\w/g, (l) => l.toUpperCase());
 </script>
 
-<div class="mainlayoutwrapper" style="height:100%;">
+<div class="mainlayoutwrapper bg-gray-100" style="height:100%;">
 	<MainNav></MainNav>
 
 	<slot></slot>
@@ -28,12 +28,12 @@
 </svelte:head>
 
 <style>
-	@media (prefers-color-scheme: dark) {
+	/* @media (prefers-color-scheme: dark) {
 		* {
 			color-scheme: light;
 			background-color: white;
 		}
-	}
+	} */
 	/* 
     @media (prefers-color-scheme: dark) {
     .dark .bg-gray-900,
