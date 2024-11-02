@@ -11,6 +11,7 @@
 	} from 'flowbite-svelte-icons';
 	import { user } from '../stores/auth';
 	import { getUserDocData } from '../lib/user';
+	import { retrieveUserInfo } from "$lib/cache";
 
 	let loggedIn = false;
 
@@ -18,27 +19,10 @@
 	let loggedInUser;
 	let userInfo;
 
-	function basicSetUp() {
-		user.subscribe(async value => {
-           if (value) {
-               email = value.email;
-               userInfo = window.localStorage.getItem("userInfo");
-               if (window.localStorage.getItem("userInfo")) {
-                  userInfo = window.localStorage.getItem("userInfo");
-               } else {
-                   userInfo = await getUserDocData(email);
-                   window.localStorage.setItem("userInfo", userInfo);
-               }
-               console.log(userInfo);
-           }
-       });
-
-	}
-
-	onMount(() => {
+	onMount(async () => {
 		if (getLoggedIn()) {
 			loggedIn = true;
-			basicSetUp();
+			await retrieveUserInfo();
 			setTimeout(() => {
 				toggleLoggedIn();
 				loggedIn = false;

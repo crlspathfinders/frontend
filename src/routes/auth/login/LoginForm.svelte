@@ -9,6 +9,7 @@
 	import { toggleLoggedIn } from '../../../lib/auth/login';
 	import { writable } from 'svelte/store';
 	import { googleSignUp } from '../../../lib/auth/googlesignup';
+	import { retrieveUserInfo } from "$lib/cache";
 
 	let email;
 	let password;
@@ -39,6 +40,7 @@
 			if (res) {
 				toggleLoggedIn();
 				loginLoading.set(false);
+				await retrieveUserInfo();
 				goto('/');
 			}
 		} catch (error) {
