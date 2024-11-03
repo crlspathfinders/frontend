@@ -23,7 +23,7 @@
 			</svelte:fragment>
 		</Page404>
 		<center>
-			<img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fimsorryemoji.jpg?alt=media&token=d4eb6c40-4098-4a11-a4a5-9cf1103ff527" alt="I'm sorry">
+			<img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fimsorryemoji-removebg-preview.png?alt=media&token=e288835c-de37-4d30-9be6-9eeb76f798d4" alt="I'm sorry">
 		</center>
 	</Section>
 
