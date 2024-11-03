@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder, Search, Popover } from 'flowbite-svelte';
+    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder, Search, Popover, Heading, Span } from 'flowbite-svelte';
     import { TableHeader } from 'flowbite-svelte-blocks';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
     import { getCollection } from "$lib/api";
@@ -118,6 +118,19 @@
 {/if}
 
 <div class="wholeclubwrapper bg-gray-100" style="height:100%;">
+
+	<div class="titleinfowrapper" style="margin-left: 3rem;">
+		<br>
+		<Heading><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Find</Span> a Club</Heading>
+		<br>
+		<P size="xl">
+			Scroll through the available clubs within CRLS! You can look at when clubs meet, who else is in the club, what their mission statement is, and so much more!
+		</P>
+		<P size="lg">
+			Interested in <u><a href="/registeryourclub">registering</a></u> your club? Please follow the steps <u><a target="_blank" href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0">here</a></u>!
+		</P>
+	</div>
+
 	{#if $wholeReady}
 		<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
 			<TableHeader headerType="search">

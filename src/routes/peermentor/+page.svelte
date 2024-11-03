@@ -1,13 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
 	import PeerMentorLinkTable from './PeerMentorLinkTable.svelte';
-	import { Heading, P } from 'flowbite-svelte';
+	import { Heading, P, Span } from 'flowbite-svelte';
 </script>
 
 <div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
 	<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-gray-100"
-		>Peer Mentor Support Group</Heading
+		><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Peer Mentor</Span> Support Group</Heading
 	>
+	<br>
 	<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 		We are thrilled to be bringing back the Peer Mentor Support Group after a year-long break! We’re
 		also excited to announce our partnership with CRLS Pathfinders, which offers a one-on-one

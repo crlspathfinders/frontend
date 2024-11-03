@@ -13,7 +13,8 @@
 		Avatar,
 		Heading,
 		Popover,
-		Skeleton
+		Skeleton,
+		Span
 	} from 'flowbite-svelte';
 	import { getCollectionDoc } from '$lib/api';
 	import {
@@ -260,11 +261,11 @@
 
 <br />
 
-<div class="wholebecomeamentorwrapper" style="height:120vh;">
+<div class="wholebecomeamentorwrapper bg-gray-100" style="height:100%;">
 	{#if $wholeReady}
 		{#if loggedInUser}
 			{#if !showVals && !loggedInUser.mentor_eligible}
-				<Heading tag="h2" customSize="text-4xl font-extrabold ">Become a mentor</Heading>
+				<Heading tag="h2" customSize="text-4xl font-extrabold "><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Become</Span> a mentor</Heading>
 
 				<div class="mentoreligibilewrapper" style="border-radius:10px;margin-top:1rem;">
 					<P class="mb-3" weight="light" color="text-gray-600">
@@ -372,9 +373,11 @@
 					</form>
 				</div>
 			{:else if $restReady}
-				<h2 class="mb-4 text-xl font-bold text-gray-900">{view} Mentor</h2>
+				
+				<Heading tag="h2" customSize="text-4xl font-extrabold "><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">{view}</Span> Mentor</Heading>
+				<br>
 				<form on:submit={handleSubmit}>
-					<div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+					<div class="grid gap-4 sm:grid-cols-2 sm:gap-6 bg-gray-100" style="height: 100%;">
 						<div class="w-full">
 							<Label for="firstname" class="mb-2">First Name <i style="color: red;">*</i></Label>
 							{#if showVals}

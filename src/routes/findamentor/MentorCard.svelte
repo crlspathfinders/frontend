@@ -18,7 +18,8 @@
 		Checkbox,
 		Heading,
 		DropdownItem,
-		Badge
+		Badge,
+		Span
 	} from 'flowbite-svelte';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 	import { getCollection } from '$lib/api';
@@ -202,8 +203,9 @@
 		<div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
 			<!-- This is all data that should NOT be hard-coded, but we will fix this later once the more pressing issues are solved. -->
 			<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-red-900">
-				Find a mentor!
+				<Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Find</Span> a Mentor
 			</Heading>
+			<br>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 				Below you can search for and filter juniors and seniors who you believe can best support
 				your academic interests.

@@ -10,7 +10,11 @@
 		MultiSelect,
 		Spinner,
 		Modal,
-		Alert
+		Alert,
+		P,
+		Hr,
+		Heading,
+		Span
 	} from 'flowbite-svelte';
 	import { getCollection } from '$lib/api';
 	import { createClub, editClub } from '../../lib/club';
@@ -243,7 +247,12 @@
 {/if}
 
 <br />
-<h2 class="mb-4 text-xl font-bold text-gray-900">{view} Your Club</h2>
+<!-- <h2 class="mb-4 text-xl font-bold text-gray-900">{view} Your Club</h2> -->
+<P size="4xl" weight="bold"><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">{view}</Span> Your Club</P>
+<P size="l">
+	Need help registering your club? Please follow the steps <u><a target="_blank" href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0">here</a></u>!
+</P>
+<Hr classHr="w-48 h-1 my-4 rounded md:my-3 bg-gray-500" />
 <form
 	on:submit={() => {
 		handleSubmit();
