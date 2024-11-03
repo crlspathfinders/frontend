@@ -40,6 +40,20 @@
     min-height: 10%;
   }
 
+  #maintitleinfo {
+    border: 0px solid black;
+    border-radius: 0;
+    margin-bottom: 2rem;
+    margin-top: -10;
+    /* display: flex; */
+    justify-content: left;
+  }
+
+  #titlespectext {
+    padding: 0;
+    max-width: 100%;
+  }
+
   @media (max-width: 768px) {
   .maincontainer {
     padding: 1.5rem;
@@ -99,23 +113,53 @@
 
 <div class="wholerapper bg-gray-100" style="height: 100%;">
   <div class="maincontainer bg-gray-100" style="height: 100%;">
-    <div class="titlecontainer">
-      <Heading tag="h1" class="mb-4">
-        <center>
-          CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders</Span>
-        </center>
-      </Heading>
-      <br>
-      <P size="lg">
-        <center>
-          Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer (<u><a target="_blank" href="https://docs.google.com/document/d/1YI2v0bbCvRPl7p3QwTcCgFys6XdEaYL5b8neRynenPI/edit?tab=t.0">read more about our mission statement here</a></u>).
-          <Hr classHr="w-48 h-1 mx-auto my-4 rounded md:my-15 bg-gray-500" />
-          Scroll below to see the various parts of our program!
-        </center>
-      </P>
-    </div>
+      <!-- <div class="titlecontainer spectext">
+        <Heading tag="h1" class="mb-4">
+          <center>
+            CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders</Span>
+          </center>
+        </Heading>
+        <br>
+        <P size="lg">
+          <center>
+            Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer (<u><a target="_blank" href="https://docs.google.com/document/d/1YI2v0bbCvRPl7p3QwTcCgFys6XdEaYL5b8neRynenPI/edit?tab=t.0">read more about our mission statement here</a></u>).
+            <Hr classHr="w-48 h-1 mx-auto my-4 rounded md:my-15 bg-gray-500" />
+            Scroll below to see the various parts of our program!
+          </center>
+        </P>
+      </div>
+      <div class="specimg">
+        <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfinderslogo_nobackground.png?alt=media&token=58a95374-adfd-4c0f-b724-a5bbd6ed7ea5" alt="PathFinders Logo" style="min-width: 30%; min-height:30%;">
+      </div> -->
+    
     <!-- This shouldn't be hard-coded! (Will fix later on.) -->
     <div class="infocontainer">
+
+      <div class="specinfo" id="maintitleinfo">
+        <div class="spectext" id="titlespectext">
+          <div class="spectitletext">
+            <Heading tag="h1" class="mb-4">
+              CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders</Span>
+            </Heading>
+            <br>
+            <P size="2xl">
+               <i>
+                Bringing autonomy back to the students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer (<u><a target="_blank" href="https://docs.google.com/document/d/1YI2v0bbCvRPl7p3QwTcCgFys6XdEaYL5b8neRynenPI/edit?tab=t.0">read more about our mission statement here</a></u>).
+                <!-- <Hr classHr="w-48 h-1 mx-auto my-4 rounded md:my-15 bg-gray-500" /> -->
+               </i>
+               <br>
+            </P>
+            <P size="xl">
+              Scroll below to learn more about what our program offers.
+            </P>
+          </div>
+          
+        </div>
+        <!-- <div class="specimg">
+          <img width="300rem" src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fempowering-removebg-preview.png?alt=media&token=99a65cff-6c60-4d47-8d59-559a2be1b7d0" alt="PathFinders Logo">
+        </div> -->
+      </div>
+
       <div class="specinfo" id="mentorinfo">
         <div class="specimg" id="mentorimg">
           <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_mentorimg-removebg-preview.png?alt=media&token=b619a6cf-29a3-4cfe-a1d1-05e3de85ec27" alt="mentor">
@@ -125,18 +169,19 @@
             <center>
               Whether you're having trouble in a class, preparing for an upcoming exam, or just need some guidance on high school, you can connect to and pair with one of our mentors.
               <br>
-              Message someome who you best believe matches your interests and can help you support your goals.
+              Message someone who you best believe matches your interests and can help you support your academic or career goals.
               <br><br>
               <Button outline color="red"><a href="/findamentor">Explore Mentors</a></Button>
             </center>
           </P>
         </div>
       </div>
+
       <div class="specinfo" id="clubinfo">
         <div class="spectext" id="clubtext">
             <P size="lg">
               <center>
-                Find different clubs that suit your interests. Ranging from sports to drones to art to culture, there are so many different clubs available at our school!
+                Find different clubs that suit your interests. Ranging from sports, to drones, to art, to culture, there are so many different clubs available at our school!
                 <br><br>
                 <Button outline color="red"><a href="/findaclub">Explore Clubs</a></Button>
               </center>
@@ -146,6 +191,7 @@
           <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_clubs_vectorart-removebg-preview.png?alt=media&token=013256c9-7d45-4cad-a8e1-81ca44337f8f" alt="club">
         </div>
       </div>
+
       <div class="specinfo" id="pmlinfo">
         <div class="specimg" id="mentorimg">
           <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_opportunitiesclipart-removebg-preview.png?alt=media&token=d8efa34e-d006-478b-b2a2-e9e743c788a0" alt="peermentor">
@@ -153,7 +199,7 @@
         <div class="spectext" id="pmltext">
           <P size="lg">
             <center>
-              Looking for opportunities in CRLS or Cambridge? Check out our list of available opportunities to see which one interests you the most!
+              Looking for opportunities in CRLS or Cambridge? Check out our list of available opportunities to see which one catches your eye!
               <br>
               Also keep an eye on this page for peer-shadowing. Once course selection rolls around, you are able to shadow a class you might be interested in taking.
               <br><br>
@@ -162,18 +208,19 @@
           </P>
         </div>
       </div>
+      
       <div class="specinfo" id="helpoutinfo">
         <div class="spectext" id="helpouttext">
           <P size="lg">
             <center>
-              Want to help out? Whether that's becoming a mentor, joining our management team or website development team, follow the links below to reach out!
+              Want to help out? Want to become a mentor and earn community service hours, or get your club registered on the site?
               <br>
-              Mentors recieve community service hours for their work as well!
+              Follow the links below!
               <br><br>
               <ButtonGroup>
                 {#if $user}
                   <Button outline color="red"><a href="/becomeamentor">Become a mentor</a></Button>
-                  <!-- <div id="becomeamentorbutton"></div> -->
+                  <Button outline color="red"><a href="/registeryourclub">Register club</a></Button>
                 {:else}
                   <Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledbecomeamentorbutton">
                     <p class="text-gray-800">
@@ -183,14 +230,38 @@
                     </p>
                   </Popover>
                   <Button disabled outline color="red" id="disabledbecomeamentorbutton">Become a mentor</Button>
+                  <Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledregisterclubbutton">
+                    <p class="text-gray-800">
+                      You can only register a club when you have an account!
+                      <br><br>
+                      <u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+                    </p>
+                  </Popover>
+                  <Button disabled outline color="red" id="disabledregisterclubbutton">Register club</Button>
                 {/if}
-                <Button outline color="red"><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">Send us an email</a></Button>
               </ButtonGroup>
             </center>
           </P>
         </div>
         <div class="specimg" id="mentorimg">
           <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_reachout_clipart-removebg-preview.png?alt=media&token=e52c1d3c-32fc-4672-a1e7-63b6dcd22c09" alt="peermentor">
+        </div>
+      </div>
+
+      <div class="specinfo" id="contactinfo">
+        <div class="specimg" id="contactimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fcontact-removebg-preview.png?alt=media&token=1cde35bf-0068-42e8-8a52-c0f9895a0aa9" alt="Contact Us">
+        </div>
+        <div class="spectext" id="contacttext">
+          <P size="lg">
+            <center>
+              Need help with features on the site? Mentors not responding? Can't find the page you're looking for?
+              <br>
+              Contact us! Our email is <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">crlspathfinders25@gmail.com</a></u>.
+              <br><br>
+              <Button outline color="red"><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">Send us an email</a></Button>
+            </center>
+          </P>
         </div>
       </div>
     </div>
