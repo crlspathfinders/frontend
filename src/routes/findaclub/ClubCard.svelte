@@ -1,14 +1,26 @@
 <script>
-    import { onMount } from 'svelte';
-    import { Card, Button, ButtonGroup, Spinner, Toast, P, CardPlaceholder, Search, Popover, Heading, Span } from 'flowbite-svelte';
-    import { TableHeader } from 'flowbite-svelte-blocks';
-    import { ArrowRightOutline } from 'flowbite-svelte-icons';
-    import { getCollection } from "$lib/api";
-    import { user } from "../../stores/auth";
-    import { getUserDocData, toggleClub } from "../../lib/user";
-    import { writable } from 'svelte/store';
-    import { fly } from 'svelte/transition';
-    import { Badge } from 'flowbite-svelte';
+ 	import { onMount } from 'svelte';
+	import {
+		Card,
+		Button,
+		ButtonGroup,
+		Spinner,
+		Toast,
+		P,
+		CardPlaceholder,
+		Search,
+		Popover,
+		Heading,
+		Span
+	} from 'flowbite-svelte';
+	import { TableHeader } from 'flowbite-svelte-blocks';
+	import { ArrowRightOutline } from 'flowbite-svelte-icons';
+	import { getCollection } from '$lib/api';
+	import { user } from '../../stores/auth';
+	import { getUserDocData, toggleClub } from '../../lib/user';
+	import { writable } from 'svelte/store';
+	import { fly } from 'svelte/transition';
+	import { Badge } from 'flowbite-svelte';
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 
 	let wholeReady = writable(false);
@@ -54,7 +66,7 @@
 			// Brings in the current user's information.
 			userInfo = await getUserDocData(email);
 			// Calls the updateCache function from lib/cache.js to update the userInfo whenever they join/leave a club.
-			updateCache("userInfo", userInfo);
+			updateCache('userInfo', userInfo);
 		} catch (error) {
 			console.log('Failed to toggle club! ' + error);
 		} finally {
@@ -66,21 +78,19 @@
 		}
 	};
 
-    onMount(async () => {
-        wholeReady.set(false);
-        try {
+	onMount(async () => {
+		wholeReady.set(false);
+		try {
 			// GOOD CODE:
-			if (!localStorage.getItem("userInfo")) {
-				console.log("userinfo not in storage");
+			if (!localStorage.getItem('userInfo')) {
+				console.log('userinfo not in storage');
 				userInfo = await retrieveUserInfo();
 				// userInfo = JSON.parse(userInfo);
 				// myClubs = userInfo.joined_clubs;
 				// email = userInfo.email;
 				// inClubs.set(myClubs);
-				
-			}
-			else {
-				console.log("userinfo already in storage");
+			} else {
+				console.log('userinfo already in storage');
 				userInfo = localStorage.getItem('userInfo');
 				userInfo = JSON.parse(userInfo);
 				console.log(userInfo);
@@ -90,22 +100,21 @@
 			}
 
 			// GOOD CODE: (uncomment to see in action):
-			// if (!localStorage.getItem("clubsInfo")) {
-			// 	console.log("clubs not in locstor");
-			// 	clubs = await retrieveCollectionInfo("Clubs");
-			// 	clubs = JSON.parse(clubs);
-			// } else {
-			// 	console.log("clubs in locstor");
-			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
-			// }
-            clubs = await getCollection("Clubs");
-        } catch (error) {
-            console.log("Onmount failed: " + error);
-        } finally {
-            wholeReady.set(true);
-        }
-    });
-
+			if (!localStorage.getItem("clubsInfo")) {
+				console.log("clubs not in locstor");
+				clubs = await retrieveCollectionInfo("Clubs");
+				clubs = JSON.parse(clubs);
+			} else {
+				console.log("clubs in locstor");
+				clubs = JSON.parse(localStorage.getItem("clubsInfo"));
+			}
+			// clubs = await getCollection('Clubs');
+		} catch (error) {
+			console.log('Onmount failed: ' + error);
+		} finally {
+			wholeReady.set(true);
+		}
+	});
 </script>
 
 {#if $showToast}
@@ -118,16 +127,28 @@
 {/if}
 
 <div class="wholeclubwrapper bg-gray-100" style="height:100%;">
-
 	<div class="titleinfowrapper" style="margin-left: 3rem;">
-		<br>
-		<Heading><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Find</Span> a Club</Heading>
-		<br>
+		<br />
+		<Heading
+			><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
+				>Find</Span
+			> a Club</Heading
+		>
+		<br />
 		<P size="xl">
-			Scroll through the available clubs within CRLS! You can look at when clubs meet, who else is in the club, what their mission statement is, and so much more!
+			Scroll through the available clubs within CRLS! You can look at when clubs meet, who else is
+			in the club, what their mission statement is, and so much more!
 		</P>
 		<P size="lg">
-			Interested in <u><a href="/registeryourclub">registering</a></u> your club? Please follow the steps <u><a target="_blank" href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0">here</a></u>!
+			Interested in <u><a href="/registeryourclub">registering</a></u> your club? Please follow the
+			steps
+			<u
+				><a
+					target="_blank"
+					href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0"
+					>here</a
+				></u
+			>!
 		</P>
 	</div>
 
