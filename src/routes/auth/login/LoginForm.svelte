@@ -9,7 +9,7 @@
 	import { toggleLoggedIn } from '../../../lib/auth/login';
 	import { writable } from 'svelte/store';
 	import { googleSignUp } from '../../../lib/auth/googlesignup';
-	import { retrieveUserInfo } from '$lib/cache';
+	import { retrieveUserInfo } from "$lib/cache";
 
 	let email;
 	let password;
@@ -51,11 +51,9 @@
 	}
 </script>
 
-<Section name="login" class="flex justify-center items-center min-h-screen">
+<Section name="login">
 	<Register>
-		<div
-			class="p-6 space-y-4 md:space-y-6 sm:p-8 max-w-md w-full bg-white rounded-lg shadow-md border border-gray-300 mx-auto"
-		>
+		<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
 			<form
 				class="flex flex-col space-y-6"
 				on:submit={() => {
