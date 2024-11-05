@@ -9,7 +9,7 @@
 	import { toggleLoggedIn } from '../../../lib/auth/login';
 	import { writable } from 'svelte/store';
 	import { googleSignUp } from '../../../lib/auth/googlesignup';
-	import { retrieveUserInfo } from "$lib/cache";
+	import { retrieveUserInfo } from '$lib/cache';
 
 	let email;
 	let password;

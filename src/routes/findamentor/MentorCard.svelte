@@ -22,7 +22,7 @@
 		Span
 	} from 'flowbite-svelte';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { getCollection } from '$lib/api';
+	import { getCollection, getDataFromLocalStorage, setDataInLocalStorage } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -30,24 +30,7 @@
 	import RegisterForm from '../becomeamentor/RegisterForm.svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import { Search } from 'flowbite-svelte';
-	import {
-		createMentor,
-		editMentor,
-		races,
-		religions,
-		genders,
-		languages,
-		academics,
-		UploadMentorImage,
-		SetMentorImage,
-		sendMentorPitch,
-		listAcademics,
-		listGenders,
-		listLanguages,
-		listRaces,
-		listReligions,
-		retrieveDemographics
-	} from '../../lib/mentor';
+	import { retrieveDemographics } from '../../lib/mentor';
 	import { ChevronRightOutline } from 'flowbite-svelte-icons';
 
 	// Declaring variables to be used:
@@ -56,19 +39,19 @@
 	let filters = writable([]); // list store
 
 	let ready = false;
-
 	let mentors = [];
-
 	let email = '';
-
 	let userInfo;
-
 	let view = 'Edit';
 	let showVals = true;
-
 	let currMentor;
-
 	let searching = '';
+
+	let listAcademics = [];
+	let listRaces = [];
+	let listReligions = [];
+	let listLanguages = [];
+	let listGenders = [];
 
 	// Filter functionality
 	function toggleFilters(item) {
@@ -109,74 +92,104 @@
 	}
 
 	// This function isn't currently being used.
-    function filtersIncluded(mentor) {
-        console.log(mentor);
-        let all_info = [];
-        if (mentor.academics.length > 0) { all_info.push(mentor.academics); }
-        if (mentor.gender.length > 0) { all_info.push(mentor.gender); }
-        if (mentor.languages.length > 0) { all_info.push(mentor.languages); }
-        if (mentor.races.length > 0) { all_info.push(mentor.races); }
-        if (mentor.religions.length > 0) { all_info.push(mentor.religions); }
-        console.log(all_info);
-        console.log($filters.length);        
-        // if any of these are in filters, then return true.
-        for (let i = 0; i < all_info.length; i++) {
-            for (let j = 0; j < $filters.length; j++) {
-                if (all_info[i].localeCompare($filters[j]) === 0) {return true};
-            }
-        }
-        return false;
-    }
+	function filtersIncluded(mentor) {
+		console.log(mentor);
+		let all_info = [];
+		if (mentor.academics.length > 0) {
+			all_info.push(mentor.academics);
+		}
+		if (mentor.gender.length > 0) {
+			all_info.push(mentor.gender);
+		}
+		if (mentor.languages.length > 0) {
+			all_info.push(mentor.languages);
+		}
+		if (mentor.races.length > 0) {
+			all_info.push(mentor.races);
+		}
+		if (mentor.religions.length > 0) {
+			all_info.push(mentor.religions);
+		}
+		console.log(all_info);
+		console.log($filters.length);
+		// if any of these are in filters, then return true.
+		for (let i = 0; i < all_info.length; i++) {
+			for (let j = 0; j < $filters.length; j++) {
+				if (all_info[i].localeCompare($filters[j]) === 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	// onMount function run whenever the page reloads (is an async function because we call await functions in the function).
-  	onMount(async () => {
+	onMount(async () => {
 		// By default wholeReady is false, and therefore no data is rendered onto the page.
 		wholeReady.set(false);
 		// Whole thing in try-catch block:
 		try {
 			// GOOD CODE:
 			// Checks if userInfo is not in the localStorage
-			if (!localStorage.getItem("userInfo")) {
-				console.log("userinfo not in storage");
+			if (!localStorage.getItem('userInfo')) {
+				console.log('userinfo not in storage');
 				// If userInfo is not in localStorage calls the retrieveUserInfo function from cache.js, which will store the current user's information in the localStorage for future use and caching. This function is used with await because it is an async function
 				userInfo = await retrieveUserInfo();
 				// email = userInfo.email;
 				console.log(userInfo);
-			}
-			else { // If we reach here, that means userInfo is in localStorage
-				console.log("userinfo already in storage");
+			} else {
+				// If we reach here, that means userInfo is in localStorage
+				console.log('userinfo already in storage');
 				try {
 					// Retrieves the correct userInfo from the localStorage (we know that it must be there!)
 					userInfo = localStorage.getItem('userInfo'); // This will return a STRING.
 					userInfo = JSON.parse(userInfo); // JSON.parse is IMPERATIVE because it turns the string that is returned into a JSON dictionary, allowing us to access data from that dictionary, like the user's email, etc.
 					// console.log(userInfo);
-					email = userInfo["email"];
+					email = userInfo['email'];
 					// console.log(email);
 				} catch (error) {
 					// Prints the error that to the console, if one exists.
 					console.log("couldn't fetchuserinfo: " + error);
 				} finally {
-					console.log("finished");
+					console.log('finished');
 				}
-				
 			}
 
 			// GREAT WORKS: (uncomment to see in action): The reason we don't use this function now, even though it significantly speeds up the loading time, is because it is not done yet - we have to make sure the mentor data in localStorage is updated when the mentor updates their information, which hasn't been done yet. (That is a TO-DO! - see ClubCard handleClick() function for an example of how to do that, it's not too hard.)
 
-			// if (!localStorage.getItem("mentorsInfo")) {
-			// 	console.log("mentors not in locstor!");
-			// 	mentors = await retrieveCollectionInfo("Mentors");
-			// 	// mentors = J(mentors);
-			// } else {
-			// 	console.log("mentors in locstor!");
-			// 	mentors = JSON.parse(localStorage.getItem("mentorsInfo"));
-			// }
+			if (!localStorage.getItem('mentorsInfo')) {
+				console.log('mentors not in locstor!');
+				mentors = await retrieveCollectionInfo('Mentors');
+				// mentors = J(mentors);
+			} else {
+				console.log('mentors in locstor!');
+				mentors = JSON.parse(localStorage.getItem('mentorsInfo'));
+			}
 
 			// For now we do it the old fashioned way. The getCollection function is a function from the api.js file in the lib folder, that just returns a specific colelction. A collection is what our databse (Google Firestore) calls each table of data. In this case we call the collection of Mentors to get the data of each mentor who is signed up. The reason we had to optimize this was because it is calling static data, meaning the data doesn't change on the page reload, but is still being requested. But why should we constantly request data that we know doesn't change? That slows down the site, and the above localStorage implementation fixes that and only calls this data once.
-			mentors = await getCollection("Mentors");
-			
-			await retrieveDemographics(); // TODO: Call retrieveCollectionInfo function here - if works this page should load instantly!
+			// mentors = await getCollection('Mentors');
 
+			if (!localStorage.getItem('demographicsInfo')) {
+				console.log('demographics not in locstor!');
+				const demographics = await retrieveDemographics();
+
+				religions = demographics.religions;
+				academics = demographics.acedemics;
+				races = demographics.races;
+				languages = demographics.languages;
+				genders = demographics.genders;
+
+				localStorage.setItem('demographicsInfo', JSON.stringify(demographics));
+			} else {
+				console.log('demographics in locstor!');
+				demographics = JSON.parse(localStorage.getItem('demographicsInfo'));
+
+				religions = demographics.religions;
+				academics = demographics.acedemics;
+				races = demographics.races;
+				languages = demographics.languages;
+				genders = demographics.genders;
+			}
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {
@@ -203,9 +216,11 @@
 		<div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
 			<!-- This is all data that should NOT be hard-coded, but we will fix this later once the more pressing issues are solved. -->
 			<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-red-900">
-				<Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Find</Span> a Mentor
+				<Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
+					>Find</Span
+				> a Mentor
 			</Heading>
-			<br>
+			<br />
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 				Below you can search for and filter juniors and seniors who you believe can best support
 				your academic interests.
@@ -219,7 +234,7 @@
 				goals. Send them an email and start your journey today.
 			</P>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
-				Interested in becoming a mentor? 
+				Interested in becoming a mentor?
 				{#if $user}
 					<u><a href="/becomeamentor">Register here</a></u>
 				{:else}
@@ -250,7 +265,7 @@
 						{#each listAcademics as r}
 							<DropdownItem>
 								<!-- Notice the user of $ before filters, because filters is a store variable. -->
-								 <!-- $fiters.includes(r) checks if the current academic is in the filters array. -->
+								<!-- $fiters.includes(r) checks if the current academic is in the filters array. -->
 								{#if $filters.includes(r)}
 									<!-- on:change={()} means everytime you select or deselect this checkbox input, it calls the toggleFilters function that we defined above, which just updates the contents of the filters array. -->
 									<Checkbox
@@ -412,7 +427,7 @@
 							{/if}
 							<h5 class="mb-1 text-xl font-medium text-gray-900">
 								<!-- The information of each mentor listed out. -->
-								 <!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
+								<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
 								{m.firstname}
 								{m.lastname}
 								<!-- This checks if this mentor is the current logged in user. If it is, it adds the pencil icon, which when clicked allows the user to edit or change their information. -->
@@ -463,16 +478,21 @@
 											class="font-medium hover:underline">Message</A
 										>
 									</Button>
-								<!-- If the current user is not logged in, they will not be able to message anyone, and instead will be prompted to make an account or sign in when they try to click on "Message." -->
+									<!-- If the current user is not logged in, they will not be able to message anyone, and instead will be prompted to make an account or sign in when they try to click on "Message." -->
 								{:else}
 									<Button disabled outline color="blue" id="disabledmessagebutton" class="">
 										Message
 									</Button>
-									<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledmessagebutton">
+									<Popover
+										class="w-64 text-sm font-light "
+										title="Make an account first!"
+										triggeredBy="#disabledmessagebutton"
+									>
 										<p class="text-gray-800">
 											You can only message mentors when you have an account!
-											<br><br>
-											<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+											<br /><br />
+											<u><a href="/auth/login">Log in</a></u> or
+											<u><a href="/auth/signup">Sign up</a></u>
 										</p>
 									</Popover>
 								{/if}
@@ -483,7 +503,7 @@
 			{/each}
 		</div>
 	{:else}
-	<!-- This else refers to if $wholeReady is false, in which case a loading message will show. -->
+		<!-- This else refers to if $wholeReady is false, in which case a loading message will show. -->
 		<center>
 			<div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
 				Loading Mentors ... <Spinner color="blue" />
@@ -515,7 +535,7 @@
     box-shadow: inset;
    } */
 
-   /* Making each mentor card dynamic to the width of the screen or page. */
+	/* Making each mentor card dynamic to the width of the screen or page. */
 
 	@media (max-width: 1200px) {
 		.card-container {

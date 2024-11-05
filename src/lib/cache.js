@@ -2,7 +2,7 @@ import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 import { user } from '../stores/auth';
 import { getUserDocData } from '$lib/user';
-import { getCollection } from "$lib/api";
+import { getCollection } from '$lib/api';
 
 // A dictionary store variable for all of the cachedData (we will update it with more as we go along).
 const cachedData = writable({
@@ -33,12 +33,11 @@ if (browser) {
 
 if (storedUserInfo) {
 	try {
-		console.log("Updating cache");
+		console.log('Updating cache');
 		updateCache('userInfo', JSON.parse(storedUserInfo));
 	} catch (error) {
-		console.log("Failed to update cache: " + error);
+		console.log('Failed to update cache: ' + error);
 	}
-	
 }
 
 if (storedClubs) {
@@ -72,7 +71,7 @@ export async function retrieveUserInfo() {
 				console.log('cached data', userInfo);
 			}
 		} catch (error) {
-			console.log("Failed to retrieve user info: " + error);
+			console.log('Failed to retrieve user info: ' + error);
 		}
 	});
 	return userInfo;
@@ -82,13 +81,13 @@ export async function retrieveUserInfo() {
 // BTW: This function isn't ready to be fully used yet, although you can see it in the commented out stuff in MentorCard.svelte, how it should be used.
 export async function retrieveCollectionInfo(collection) {
 	let collectionInfo;
-	console.log("starting " + collection + " function");
+	console.log('starting ' + collection + ' function');
 
 	try {
 		collectionInfo = await getCollection(collection);
-		updateCache(collection.toLowerCase() + "Info", collectionInfo);
-	} catch(error) {
-		console.log("Failed to get collectionInfo: " + error);
+		updateCache(collection.toLowerCase() + 'Info', collectionInfo);
+	} catch (error) {
+		console.log('Failed to get collectionInfo: ' + error);
 	}
 
 	return collectionInfo;
