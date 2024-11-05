@@ -34,10 +34,13 @@
   }
 
   .specimg {
-    max-width: 20%;
+    max-width: 30%;
     max-height: 20%;
     min-width: 10%;
-    min-height: 10%;
+    min-height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   #maintitleinfo {
@@ -70,7 +73,10 @@
   }
 
   .specimg {
-    max-width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 40%;
   }
 
   /* #becomeamentorbutton {
@@ -102,6 +108,9 @@
   }
 
   .specimg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     max-width: 50%;
   }
 
@@ -162,7 +171,7 @@
 
       <div class="specinfo" id="mentorinfo">
         <div class="specimg" id="mentorimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_mentorimg-removebg-preview.png?alt=media&token=b619a6cf-29a3-4cfe-a1d1-05e3de85ec27" alt="mentor">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F4-removebg-preview.png?alt=media&token=2180129f-5c8d-4a6d-b5d8-adc0edaa8e77" alt="mentor">
         </div>
         <div class="spectext" id="mentortext">
           <P size="lg">
@@ -188,13 +197,13 @@
             </P>
         </div>
         <div class="specimg" id="clubimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_clubs_vectorart-removebg-preview.png?alt=media&token=013256c9-7d45-4cad-a8e1-81ca44337f8f" alt="club">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F5-removebg-preview.png?alt=media&token=2f819424-e89d-42a0-8f45-17f7a387a9cb" alt="club">
         </div>
       </div>
 
       <div class="specinfo" id="pmlinfo">
         <div class="specimg" id="mentorimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_opportunitiesclipart-removebg-preview.png?alt=media&token=d8efa34e-d006-478b-b2a2-e9e743c788a0" alt="peermentor">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F6-removebg-preview.png?alt=media&token=9d2a7327-21d8-4d64-8b76-b6cd30ac61ea" alt="peermentor">
         </div>
         <div class="spectext" id="pmltext">
           <P size="lg">
@@ -244,13 +253,13 @@
           </P>
         </div>
         <div class="specimg" id="mentorimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpf_reachout_clipart-removebg-preview.png?alt=media&token=e52c1d3c-32fc-4672-a1e7-63b6dcd22c09" alt="peermentor">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fthe_best_pathfinder_icons_found_by_urbana-removebg-preview.png?alt=media&token=c61646b4-d481-4975-908d-0c950332f75a" alt="helpout">
         </div>
       </div>
 
       <div class="specinfo" id="contactinfo">
         <div class="specimg" id="contactimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fcontact-removebg-preview.png?alt=media&token=1cde35bf-0068-42e8-8a52-c0f9895a0aa9" alt="Contact Us">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F3-removebg-preview.png?alt=media&token=2289e9bf-8c24-4c99-80ca-9eed0d804232" alt="Contact Us">
         </div>
         <div class="spectext" id="contacttext">
           <P size="lg">
