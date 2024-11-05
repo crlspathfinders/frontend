@@ -218,6 +218,14 @@
 				Simply click "message" for whichever mentor you believe can best help you achieve your
 				goals. Send them an email and start your journey today.
 			</P>
+			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
+				Interested in becoming a mentor? 
+				{#if $user}
+					<u><a href="/becomeamentor">Register here</a></u>
+				{:else}
+					<u><a href="/auth/login">Login first</a></u>
+				{/if}
+			</P>
 		</div>
 
 		<!-- This is the search box - All of the components here are imported from the Flowbite Svelte UI Library, which you can find links to in the doc I emailed you. -->
