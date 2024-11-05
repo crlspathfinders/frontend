@@ -60,10 +60,10 @@
 	let currLinkName = '';
 	let currLinkUrl = '';
 
-	let bio = '';
-	let deadline = '';
-	let currBio = '';
-	let currDeadline = '';
+	let bio = "";
+	let deadline = "";
+	let currBio = "";
+	let currDeadline = "";
 
 	function toggleFilters(item) {
 		filtersSelected.update((currentItems) => {
@@ -101,6 +101,7 @@
 		} catch (error) {
 			console.log('Failed to delete link: ' + error);
 		} finally {
+			// NEED CACHING
 			peerMentorLinks = await getCollection('PeerMentorLinks');
 			categories = await getCollection('Demographics');
 			for (let i = 0; i < categories.length; i++) {
@@ -119,6 +120,7 @@
 			// const correctedCats = selectedCategories.join(", ");
 			// console.log(correctedCats);
 			await addLink(linkName, linkUrl, selectedCategories, bio, deadline);
+			// UPDATE PML locstor
 			console.log('Successfully added link');
 			linkName = '';
 			linkUrl = '';
@@ -128,6 +130,7 @@
 			console.log('Failed to add link');
 		} finally {
 			isLoading.set(false);
+			// NEED CACHE
 			peerMentorLinks = await getCollection('PeerMentorLinks');
 		}
 	};
@@ -136,6 +139,7 @@
 		isLoading.set(true);
 		try {
 			await editLink(oldLinkName, currLinkName, currLinkUrl, currCats, currBio, currDeadline);
+			// UPDATE locstor
 			console.log('Successfully edited link');
 			currLinkName = '';
 			currLinkUrl = '';
@@ -147,6 +151,7 @@
 			console.log('Failed to edit link');
 		} finally {
 			isLoading.set(false);
+			// NEED CACHE
 			peerMentorLinks = await getCollection('PeerMentorLinks');
 			closeshowEditLinkModal();
 		}
@@ -163,6 +168,7 @@
 			console.log('Failed to edit category: ' + error);
 		} finally {
 			// Update the demographics collection:
+			// LEAVE FOR NOW
 			categories = await getCollection('Demographics');
 			for (let i = 0; i < categories.length; i++) {
 				if (categories[i].id == 'PeerMentor') {
@@ -171,6 +177,7 @@
 			}
 			categories = makeSelectCategoriesOk(categories);
 			// Update the peermentorlinks individual fields:
+			// NEED CACHE
 			peerMentorLinks = await getCollection('PeerMentorLinks');
 			let currPMLCats;
 			for (let i = 0; i < peerMentorLinks.length; i++) {
@@ -233,8 +240,10 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		peerMentorLinks = await getCollection('PeerMentorLinks');
+		// NEED CACHE - same as mentorcard and clubcard.
+		// peerMentorLinks = await getCollection('PeerMentorLinks');
 		console.log(peerMentorLinks);
+		// LEAVE THIS FOR NOW
 		categories = await getCollection('Demographics');
 		for (let i = 0; i < categories.length; i++) {
 			if (categories[i].id == 'PeerMentor') {
@@ -313,7 +322,12 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={bio} required
+				<Textarea
+					id="linkbio"
+					rows="10"
+					placeholder="Link Bio"
+					bind:value={bio}
+					required
 				></Textarea>
 			</div>
 			<br />
@@ -361,7 +375,12 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={currBio} required
+				<Textarea
+					id="linkbio"
+					rows="10"
+					placeholder="Link Bio"
+					bind:value={currBio}
+					required
 				></Textarea>
 			</div>
 			<br />

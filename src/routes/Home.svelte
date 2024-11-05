@@ -31,12 +31,10 @@
 				<svelte:fragment slot="paragraph">
 					Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade
 					students with all of the resources that CRLS and Cambridge have to offer.
-				</svelte:fragment>
+					</svelte:fragment>
 			</HeroHeader>
-
-			<div
-				class="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4 bg-gray-100"
-			>
+	
+			<div class="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4 bg-gray-100">
 				{#if $user}
 					<a href="/findaclub">
 						<Button size="xl" color="green" class="inline-flex items-center justify-center mr-3">
@@ -87,20 +85,17 @@
 					<Faq>
 						<div>
 							<FaqItem>
-								<svelte:fragment slot="h3"
-									><div class="bg-gray-100">What does PathFinders do?</div></svelte:fragment
-								>
+								<svelte:fragment slot="h3"><div class="bg-gray-100">What does PathFinders do?</div></svelte:fragment>
 								<p class="text-gray-600 bg-gray-100">
-									Our goal with PathFinders is to create one place within CRLS where all students
-									can access all the help and resources that they need to succeed both in school and
-									out.
+									Our goal with PathFinders is to create one place within CRLS where all students can
+									access all the help and resources that they need to succeed both in school and out.
 								</p>
 							</FaqItem>
 							<FaqItem>
 								<svelte:fragment slot="h3">What can I do?</svelte:fragment>
 								<p class="text-gray-600 bg-gray-100">
-									Feel free to explore the website. We are still adding new features, but feel free
-									to check out all the <u><a href="/findaclub">clubs</a></u> and
+									Feel free to explore the website. We are still adding new features, but feel free to
+									check out all the <u><a href="/findaclub">clubs</a></u> and
 									<u><a href="/findamentor">mentors</a></u>.
 								</p>
 							</FaqItem>
