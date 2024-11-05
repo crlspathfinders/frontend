@@ -229,7 +229,7 @@ export async function retrieveDemographics() {
 		listGenders = wholeRes.genders;
 		listReligions = wholeRes.religions;
 		listRaces = wholeRes.races;
-		return wholeRes;
+		return res;
 	} catch (error) {
 		console.log('Error retrieving demographics: ' + error);
 		return -1;

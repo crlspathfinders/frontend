@@ -223,20 +223,21 @@
 						{/if}
 					</Button>
 				{/if}
-			{:else}
-				<Button disabled pill color="green" id="disabledjoinclubbutton">Join Club</Button>
 
-				<Popover
-					class="w-64 text-sm font-light "
-					title="Make an account first!"
-					triggeredBy="#disabledjoinclubbutton"
-				>
+			{:else}
+
+				<Button disabled pill color="green" id="disabledjoinclubbutton">
+					Join Club
+				</Button>
+
+				<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledjoinclubbutton">
 					<p class="text-gray-800">
 						You can only join clubs when you have an account!
-						<br /><br />
+						<br><br>
 						<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
 					</p>
 				</Popover>
+
 			{/if}
 
 			<!-- Join the google classroom: -->

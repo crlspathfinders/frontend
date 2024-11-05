@@ -33,11 +33,9 @@
     <button type="submit">Send Password Reset Email</button>
 </form> -->
 
-<Section name="login" class="flex justify-center items-center min-h-screen">
+<Section name="login">
 	<Register>
-		<div
-			class="p-6 space-y-4 md:space-y-6 sm:p-8 max-w-md w-full bg-white rounded-lg shadow-md border border-gray-300 mx-auto"
-		>
+		<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
 			<form class="flex flex-col space-y-6" on:submit={handleForgotPassword}>
 				<h3 class="text-xl font-medium text-gray-900 p-0">Password Reset</h3>
 				<Label class="space-y-2">
