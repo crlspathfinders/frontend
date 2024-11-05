@@ -12,7 +12,7 @@
 	} from 'flowbite-svelte-icons';
 	import { user } from '../stores/auth';
 	import { getUserDocData } from '../lib/user';
-	import { retrieveUserInfo } from "$lib/cache";
+	import { retrieveUserInfo } from '$lib/cache';
 
 	let loggedIn = false;
 
@@ -34,7 +34,7 @@
 
 <div class="mainwrapper">
 	<!-- <Home></Home> -->
-	 <HomeMainPage></HomeMainPage>
+	<HomeMainPage></HomeMainPage>
 </div>
 
 <style>

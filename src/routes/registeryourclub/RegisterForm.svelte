@@ -47,7 +47,7 @@
 		console.log(email);
 		console.log(typeof email.charAt(0));
 		if (typeof email.charAt(0) == Number) {
-			console.log("failed");
+			console.log('failed');
 		}
 	}
 
@@ -86,7 +86,7 @@
 			return false;
 		}
 
-		if (advisor_email.indexOf("@cpsd.us") === -1) {
+		if (advisor_email.indexOf('@cpsd.us') === -1) {
 			errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
 			return false;
 		}
@@ -197,7 +197,7 @@
 				errorMessage.set('' + error);
 				console.log('Failed to edit club: ' + error);
 			} finally {
-				advisor_email = "";
+				advisor_email = '';
 
 				isLoading.set(false);
 			}
@@ -248,9 +248,19 @@
 
 <br />
 <!-- <h2 class="mb-4 text-xl font-bold text-gray-900">{view} Your Club</h2> -->
-<P size="4xl" weight="bold"><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">{view}</Span> Your Club</P>
+<P size="4xl" weight="bold"
+	><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
+		>{view}</Span
+	> Your Club</P
+>
 <P size="l">
-	Need help registering your club? Please follow the steps <u><a target="_blank" href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0">here</a></u>!
+	Need help registering your club? Please follow the steps <u
+		><a
+			target="_blank"
+			href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0"
+			>here</a
+		></u
+	>!
 </P>
 <Hr classHr="w-48 h-1 my-4 rounded md:my-3 bg-gray-500" />
 <form
@@ -290,7 +300,7 @@
 			{#if showVals}
 				<Input type="text" id="clubname" placeholder="Type club name" value={currClub.club_name} />
 			{:else}
-				<Input type="text" id="clubname" placeholder="Type club name" required bind:value={name}/>
+				<Input type="text" id="clubname" placeholder="Type club name" required bind:value={name} />
 			{/if}
 		</div>
 		<div class="w-full">
@@ -303,7 +313,13 @@
 					value={currClub.president_email}
 				/>
 			{:else}
-				<Input type="text" id="presidentemail" placeholder="President email 1" required bind:value={presEmail}/>
+				<Input
+					type="text"
+					id="presidentemail"
+					placeholder="President email 1"
+					required
+					bind:value={presEmail}
+				/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -355,7 +371,13 @@
 					placeholder="Advisor Email"
 				/>
 			{:else}
-				<Input type="text" id="advisoremail" placeholder="Advisor Email" required bind:value={advisor_email}/>
+				<Input
+					type="text"
+					id="advisoremail"
+					placeholder="Advisor Email"
+					required
+					bind:value={advisor_email}
+				/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -368,7 +390,13 @@
 					placeholder="Room Number"
 				/>
 			{:else}
-				<Input type="number" id="roomnumber" placeholder="Room Number" required bind:value={roomNum}/>
+				<Input
+					type="number"
+					id="roomnumber"
+					placeholder="Room Number"
+					required
+					bind:value={roomNum}
+				/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -382,7 +410,13 @@
 					placeholder="Google Classroom Link"
 				/>
 			{:else}
-				<Input type="text" id="gclasslink" placeholder="Google Classroom Link" required bind:value={gClassLink}/>
+				<Input
+					type="text"
+					id="gclasslink"
+					placeholder="Google Classroom Link"
+					required
+					bind:value={gClassLink}
+				/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -412,13 +446,7 @@
 			{#if showVals}
 				<Input type="time" id="clubstarttime" placeholder="12" value={currClub.start_time} />
 			{:else}
-				<Input
-					type="time"
-					id="clubstarttime"
-					placeholder="12"
-					bind:value={startTime}
-					required
-				/>
+				<Input type="time" id="clubstarttime" placeholder="12" bind:value={startTime} required />
 			{/if}
 		</div>
 		<div class="sm:col-span-2">
@@ -454,7 +482,6 @@
 				{view} Club
 			</Button>
 		{/if}
-
 	</div>
 	<br />
 	<br /><br />

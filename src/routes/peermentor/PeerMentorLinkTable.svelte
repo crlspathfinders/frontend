@@ -60,10 +60,10 @@
 	let currLinkName = '';
 	let currLinkUrl = '';
 
-	let bio = "";
-	let deadline = "";
-	let currBio = "";
-	let currDeadline = "";
+	let bio = '';
+	let deadline = '';
+	let currBio = '';
+	let currDeadline = '';
 
 	function toggleFilters(item) {
 		filtersSelected.update((currentItems) => {
@@ -322,12 +322,7 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea
-					id="linkbio"
-					rows="10"
-					placeholder="Link Bio"
-					bind:value={bio}
-					required
+				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={bio} required
 				></Textarea>
 			</div>
 			<br />
@@ -375,12 +370,7 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea
-					id="linkbio"
-					rows="10"
-					placeholder="Link Bio"
-					bind:value={currBio}
-					required
+				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={currBio} required
 				></Textarea>
 			</div>
 			<br />
