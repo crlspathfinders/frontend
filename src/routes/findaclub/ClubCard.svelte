@@ -9,9 +9,7 @@
 		P,
 		CardPlaceholder,
 		Search,
-		Popover,
-		Heading,
-		Span
+		Popover
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
@@ -21,7 +19,6 @@
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
-	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 
 	let wholeReady = writable(false);
 	let inClubs = writable([]);
@@ -49,7 +46,6 @@
 		return false;
 	}
 
-	// Only shows the first 100 characters of the description
 	function handleDescription(desc) {
 		if (desc.length > 100) {
 			return desc.substring(0, 100) + ' ... ';
@@ -57,16 +53,10 @@
 		return desc;
 	}
 
-	// This function is used to join / leave a club. It takes the club's unique id as a parameter.
 	const handleClick = async (clubId) => {
 		try {
 			isLoading.set(true);
-			// Calls the toggleClub function that is defined in the api/user file, not api/club file, because it's really the user leaving the club, not the other way around.
 			const res = await toggleClub(email, clubId);
-			// Brings in the current user's information.
-			userInfo = await getUserDocData(email);
-			// Calls the updateCache function from lib/cache.js to update the userInfo whenever they join/leave a club.
-			updateCache('userInfo', userInfo);
 		} catch (error) {
 			console.log('Failed to toggle club! ' + error);
 		} finally {
@@ -74,41 +64,30 @@
 			userInfo = await getUserDocData(email);
 			myClubs = userInfo.joined_clubs;
 			inClubs.set(myClubs);
-			clubs = await getCollection('Clubs'); // TO-DO: Change into caching, etc.
+			clubs = await getCollection('Clubs');
+			setTimeout(() => {
+				showToast.set(false);
+			}, 3000);
+			showToast.set(true);
 		}
 	};
 
 	onMount(async () => {
+		// IDEAL: Check if local storage is full, bring in data if not (getCollection), if full then bring in from localStorage.
 		wholeReady.set(false);
+		console.log('test print');
 		try {
-			// GOOD CODE:
-			if (!localStorage.getItem('userInfo')) {
-				console.log('userinfo not in storage');
-				userInfo = await retrieveUserInfo();
-				// userInfo = JSON.parse(userInfo);
-				// myClubs = userInfo.joined_clubs;
-				// email = userInfo.email;
-				// inClubs.set(myClubs);
-			} else {
-				console.log('userinfo already in storage');
-				userInfo = localStorage.getItem('userInfo');
-				userInfo = JSON.parse(userInfo);
-				console.log(userInfo);
-				myClubs = userInfo.joined_clubs;
-				email = userInfo.email;
-				inClubs.set(myClubs);
-			}
-
-			// GOOD CODE: (uncomment to see in action):
-			if (!localStorage.getItem('clubsInfo')) {
-				console.log('clubs not in locstor');
-				clubs = await retrieveCollectionInfo('Clubs');
-				clubs = JSON.parse(clubs);
-			} else {
-				console.log('clubs in locstor');
-				clubs = JSON.parse(localStorage.getItem('clubsInfo'));
-			}
-			// clubs = await getCollection('Clubs');
+			user.subscribe(async (value) => {
+				if (value) {
+					email = value.email;
+					userInfo = await getUserDocData(email);
+					console.log(userInfo);
+					myClubs = userInfo.joined_clubs;
+					inClubs.set(myClubs);
+					console.log(myClubs);
+				}
+			});
+			clubs = await getCollection('Clubs');
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {
@@ -126,32 +105,7 @@
 	</div>
 {/if}
 
-<div class="wholeclubwrapper bg-gray-100" style="height:100%;">
-	<div class="titleinfowrapper" style="margin-left: 3rem;">
-		<br />
-		<Heading
-			><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
-				>Find</Span
-			> a Club</Heading
-		>
-		<br />
-		<P size="xl">
-			Scroll through the available clubs within CRLS! You can look at when clubs meet, who else is
-			in the club, what their mission statement is, and so much more!
-		</P>
-		<P size="lg">
-			Interested in <u><a href="/registeryourclub">registering</a></u> your club? Please follow the
-			steps
-			<u
-				><a
-					target="_blank"
-					href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0"
-					>here</a
-				></u
-			>!
-		</P>
-	</div>
-
+<div class="wholeclubwrapper" style="height:100vh;">
 	{#if $wholeReady}
 		<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
 			<TableHeader headerType="search">
