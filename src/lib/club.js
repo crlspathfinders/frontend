@@ -1,4 +1,5 @@
 const SEND_URL = import.meta.env.VITE_URL;
+import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 
 export async function createClub(
 	advisor_email,
@@ -59,6 +60,9 @@ export async function createClub(
 	} catch (error) {
 		console.log('Error: ' + error);
 		return -1;
+	} finally {
+		await retrieveCollectionInfo("Clubs");
+		await retrieveUserInfo();
 	}
 }
 
@@ -116,6 +120,10 @@ export async function editClub(
 	} catch (error) {
 		console.log('Error: ' + error);
 		return -1;
+	} finally {
+		await retrieveCollectionInfo("Clubs");
+		// updateCache("clubsInfo", all_clubs);
+		await retrieveUserInfo();
 	}
 }
 
@@ -166,6 +174,9 @@ export async function deleteClub(clubId) {
 		return resData;
 	} catch (error) {
 		console.log('Failed to delete club: ' + error);
+	} finally {
+		await retrieveCollectionInfo("Clubs");
+		await retrieveUserInfo();
 	}
 }
 

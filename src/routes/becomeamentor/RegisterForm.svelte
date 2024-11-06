@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { Section } from 'flowbite-svelte-blocks';
+	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 	import {
 		Label,
 		Input,
@@ -16,7 +17,7 @@
 		Skeleton,
 		Span
 	} from 'flowbite-svelte';
-	import { getCollectionDoc } from '$lib/api';
+	import { getCollectionDoc, getCollection } from '$lib/api';
 	import {
 		createMentor,
 		editMentor,
@@ -190,6 +191,8 @@
 			console.log('Failed to register / edit mentor: ' + error);
 			errorMessage.set('' + error);
 		} finally {
+			const new_mentors = await getCollection("Mentors");
+			updateCache("mentorsInfo", new_mentors);
 			if (academicsSelected.length < 1) {
 				showSubmitImage.set(false);
 				isLoading.set(false);

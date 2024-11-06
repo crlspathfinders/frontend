@@ -100,15 +100,15 @@
 			}
 
 			// GOOD CODE: (uncomment to see in action):
-			if (!localStorage.getItem("clubsInfo")) {
-				console.log("clubs not in locstor");
-				clubs = await retrieveCollectionInfo("Clubs");
-				clubs = JSON.parse(clubs);
-			} else {
-				console.log("clubs in locstor");
-				clubs = JSON.parse(localStorage.getItem("clubsInfo"));
-			}
-			// clubs = await getCollection('Clubs');
+			// if (!localStorage.getItem("clubsInfo")) {
+			// 	console.log("clubs not in locstor");
+			// 	clubs = await retrieveCollectionInfo("Clubs");
+			// 	clubs = JSON.parse(clubs);
+			// } else {
+			// 	console.log("clubs in locstor");
+			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
+			// }
+			clubs = await getCollection('Clubs');
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {

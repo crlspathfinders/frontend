@@ -241,7 +241,7 @@
 	onMount(async () => {
 		allReady.set(false);
 		// NEED CACHE - same as mentorcard and clubcard.
-		// peerMentorLinks = await getCollection('PeerMentorLinks');
+		peerMentorLinks = await getCollection('PeerMentorLinks');
 		console.log(peerMentorLinks);
 		// LEAVE THIS FOR NOW
 		categories = await getCollection('Demographics');

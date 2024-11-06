@@ -8,7 +8,8 @@
   .maincontainer {
     padding: 2rem;
     height: 200vh;
-    /* background-image: url("https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfindersbackground.png?alt=media&token=cc40fc16-7758-4210-aee4-4827acfa2655"); */
+    /* background-image: url("https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fdotpattern.jpg?alt=media&token=6fa7730e-931d-413d-9ee2-271ac07d6661"); */
+    /* background-color: #aac2bd; */
   }
 
   .infocontainer {

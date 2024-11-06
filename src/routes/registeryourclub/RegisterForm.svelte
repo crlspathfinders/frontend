@@ -76,19 +76,19 @@
 		// 	return false;
 		// }
 
-		console.log(advisor_email);
-		console.log(advisor_email[0]);
-		console.log(isNaN(advisor_email[0]));
-		console.log(isNaN(advisor_email[4]));
-
-		if (!isNaN(advisor_email[0])) {
-			errorMessage.set("Make sure to use your advisor's correct email!");
-			return false;
-		}
-
-		if (advisor_email.indexOf("@cpsd.us") === -1) {
-			errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
-			return false;
+		try {
+			console.log(advisor_email);
+			if (!isNaN(advisor_email[0])) {
+				errorMessage.set("Make sure to use your advisor's correct email!");
+				return false;
+			}
+			
+			// if (advisor_email.indexOf("@cpsd.us") === -1) {
+			// 	errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
+			// 	return false;
+			// }
+		} catch(error) {
+			console.log("couldn't find advisor email.");
 		}
 
 		// Make sure this club name hasn't been taken:

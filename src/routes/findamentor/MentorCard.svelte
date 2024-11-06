@@ -22,7 +22,7 @@
 		Span
 	} from 'flowbite-svelte';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { getCollection, getDataFromLocalStorage, setDataInLocalStorage } from '$lib/api';
+	import { getCollection } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -46,8 +46,16 @@
 	let showVals = true;
 	let currMentor;
 	let searching = '';
+
+	let listAcademics = [];
+	let listRaces = [];
+	let listReligions = [];
+	let listGenders = [];
+	let listLanguages = [];
+
 	// Filter functionality
 	function toggleFilters(item) {
+		console.log(filters);
 		filters.update((currentItems) => {
 			// Check if the item exists in the array
 			if (currentItems.includes(item)) {
@@ -138,39 +146,54 @@
 
 			// GREAT WORKS: (uncomment to see in action): The reason we don't use this function now, even though it significantly speeds up the loading time, is because it is not done yet - we have to make sure the mentor data in localStorage is updated when the mentor updates their information, which hasn't been done yet. (That is a TO-DO! - see ClubCard handleClick() function for an example of how to do that, it's not too hard.)
 
-			if (!localStorage.getItem('mentorsInfo')) {
-				console.log('mentors not in locstor!');
-				mentors = await retrieveCollectionInfo('Mentors');
-				// mentors = J(mentors);
-			} else {
-				console.log('mentors in locstor!');
-				mentors = JSON.parse(localStorage.getItem('mentorsInfo'));
-			}
+			// if (!localStorage.getItem('mentorsInfo')) {
+			// 	console.log('mentors not in locstor!');
+			// 	mentors = await retrieveCollectionInfo('Mentors');
+			// 	// mentors = J(mentors);
+			// } else {
+			// 	console.log('mentors in locstor!');
+			// 	mentors = JSON.parse(localStorage.getItem('mentorsInfo'));
+			// }
+
+			mentors = await getCollection("Mentors");
 
 			// For now we do it the old fashioned way. The getCollection function is a function from the api.js file in the lib folder, that just returns a specific colelction. A collection is what our databse (Google Firestore) calls each table of data. In this case we call the collection of Mentors to get the data of each mentor who is signed up. The reason we had to optimize this was because it is calling static data, meaning the data doesn't change on the page reload, but is still being requested. But why should we constantly request data that we know doesn't change? That slows down the site, and the above localStorage implementation fixes that and only calls this data once.
 			// mentors = await getCollection('Mentors');
 
-			if (!localStorage.getItem('demographicsInfo')) {
-				console.log('demographics not in locstor!');
-				const demographics = await retrieveDemographics();
+			// if (!localStorage.getItem('demographicsInfo')) {
+			// 	console.log('demographics not in locstor!');
+			// 	const demographics = await retrieveDemographics();
 
-				religions = demographics.religions;
-				academics = demographics.acedemics;
-				races = demographics.races;
-				languages = demographics.languages;
-				genders = demographics.genders;
+			// 	listReligions = demographics.religions;
+			// 	listAcademics = demographics.acedemics;
+			// 	listRaces = demographics.races;
+			// 	listLanguages = demographics.languages;
+			// 	listGenders = demographics.genders;
 
-				localStorage.setItem('demographicsInfo', JSON.stringify(demographics));
-			} else {
-				console.log('demographics in locstor!');
-				demographics = JSON.parse(localStorage.getItem('demographicsInfo'));
+			// 	localStorage.setItem('demographicsInfo', JSON.stringify(demographics));
+			// } else {
+			// 	console.log('demographics in locstor!');
+			// 	demographics = JSON.parse(localStorage.getItem('demographicsInfo'));
 
-				religions = demographics.religions;
-				academics = demographics.acedemics;
-				races = demographics.races;
-				languages = demographics.languages;
-				genders = demographics.genders;
-			}
+			// 	listReligions = demographics.religions;
+			// 	listAcademics = demographics.acedemics;
+			// 	listRaces = demographics.races;
+			// 	listLanguages = demographics.languages;
+			// 	listGenders = demographics.genders;
+			// }
+
+			const demographics = await retrieveDemographics();
+
+			console.log(demographics);
+
+			listReligions = demographics.religions;
+			listAcademics = demographics.academics;
+			listRaces = demographics.races;
+			listLanguages = demographics.languages;
+			listGenders = demographics.genders;
+
+			console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
+
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {
