@@ -22,6 +22,7 @@
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
+	const SEND_URL = import.meta.env.VITE_URL;
 
 	let wholeReady = writable(false);
 	let inClubs = writable([]);
@@ -109,7 +110,7 @@
 			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
 			// }
 			// clubs = await getCollection('Clubs');
-			const mentors_url = "http://127.0.0.1:8000/cache/Clubs";
+			const mentors_url = SEND_URL + "cache/Clubs";
 			const res = await fetch(mentors_url);
 			if (!res.ok) {
 				throw new Error('Failure to delete id');
