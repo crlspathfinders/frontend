@@ -108,7 +108,14 @@
 			// 	console.log("clubs in locstor");
 			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
 			// }
-			clubs = await getCollection('Clubs');
+			// clubs = await getCollection('Clubs');
+			const mentors_url = "http://127.0.0.1:8000/cache/Clubs";
+			const res = await fetch(mentors_url);
+			if (!res.ok) {
+				throw new Error('Failure to delete id');
+			}
+			const resData = await res.json();
+			clubs = JSON.parse(resData);
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {

@@ -1,5 +1,8 @@
+import flowbite from 'flowbite/plugin';
+import daisyui from 'daisyui';
+
 /** @type {import('tailwindcss').Config} */
-const config = {
+export default {
 	darkMode: 'class',
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
@@ -9,11 +12,9 @@ const config = {
 	theme: {
 		extend: {}
 	},
-	plugins: [
-		require('flowbite/plugin'),
-		require('daisyui')
-		// require("flowbite-typography")
-	]
+plugins: [
+	flowbite,
+	daisyui
+	// require("flowbite-typography")
+]
 };
-
-module.exports = config;

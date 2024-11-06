@@ -156,6 +156,13 @@
 			// }
 
 			mentors = await getCollection("Mentors");
+			// const mentors_url = "http://127.0.0.1:8000/cache/Mentors";
+			// const res = await fetch(mentors_url);
+			// if (!res.ok) {
+			// 	throw new Error('Failure to delete id');
+			// }
+			// const resData = await res.json();
+			// mentors = JSON.parse(resData);
 
 			// For now we do it the old fashioned way. The getCollection function is a function from the api.js file in the lib folder, that just returns a specific colelction. A collection is what our databse (Google Firestore) calls each table of data. In this case we call the collection of Mentors to get the data of each mentor who is signed up. The reason we had to optimize this was because it is calling static data, meaning the data doesn't change on the page reload, but is still being requested. But why should we constantly request data that we know doesn't change? That slows down the site, and the above localStorage implementation fixes that and only calls this data once.
 			// mentors = await getCollection('Mentors');

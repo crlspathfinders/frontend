@@ -83,10 +83,10 @@
 				return false;
 			}
 			
-			// if (advisor_email.indexOf("@cpsd.us") === -1) {
-			// 	errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
-			// 	return false;
-			// }
+			if (advisor_email.indexOf("@cpsd.us") === -1) {
+				errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
+				return false;
+			}
 		} catch(error) {
 			console.log("couldn't find advisor email.");
 		}
@@ -122,14 +122,14 @@
 		isLoading.set(true);
 		if ((await checkAllInfo()) || showVals) {
 			try {
-				// const advisor_email = document.querySelector('#advisoremail').value;
-				// console.log(currClub.club_days);
-				// const desc = document.querySelector('#clubdescription').value;
-				// const name = document.querySelector('#clubname').value;
-				// const presEmail = document.querySelector('#presidentemail').value;
-				// const roomNum = document.querySelector('#roomnumber').value;
-				// const gClassLink = document.querySelector('#gclasslink').value;
-				// const startTime = document.querySelector('#clubstarttime').value;
+				const advisor_email = document.querySelector('#advisoremail').value;
+				console.log(currClub.club_days);
+				const desc = document.querySelector('#clubdescription').value;
+				const name = document.querySelector('#clubname').value;
+				const presEmail = document.querySelector('#presidentemail').value;
+				const roomNum = document.querySelector('#roomnumber').value;
+				const gClassLink = document.querySelector('#gclasslink').value;
+				const startTime = document.querySelector('#clubstarttime').value;
 				let status;
 				if (showVals) {
 					status = 'Approved';
