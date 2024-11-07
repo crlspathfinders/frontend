@@ -22,7 +22,7 @@
 		Span
 	} from 'flowbite-svelte';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { getCollection } from '$lib/api';
+	import { getCollection, getBackendCache } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -156,6 +156,7 @@
 			// }
 
 			mentors = await getCollection("Mentors");
+			// mentors = await getBackendCache("Mentors");
 			// const mentors_url = "http://127.0.0.1:8000/cache/Mentors";
 			// const res = await fetch(mentors_url);
 			// if (!res.ok) {

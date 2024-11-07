@@ -21,6 +21,7 @@
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
+	import { getBackendCache } from "$lib/api";
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 	const SEND_URL = import.meta.env.VITE_URL;
 
@@ -110,13 +111,8 @@
 			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
 			// }
 			clubs = await getCollection('Clubs');
-			// const mentors_url = SEND_URL + "cache/Clubs";
-			// const res = await fetch(mentors_url);
-			// if (!res.ok) {
-			// 	throw new Error('Failure to delete id');
-			// }
-			// const resData = await res.json();
-			// clubs = JSON.parse(resData);
+			// clubs = await getBackendCache("Clubs");
+			
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {

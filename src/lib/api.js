@@ -55,4 +55,15 @@ export async function deleteDoc(collection, id) {
 	}
 }
 
-// TODO: Function that brings in data from local storage at a defined value
+export async function getBackendCache(collection) {
+	const url = SEND_URL + "cache/" + collection;
+	const res = await fetch(url);
+	if (!res.ok) {
+		console.log('Failure to get cached collection');
+		throw new Error('Failure to get cached collection');
+	}
+	const resData = await res.json();
+	const result = JSON.parse(resData);
+	
+	return result;
+}
