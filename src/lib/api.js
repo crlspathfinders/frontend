@@ -56,3 +56,40 @@ export async function deleteDoc(collection, id) {
 }
 
 // TODO: Function that brings in data from local storage at a defined value
+export function getDataFromLocalStorage(key) {
+	try {
+		const data = localStorage.getItem(key);
+		if (!data) {
+			console.error('No data found in local storage for key: ' + key);
+		}
+		const parsedData = JSON.parse(data);
+		return parsedData;
+	} catch (error) {
+		console.error("Couldn't retrieve data from local storage: " + error);
+		return null;
+	}
+}
+
+export function setDataInLocalStorage(key, data) {
+	try {
+		localStorage.setItem(key, JSON.stringify(data));
+	} catch (error) {
+		console.error("Couldn't set data in local storage: " + error);
+	}
+}
+
+export function removeDataFromLocalStorage(key) {
+	try {
+		localStorage.removeItem(key);
+	} catch (error) {
+		console.error("Couldn't remove data from local storage: " + error);
+	}
+}
+
+export function clearLocalStorage() {
+	try {
+		localStorage.clear();
+	} catch (error) {
+		console.error("Couldn't clear local storage: " + error);
+	}
+}

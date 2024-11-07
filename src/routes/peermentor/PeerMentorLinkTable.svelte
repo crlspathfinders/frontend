@@ -11,7 +11,13 @@
 		Skeleton
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
-	import { getCollection } from '../../lib/api';
+	import {
+		getCollection,
+		getDataFromLocalStorage,
+		setDataInLocalStorage,
+		removeDataFromLocalStorage,
+		clearLocalStorage
+	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
 		Label,
@@ -60,10 +66,10 @@
 	let currLinkName = '';
 	let currLinkUrl = '';
 
-	let bio = "";
-	let deadline = "";
-	let currBio = "";
-	let currDeadline = "";
+	let bio = '';
+	let deadline = '';
+	let currBio = '';
+	let currDeadline = '';
 
 	function toggleFilters(item) {
 		filtersSelected.update((currentItems) => {
@@ -102,8 +108,25 @@
 			console.log('Failed to delete link: ' + error);
 		} finally {
 			// NEED CACHING
-			peerMentorLinks = await getCollection('PeerMentorLinks');
-			categories = await getCollection('Demographics');
+			// peerMentorLinks = await getCollection('PeerMentorLinks');
+			// categories = await getCollection('Demographics');
+
+			if (!localStorage.getItem('PeerMentorLinks')) {
+				console.info('Peer Mentor Links not in storage, setting');
+				peerMentorLinks = await getCollection('PeerMentorLinks');
+				setDataInLocalStorage('PeerMentorLinks', JSON.stringify(peerMentorLinks));
+			} else {
+				peerMentorLinks = JSON.parse(await getDataFromLocalStorage('PeerMentorLinks'));
+			}
+
+			if (!localStorage.getItem('Demographics')) {
+				console.info('Demographics for peer mentors not in storage, setting');
+				categories = await getCollection('Demographics');
+				setDataInLocalStorage('Demographics', JSON.stringify(categories));
+			} else {
+				categories = JSON.parse(await getDataFromLocalStorage('Demographics'));
+			}
+			
 			for (let i = 0; i < categories.length; i++) {
 				if (categories[i].id == 'PeerMentor') {
 					categories = categories[i].categories;
@@ -322,12 +345,7 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea
-					id="linkbio"
-					rows="10"
-					placeholder="Link Bio"
-					bind:value={bio}
-					required
+				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={bio} required
 				></Textarea>
 			</div>
 			<br />
@@ -375,12 +393,7 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea
-					id="linkbio"
-					rows="10"
-					placeholder="Link Bio"
-					bind:value={currBio}
-					required
+				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={currBio} required
 				></Textarea>
 			</div>
 			<br />
