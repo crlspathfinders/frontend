@@ -11,7 +11,14 @@
 		Skeleton
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
-	import { getCollection } from '../../lib/api';
+	import {
+		getCollection,
+		updateCache,
+		getDataFromLocalStorage,
+		setDataInLocalStorage,
+		removeDataFromLocalStorage,
+		clearLocalStorage
+	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
 		Label,
@@ -60,10 +67,10 @@
 	let currLinkName = '';
 	let currLinkUrl = '';
 
-	let bio = "";
-	let deadline = "";
-	let currBio = "";
-	let currDeadline = "";
+	let bio = '';
+	let deadline = '';
+	let currBio = '';
+	let currDeadline = '';
 
 	function toggleFilters(item) {
 		filtersSelected.update((currentItems) => {
@@ -101,9 +108,10 @@
 		} catch (error) {
 			console.log('Failed to delete link: ' + error);
 		} finally {
-			// NEED CACHING
-			peerMentorLinks = await getCollection('PeerMentorLinks');
-			categories = await getCollection('Demographics');
+			// NEED CACHING - Done
+			peerMentorLinks = await updateCache('PeerMentorLinks');
+			categories = await updateCache('Demographics');
+
 			for (let i = 0; i < categories.length; i++) {
 				if (categories[i].id == 'PeerMentor') {
 					categories = categories[i].categories;
@@ -120,7 +128,10 @@
 			// const correctedCats = selectedCategories.join(", ");
 			// console.log(correctedCats);
 			await addLink(linkName, linkUrl, selectedCategories, bio, deadline);
-			// UPDATE PML locstor
+
+			// UPDATE PML locstor - Done
+			await setDataInLocalStorage('PeerMentorLinks', peerMentorLinks);
+
 			console.log('Successfully added link');
 			linkName = '';
 			linkUrl = '';
@@ -130,8 +141,8 @@
 			console.log('Failed to add link');
 		} finally {
 			isLoading.set(false);
-			// NEED CACHE
-			peerMentorLinks = await getCollection('PeerMentorLinks');
+			// NEED CACHE - Done
+			peerMentorLinks = await updateCache('PeerMentorLinks');
 		}
 	};
 
@@ -151,8 +162,8 @@
 			console.log('Failed to edit link');
 		} finally {
 			isLoading.set(false);
-			// NEED CACHE
-			peerMentorLinks = await getCollection('PeerMentorLinks');
+			// NEED CACHE - Done
+			peerMentorLinks = await updateCache('PeerMentorLinks');
 			closeshowEditLinkModal();
 		}
 	};
@@ -177,8 +188,9 @@
 			}
 			categories = makeSelectCategoriesOk(categories);
 			// Update the peermentorlinks individual fields:
-			// NEED CACHE
-			peerMentorLinks = await getCollection('PeerMentorLinks');
+			// NEED CACHE - Done
+			peerMentorLinks = await updateCache('PeerMentorLinks');
+
 			let currPMLCats;
 			for (let i = 0; i < peerMentorLinks.length; i++) {
 				currPMLCats = peerMentorLinks[i].categories;
@@ -240,8 +252,9 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		// NEED CACHE - same as mentorcard and clubcard.
-		peerMentorLinks = await getCollection('PeerMentorLinks');
+		// NEED CACHE - Done
+		peerMentorLinks = await updateCache('PeerMentorLinks');
+
 		console.log(peerMentorLinks);
 		// LEAVE THIS FOR NOW
 		categories = await getCollection('Demographics');
@@ -322,12 +335,7 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea
-					id="linkbio"
-					rows="10"
-					placeholder="Link Bio"
-					bind:value={bio}
-					required
+				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={bio} required
 				></Textarea>
 			</div>
 			<br />
@@ -375,12 +383,7 @@
 			</div>
 			<div class="w-full">
 				<Label for="linkbio" class="mb-2">Bio</Label>
-				<Textarea
-					id="linkbio"
-					rows="10"
-					placeholder="Link Bio"
-					bind:value={currBio}
-					required
+				<Textarea id="linkbio" rows="10" placeholder="Link Bio" bind:value={currBio} required
 				></Textarea>
 			</div>
 			<br />
