@@ -93,3 +93,15 @@ export function clearLocalStorage() {
 		console.error("Couldn't clear local storage: " + error);
 	}
 }
+
+export async function updateCache(key) {
+	let pulledData;
+	if (!localStorage.getItem(key)) {
+		console.info(` ${key} not in storage, setting`);
+		pulledData = await getCollection(key);
+		setDataInLocalStorage(key, pulledData);
+	} else {
+		pulledData = await getDataFromLocalStorage(key);
+	}
+	return pulledData;
+}
