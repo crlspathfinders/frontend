@@ -10,7 +10,7 @@
 		"format": "prettier --write ."
 	},
 	"engines": {
-		"node": "23.1.0"
+		"node": "20.1.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
