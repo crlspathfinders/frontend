@@ -2,6 +2,8 @@ const SEND_URL = import.meta.env.VITE_URL;
 
 export async function getCollection(collection) {
 	try {
+		console.log("send url: ");
+		console.log(SEND_URL);
 		const url = SEND_URL + 'read/' + collection;
 		const res = await fetch(url);
 		if (!res.ok) {
@@ -56,6 +58,7 @@ export async function deleteDoc(collection, id) {
 }
 
 export async function getBackendCache(collection) {
+	cons
 	const url = SEND_URL + "cache/" + collection;
 	const res = await fetch(url);
 	if (!res.ok) {

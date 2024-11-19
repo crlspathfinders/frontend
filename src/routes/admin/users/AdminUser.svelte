@@ -198,6 +198,7 @@
 								<th scope="col" class="px-4 py-3">Role</th>
 								<th scope="col" class="px-4 py-3">Delete</th>
 								<th scope="col" class="px-4 py-3">Email</th>
+								<th scope="col" class="px-4 py-3">Grade</th>
 								<th scope="col" class="px-4 py-3">Joined Clubs</th>
 								<th scope="col" class="px-4 py-3">Is Leader</th>
 								<th scope="col" class="px-4 py-3">Is Mentor-Eligible</th>
@@ -248,6 +249,9 @@
 										{/if}
 										<th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
 											>{i + 1} | <b><u>{user.email}</u></b></th
+										>
+										<th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
+											>{user.grade}</th
 										>
 										<td class="px-4 py-3">{user.joined_clubs}</td>
 										<td class="px-4 py-3">

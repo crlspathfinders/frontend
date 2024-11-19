@@ -605,6 +605,7 @@
 							on:click={async () => {
 								console.log(file);
 								await handleSubmitImage(file);
+								// another function that deletes the image (old img)
 							}}
 						>
 							Upload
