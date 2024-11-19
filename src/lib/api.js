@@ -55,7 +55,6 @@ export async function deleteDoc(collection, id) {
 	}
 }
 
-<<<<<<< HEAD
 export async function getBackendCache(collection) {
 	const url = SEND_URL + "cache/" + collection;
 	const res = await fetch(url);
@@ -68,7 +67,6 @@ export async function getBackendCache(collection) {
 	
 	return result;
 }
-=======
 // TODO: Function that brings in data from local storage at a defined value
 export function getDataFromLocalStorage(key) {
 	try {
@@ -119,4 +117,3 @@ export async function updateCache(key) {
 	}
 	return pulledData;
 }
->>>>>>> ce6cc7e741817addbf25f4bfc78259d9e63968a0
