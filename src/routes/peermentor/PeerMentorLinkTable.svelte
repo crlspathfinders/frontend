@@ -253,7 +253,9 @@
 	onMount(async () => {
 		allReady.set(false);
 		// NEED CACHE - Done
-		peerMentorLinks = await updateCache('PeerMentorLinks');
+		// peerMentorLinks = await updateCache('PeerMentorLinks');
+
+		peerMentorLinks = await getCollection("PeerMentorLinks");
 
 		console.log(peerMentorLinks);
 		// LEAVE THIS FOR NOW
