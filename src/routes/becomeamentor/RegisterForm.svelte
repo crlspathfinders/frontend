@@ -99,6 +99,8 @@
 		}
 	};
 
+	// Add function that takes input of a string of the old filename and deletes that file (copy the format for handleSubmitImage)
+
 	const handleSubmitImage = async (file) => {
 		// First make sure it is the correct dimensions, type, etc.
 		if (file.length < 1) {
