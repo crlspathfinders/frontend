@@ -479,11 +479,11 @@
 							<h5 class="mb-1 text-xl font-medium text-gray-900">
 								<!-- The information of each mentor listed out. -->
 								<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
-								{#if m.email == email}
+								<!-- {#if m.email == email}
 									<Button size="xs" pill outline color="red" on:click={openshowLogsModal}>
 										<BookOpenOutline size="md"></BookOpenOutline>
 									</Button>
-								{/if}
+								{/if} -->
 								{m.firstname}
 								{m.lastname}
 								<!-- This checks if this mentor is the current logged in user. If it is, it adds the pencil icon, which when clicked allows the user to edit or change their information. -->
