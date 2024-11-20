@@ -109,7 +109,8 @@
 			console.log('Failed to delete link: ' + error);
 		} finally {
 			// NEED CACHING - Done
-			peerMentorLinks = await updateCache('PeerMentorLinks');
+			// peerMentorLinks = await updateCache('PeerMentorLinks');
+			peerMentorLinks = await getCollection("PeerMentorLinks");
 			categories = await updateCache('Demographics');
 
 			for (let i = 0; i < categories.length; i++) {
@@ -130,7 +131,8 @@
 			await addLink(linkName, linkUrl, selectedCategories, bio, deadline);
 
 			// UPDATE PML locstor - Done
-			await setDataInLocalStorage('PeerMentorLinks', peerMentorLinks);
+			// await setDataInLocalStorage('PeerMentorLinks', peerMentorLinks);
+			peerMentorLinks = await getCollection("PeerMentorLinks");
 
 			console.log('Successfully added link');
 			linkName = '';
@@ -142,7 +144,8 @@
 		} finally {
 			isLoading.set(false);
 			// NEED CACHE - Done
-			peerMentorLinks = await updateCache('PeerMentorLinks');
+			// peerMentorLinks = await updateCache('PeerMentorLinks');
+			peerMentorLinks = await getCollection("PeerMentorLinks");
 		}
 	};
 
@@ -163,7 +166,8 @@
 		} finally {
 			isLoading.set(false);
 			// NEED CACHE - Done
-			peerMentorLinks = await updateCache('PeerMentorLinks');
+			// peerMentorLinks = await updateCache('PeerMentorLinks');
+			peerMentorLinks = await getCollection("PeerMentorLinks");
 			closeshowEditLinkModal();
 		}
 	};
@@ -189,7 +193,9 @@
 			categories = makeSelectCategoriesOk(categories);
 			// Update the peermentorlinks individual fields:
 			// NEED CACHE - Done
-			peerMentorLinks = await updateCache('PeerMentorLinks');
+			// peerMentorLinks = await updateCache('PeerMentorLinks');
+			peerMentorLinks = await getCollection("PeerMentorLinks");
+
 
 			let currPMLCats;
 			for (let i = 0; i < peerMentorLinks.length; i++) {
