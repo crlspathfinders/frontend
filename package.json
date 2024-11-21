@@ -9,9 +9,6 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
-	"engines": {
-		"node": "20.18.0"
-	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
