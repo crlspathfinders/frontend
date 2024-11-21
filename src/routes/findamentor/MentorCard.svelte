@@ -410,7 +410,7 @@ We met at the library and worked on ..."
 				<Search
 					bind:value={searching}
 					slot="search"
-					placeholder="Search {mentors.length} mentors"
+					placeholder="Search mentors"
 					size="md"
 				/>
 				<div class=""></div>
@@ -574,91 +574,93 @@ We met at the library and worked on ..."
 		<div class="card-container">
 			<!-- Iterates over the filteredMentors array, which we had defined up above with the $: syntax. -->
 			{#each filteredMentors as m}
-				<!-- Checks first if either the mentor's first name, last name, anything in bio, is what is in the search box. The search box is "" by default, and every mentor has that string, so every mentor is listed out first. -->
-				{#if labelIncludesSearchTerm(m.firstname, searching) || labelIncludesSearchTerm(m.lastname, searching) || labelIncludesSearchTerm(m.bio, searching) || labelIncludesSearchTerm(m.firstname + ' ' + m.lastname, searching)}
-					<!-- The <Card> component is another component defined by the Flowbite Svelte UI Library that we use for convenience. -->
-					<Card padding="md">
-						<div class="flex flex-col items-center pb-4">
-							<!-- The profile pic of each mentor shown first. -->
-							{#if m.email == email}
-								<Avatar size="xl" src={m.profile_pic} border class="ring-yellow-400" />
-							{:else}
-								<Avatar size="xl" src={m.profile_pic} border class="ring-blue-400" />
-							{/if}
-							<h5 class="mb-1 text-xl font-medium text-gray-900">
-								<!-- The information of each mentor listed out. -->
-								<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
-								<!-- {#if m.email == email}
-									<Button size="xs" pill outline color="red" on:click={() => {openshowLogsModal(); currMentor = m;}}>
-										<BookOpenOutline size="md"></BookOpenOutline>
-									</Button>
-								{/if} -->
-								{m.firstname}
-								{m.lastname}
-								<!-- This checks if this mentor is the current logged in user. If it is, it adds the pencil icon, which when clicked allows the user to edit or change their information. -->
+				{#if m.show}
+					<!-- Checks first if either the mentor's first name, last name, anything in bio, is what is in the search box. The search box is "" by default, and every mentor has that string, so every mentor is listed out first. -->
+					{#if labelIncludesSearchTerm(m.firstname, searching) || labelIncludesSearchTerm(m.lastname, searching) || labelIncludesSearchTerm(m.bio, searching) || labelIncludesSearchTerm(m.firstname + ' ' + m.lastname, searching)}
+						<!-- The <Card> component is another component defined by the Flowbite Svelte UI Library that we use for convenience. -->
+						<Card padding="md">
+							<div class="flex flex-col items-center pb-4">
+								<!-- The profile pic of each mentor shown first. -->
 								{#if m.email == email}
-									<Button
-										size="md"
-										pill
-										outline
-										color="dark"
-										on:click={() => {
-											console.log('clicked');
-											currMentor = m;
-											console.log(currMentor);
-											openshowEditModal();
-										}}><PenOutline size="xs"></PenOutline></Button
-									>
-								{/if}
-							</h5>
-							<span class="text-sm text-gray-700">
-								<!-- the .join(", ") function takes the list and turns it into a string separated by ", ". -->
-								<center>Academic Interests: <b>{m.academics.join(', ')}</b></center>
-							</span>
-							<span class="text-sm text-gray-500">
-								{#if m.languages.length > 0}
-									<center><i>Language I Speak:</i> {m.languages.join(', ')}</center>
-								{/if}
-							</span>
-							<!-- Displays the rest of the information: -->
-							<span class="text-sm text-gray-500">
-								<center>{m.races}</center>
-							</span>
-							<span class="text-sm text-gray-500">
-								<center>{m.religions}</center>
-							</span>
-							<span class="text-sm text-gray-500">
-								<center>{m.gender}</center>
-							</span>
-							<span style="border-top: 1px solid black;" class="text-sm text-gray-800">
-								<center>{m.bio}</center>
-							</span>
-							<div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
-								<!-- < if $user > checks if the current user is logged in. If they are, then they can message any mentor.-->
-								{#if $user}
-									<Button outline color="blue" class="">
-										<A
-											target="_blank"
-											href="https://mail.google.com/mail/?view=cm&fs=1&to={m.email}&su=CRLS%20PathFinders%20Mentee"
-											class="font-medium hover:underline">Message</A
-										>
-									</Button>
-									<!-- If the current user is not logged in, they will not be able to message anyone, and instead will be prompted to make an account or sign in when they try to click on "Message." -->
+									<Avatar size="xl" src={m.profile_pic} border class="ring-yellow-400" />
 								{:else}
-									<Button disabled outline color="blue" id="disabledmessagebutton" class="">
-										Message
-									</Button>
-									<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledmessagebutton">
-										<p class="text-gray-800">
-											You can only message mentors when you have an account!
-											<br><br>
-											<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
-										</p>
-									</Popover>
+									<Avatar size="xl" src={m.profile_pic} border class="ring-blue-400" />
 								{/if}
+								<h5 class="mb-1 text-xl font-medium text-gray-900">
+									<!-- The information of each mentor listed out. -->
+									<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
+									<!-- {#if m.email == email}
+										<Button size="xs" pill outline color="red" on:click={() => {openshowLogsModal(); currMentor = m;}}>
+											<BookOpenOutline size="md"></BookOpenOutline>
+										</Button>
+									{/if} -->
+									{m.firstname}
+									{m.lastname}
+									<!-- This checks if this mentor is the current logged in user. If it is, it adds the pencil icon, which when clicked allows the user to edit or change their information. -->
+									{#if m.email == email}
+										<Button
+											size="md"
+											pill
+											outline
+											color="dark"
+											on:click={() => {
+												console.log('clicked');
+												currMentor = m;
+												console.log(currMentor);
+												openshowEditModal();
+											}}><PenOutline size="xs"></PenOutline></Button
+										>
+									{/if}
+								</h5>
+								<span class="text-sm text-gray-700">
+									<!-- the .join(", ") function takes the list and turns it into a string separated by ", ". -->
+									<center>Academic Interests: <b>{m.academics.join(', ')}</b></center>
+								</span>
+								<span class="text-sm text-gray-500">
+									{#if m.languages.length > 0}
+										<center><i>Language I Speak:</i> {m.languages.join(', ')}</center>
+									{/if}
+								</span>
+								<!-- Displays the rest of the information: -->
+								<span class="text-sm text-gray-500">
+									<center>{m.races}</center>
+								</span>
+								<span class="text-sm text-gray-500">
+									<center>{m.religions}</center>
+								</span>
+								<span class="text-sm text-gray-500">
+									<center>{m.gender}</center>
+								</span>
+								<span style="border-top: 1px solid black;" class="text-sm text-gray-800">
+									<center>{m.bio}</center>
+								</span>
+								<div class="flex mt-4 space-x-3 rtl:space-x-reverse lg:mt-6">
+									<!-- < if $user > checks if the current user is logged in. If they are, then they can message any mentor.-->
+									{#if $user}
+										<Button outline color="blue" class="">
+											<A
+												target="_blank"
+												href="https://mail.google.com/mail/?view=cm&fs=1&to={m.email}&su=CRLS%20PathFinders%20Mentee"
+												class="font-medium hover:underline">Message</A
+											>
+										</Button>
+										<!-- If the current user is not logged in, they will not be able to message anyone, and instead will be prompted to make an account or sign in when they try to click on "Message." -->
+									{:else}
+										<Button disabled outline color="blue" id="disabledmessagebutton" class="">
+											Message
+										</Button>
+										<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledmessagebutton">
+											<p class="text-gray-800">
+												You can only message mentors when you have an account!
+												<br><br>
+												<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+											</p>
+										</Popover>
+									{/if}
+								</div>
 							</div>
-						</div>
-					</Card>
+						</Card>
+					{/if}
 				{/if}
 			{/each}
 		</div>

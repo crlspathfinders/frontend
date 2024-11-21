@@ -17,7 +17,8 @@
 		Modal,
 		Spinner,
 		ListPlaceholder,
-		Search
+		Search,
+		Toggle
 	} from 'flowbite-svelte';
 	import { Section } from 'flowbite-svelte-blocks';
 	// import paginationData from '../utils/advancedTable.json'
@@ -31,7 +32,7 @@
 	import { getCollection } from '../../../lib/api';
 	import EditMentor from './EditMentor.svelte';
 	import { writable } from 'svelte/store';
-	import { deleteMentor } from '../../../lib/mentor';
+	import { deleteMentor, toggleMentorShow } from '../../../lib/mentor';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 
 	let wholeReady = writable(false);
@@ -62,6 +63,16 @@
 			return label.toLowerCase().includes(searchTerm.toLowerCase());
 		}
 		return false;
+	}
+
+	const handleToggleMentorShow = async () => {
+		try {
+			await toggleMentorShow(currEmail);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			mentors = await getCollection('Mentors');
+		}
 	}
 
 	const handleDelete = async (email) => {
@@ -142,6 +153,7 @@
 							<tr>
 								<th scope="col" class="px-4 py-3">Edit</th>
 								<th scope="col" class="px-4 py-3">Delete</th>
+								<th scope="col" class="px-4 py-3">Show</th>
 								<th scope="col" class="px-4 py-3">First Name</th>
 								<th scope="col" class="px-4 py-3">Last Name</th>
 								<th scope="col" class="px-4 py-3">Email</th>
@@ -182,6 +194,16 @@
 											>
 												Delete
 											</Button>
+										</td>
+										<td class="px-4 py-3">
+											<Toggle
+												color="green"
+												checked={m.show}
+												on:click={() => {
+													currEmail = m.email;
+													handleToggleMentorShow();
+												}}
+											></Toggle>
 										</td>
 										<td class="px-4 py-3">{i + 1} | {m.firstname}</td>
 										<td class="px-4 py-3">{m.lastname}</td>

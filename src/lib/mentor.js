@@ -258,3 +258,10 @@ export async function sendMentorMenteeLogs(mentorEmail, menteeEmail, logDescript
 	console.log(response);
 	return response;
 }
+
+export async function toggleMentorShow(mentor_email) {
+	const url = SEND_URL + "toggleshowmentor/" + mentor_email;
+	const response = await fetch(url);
+	const resData = await response.json();
+	console.log(resData);
+}
