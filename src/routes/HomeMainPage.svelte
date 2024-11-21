@@ -1,5 +1,5 @@
 <script>
-  import { Heading, P, Mark, Span, Button, Popover, ButtonGroup, Hr } from 'flowbite-svelte';
+  import { Heading, P, Mark, Span, Button, Popover, ButtonGroup, Hr, Alert } from 'flowbite-svelte';
   import { user } from "../stores/auth";
   import { FireOutline } from "flowbite-svelte-icons";
 </script>
@@ -120,6 +120,16 @@
   } */
 }
 </style>
+
+<center>
+  <Alert color="red" border>
+    <span class="font-medium">SITE DOWN!</span>
+    <br>
+    CRLS PathFinders is down for 24 hours - sorry for the inconvenience!
+    <br>
+    You will not be able to see any data from other pages - we are working to fix this issue!
+  </Alert>
+</center>
 
 <div class="wholerapper bg-gray-100" style="height: 100%;">
   <div class="maincontainer bg-gray-100" style="height: 100%;">
