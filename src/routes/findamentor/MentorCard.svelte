@@ -20,7 +20,10 @@
 		DropdownItem,
 		Badge,
 		Span,
-		Label
+		Label,
+		Textarea,
+		Input,
+		Alert
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
@@ -32,7 +35,7 @@
 	import RegisterForm from '../becomeamentor/RegisterForm.svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import { Search } from 'flowbite-svelte';
-	import { retrieveDemographics } from '../../lib/mentor';
+	import { retrieveDemographics, sendMentorMenteeLogs } from '../../lib/mentor';
 	import { ChevronRightOutline, BookOpenOutline } from 'flowbite-svelte-icons';
 
 	// Declaring variables to be used:
@@ -43,7 +46,6 @@
 
 	let ready = false;
 	let mentors = [];
-	let list_mentees = [];
 	let selected_mentees = [];
 	let email = '';
 	let userInfo;
@@ -57,6 +59,65 @@
 	let listReligions = [];
 	let listGenders = [];
 	let listLanguages = [];
+
+	// Logging mentor-mentee work:
+	let list_mentees = [];
+	let log_mentee = [];
+	let log_description = "";
+	let log_hours;
+	let logSuccessMessage = writable("");
+	let logFailMessage = writable("");
+	let logLoading = writable(false);
+
+	const checkLogInfo = () => {
+		if (log_mentee.length == 0) {
+			logSuccessMessage.set("");
+			logFailMessage.set("Select at least one mentee.")
+			return false;
+		}
+		if (log_mentee.length > 1) {
+			logSuccessMessage.set("");
+			logFailMessage.set("Only select one mentee at a time.")
+			return false;
+		}
+		if (log_description.length < 10) {
+			logSuccessMessage.set("");
+			logFailMessage.set("Description too short. Add more details.");
+			return false;
+		}
+		if (!log_hours) {
+			logSuccessMessage.set("");
+			logFailMessage.set("Select hours worked")
+			return false;
+		}
+		return true;
+	}
+
+	const handleLogMentors = async () => {
+		console.log("started");
+		logLoading.set(true);
+		try {
+			if (checkLogInfo()) {
+				try {
+					await sendMentorMenteeLogs(currMentor.email, log_mentee[0].email, log_description, log_hours);
+					logFailMessage.set("");
+					logSuccessMessage.set("Success");
+					log_mentee = [];
+					log_description = "";
+					log_hours = null;
+				} catch (error) {
+					logSuccessMessage.set("");
+					logFailMessage.set(error);
+					console.log(error);
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}  finally {
+			logLoading.set(false);
+		}
+		console.log("ended");
+	}
 
 	// Filter functionality
 	function toggleFilters(item) {
@@ -117,11 +178,20 @@
         return false;
     }
 
-	function setListMentors(mentors) {
-		for (let i = 0; i < mentors.length; i++) {
-			const new_mentor = mentors[i];
-			new_mentor["label"] = new_mentor.firstname + " " + new_mentor.lastname;
-			list_mentees.push(new_mentor);
+	async function setListMentees() {
+		const all_users = await getCollection("Users");
+		for (let i = 0; i < all_users.length; i++) {
+			const curr_mentee = all_users[i];
+			try {
+				if (curr_mentee["email"].localeCompare("25ranjaria@cpsd.us") === 0|| curr_mentee["grade"].localeCompare("Freshman") === 0 || curr_mentee["grade"].localeCompare("Sophomore") === 0) {
+					curr_mentee["label"] = curr_mentee.email;
+					list_mentees.push(curr_mentee);
+				}
+			} catch (error) {
+				console.log("Advisor found");
+			}
+				
+
 		}
 		return list_mentees;
 	}
@@ -170,7 +240,7 @@
 			// }
 
 			mentors = await getCollection("Mentors");
-			list_mentees = setListMentors(mentors);
+			list_mentees = await setListMentees();
 			// mentors = await getBackendCache("Mentors");
 			// const mentors_url = "http://127.0.0.1:8000/cache/Mentors";
 			// const res = await fetch(mentors_url);
@@ -230,7 +300,7 @@
 	const closeshowEditModal = () => showEditModal.set(false);
 
 	const openshowLogsModal = () => showLogsModal.set(true);
-	const closeshowLogsModal = () => showLogsModal.set(false);
+	const closeshowLogsModal = () => { showLogsModal.set(false); logSuccessMessage.set(""); logFailMessage.set(""); };
 	
 </script>
 
@@ -242,22 +312,61 @@
 
 <!-- Mentor Logging Modal: -->
 
-<Modal class="min-w-full" open={$showLogsModal} on:close={closeshowLogsModal}>
+<Modal open={$showLogsModal} on:close={closeshowLogsModal}>
 	<P size="xl">Log Mentor-Mentee hours</P>
-	<form on:submit={() => alert("OK works")}>
+	<form on:submit={handleLogMentors} style="height:40rem;">
 		<Label>
-			Which mentee emailed you?
+			Select mentee
 			<MultiSelect
-				id="mentees"
+				id="logmentee"
 				options={list_mentees}
-				placeholder="Select the mentee"
-				bind:value={selected_mentees}
+				bind:value={log_mentee}
+				placeholder="Select mentee"
 			></MultiSelect>
 		</Label>
-		<Button type="submit" color="green" outline>
-			Submit
-		</Button>
+		<br>
+		<Label>Brief description of what went on</Label>
+		<Textarea
+			id="logdescription"
+			rows="10"
+			placeholder="We talked about ...
+They asked me for help in ...
+We met at the library and worked on ..."
+			bind:value={log_description}
+		></Textarea>
+		<br>
+		<Label>How many hours did you work?</Label>
+		<Input
+			type="number"
+			id="loghours"
+			placeholder="10"
+			bind:value={log_hours}
+		/>
+		<br>
+		{#if $logLoading}
+			<Button disabled type="submit" color="green" outline>
+				Submit <Spinner size="6"/>
+			</Button>
+		{:else}
+			<Button type="submit" color="green" outline>
+				Submit
+			</Button>
+		{/if}
+		<br><br>
+		{#if $logFailMessage.length > 1}
+			<Alert color="red">
+				<span class="font-medium">Failed:</span>
+				{$logFailMessage}
+			</Alert>
+		{:else if $logSuccessMessage.length > 1}
+			<Alert color="green">
+				<span class="font-medium">Success:</span>
+				{$logSuccessMessage}
+			</Alert>
+		{/if}
+		<br>
 	</form>
+	
 </Modal>
 
 <!-- This div holds all of the information. -->
@@ -480,7 +589,7 @@
 								<!-- The information of each mentor listed out. -->
 								<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
 								<!-- {#if m.email == email}
-									<Button size="xs" pill outline color="red" on:click={openshowLogsModal}>
+									<Button size="xs" pill outline color="red" on:click={() => {openshowLogsModal(); currMentor = m;}}>
 										<BookOpenOutline size="md"></BookOpenOutline>
 									</Button>
 								{/if} -->

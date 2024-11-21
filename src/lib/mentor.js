@@ -237,3 +237,24 @@ export async function retrieveDemographics() {
 		return -1;
 	}
 }
+
+export async function sendMentorMenteeLogs(mentorEmail, menteeEmail, logDescription, logHours) {
+	const toSend = {
+		mentor_email: mentorEmail,
+		mentee_email: menteeEmail,
+		log_description: logDescription,
+		log_hours: logHours
+	}
+
+	console.log(toSend);
+
+	const url = SEND_URL + 'mentormenteelogs/';
+	const response = await fetch(url, {
+		method: 'POST',
+		headers: { 'Content-type': 'application/json' },
+		body: JSON.stringify(toSend)
+	});
+
+	console.log(response);
+	return response;
+}
