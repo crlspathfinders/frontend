@@ -401,6 +401,23 @@ We met at the library and worked on ..."
 					<u><a href="/auth/login">Login first</a></u>
 				{/if}
 			</P>
+			{#each mentors as m}
+				{#if m.email == email}
+					<ButtonGroup>
+						<Button
+							size="md"
+							pill
+							color="green"
+							on:click={() => {
+								console.log('clicked');
+								currMentor = m;
+								console.log(currMentor);
+								openshowEditModal();
+							}}>Edit Your Mentor<PenOutline size="xs"></PenOutline></Button
+						>
+					</ButtonGroup>
+				{/if}
+			{/each}
 		</div>
 
 		<!-- This is the search box - All of the components here are imported from the Flowbite Svelte UI Library, which you can find links to in the doc I emailed you. -->
