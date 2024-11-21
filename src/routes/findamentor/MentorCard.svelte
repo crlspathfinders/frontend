@@ -101,7 +101,7 @@
 				try {
 					await sendMentorMenteeLogs(currMentor.email, log_mentee[0].email, log_description, log_hours);
 					logFailMessage.set("");
-					logSuccessMessage.set("Success");
+					logSuccessMessage.set("Success! Check your spam for an email from us, confirming the logging of your hours.");
 					log_mentee = [];
 					log_description = "";
 					log_hours = null;
@@ -239,16 +239,17 @@
 			// 	mentors = JSON.parse(localStorage.getItem('mentorsInfo'));
 			// }
 
-			mentors = await getCollection("Mentors");
-			list_mentees = await setListMentees();
+			// mentors = await getCollection("Mentors");
+			// list_mentees = await setListMentees();
 			// mentors = await getBackendCache("Mentors");
-			// const mentors_url = "http://127.0.0.1:8000/cache/Mentors";
-			// const res = await fetch(mentors_url);
-			// if (!res.ok) {
-			// 	throw new Error('Failure to delete id');
-			// }
-			// const resData = await res.json();
-			// mentors = JSON.parse(resData);
+			const mentors_url = "http://127.0.0.1:8000/cache/Mentors";
+			const res = await fetch(mentors_url);
+			if (!res.ok) {
+				throw new Error('Failure to delete id');
+			}
+			const resData = await res.json();
+			console.log(mentors);
+			mentors = JSON.parse(resData);
 
 			// For now we do it the old fashioned way. The getCollection function is a function from the api.js file in the lib folder, that just returns a specific colelction. A collection is what our databse (Google Firestore) calls each table of data. In this case we call the collection of Mentors to get the data of each mentor who is signed up. The reason we had to optimize this was because it is calling static data, meaning the data doesn't change on the page reload, but is still being requested. But why should we constantly request data that we know doesn't change? That slows down the site, and the above localStorage implementation fixes that and only calls this data once.
 			// mentors = await getCollection('Mentors');
@@ -258,7 +259,7 @@
 			// 	const demographics = await retrieveDemographics();
 
 			// 	listReligions = demographics.religions;
-			// 	listAcademics = demographics.acedemics;
+			// 	listAcademics = demographics.academics;
 			// 	listRaces = demographics.races;
 			// 	listLanguages = demographics.languages;
 			// 	listGenders = demographics.genders;
@@ -266,16 +267,16 @@
 			// 	localStorage.setItem('demographicsInfo', JSON.stringify(demographics));
 			// } else {
 			// 	console.log('demographics in locstor!');
-			// 	demographics = JSON.parse(localStorage.getItem('demographicsInfo'));
+			// 	let demographics = JSON.parse(localStorage.getItem('demographicsInfo'));
 
 			// 	listReligions = demographics.religions;
-			// 	listAcademics = demographics.acedemics;
+			// 	listAcademics = demographics.academics;
 			// 	listRaces = demographics.races;
 			// 	listLanguages = demographics.languages;
 			// 	listGenders = demographics.genders;
 			// }
 
-			const demographics = await retrieveDemographics();
+			// const demographics = await retrieveDemographics();
 
 			console.log(demographics);
 
@@ -345,7 +346,7 @@ We met at the library and worked on ..."
 		<br>
 		{#if $logLoading}
 			<Button disabled type="submit" color="green" outline>
-				Submit <Spinner size="6"/>
+				Loading <Spinner color="green" size="6"/>
 			</Button>
 		{:else}
 			<Button type="submit" color="green" outline>
@@ -606,11 +607,11 @@ We met at the library and worked on ..."
 								<h5 class="mb-1 text-xl font-medium text-gray-900">
 									<!-- The information of each mentor listed out. -->
 									<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
-									<!-- {#if m.email == email}
+									{#if m.email == email}
 										<Button size="xs" pill outline color="red" on:click={() => {openshowLogsModal(); currMentor = m;}}>
 											<BookOpenOutline size="md"></BookOpenOutline>
 										</Button>
-									{/if} -->
+									{/if}
 									{m.firstname}
 									{m.lastname}
 									<!-- This checks if this mentor is the current logged in user. If it is, it adds the pencil icon, which when clicked allows the user to edit or change their information. -->
