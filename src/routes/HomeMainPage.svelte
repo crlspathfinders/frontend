@@ -121,7 +121,7 @@
 }
 </style>
 
-<center>
+<!-- <center>
   <Alert color="red" border>
     <span class="font-medium">SITE DOWN!</span>
     <br>
@@ -129,7 +129,7 @@
     <br>
     You will not be able to see any data from other pages - we are working to fix this issue!
   </Alert>
-</center>
+</center> -->
 
 <div class="wholerapper bg-gray-100" style="height: 100%;">
   <div class="maincontainer bg-gray-100" style="height: 100%;">
