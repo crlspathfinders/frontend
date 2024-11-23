@@ -240,7 +240,7 @@
 			// }
 
 			mentors = await getCollection("Mentors");
-			// list_mentees = await setListMentees();
+			list_mentees = await setListMentees();
 			// mentors = await getBackendCache("Mentors");
 			// const mentors_url = "http://127.0.0.1:8000/cache/Mentors";
 			// const res = await fetch(mentors_url);
