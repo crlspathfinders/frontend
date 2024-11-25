@@ -51,7 +51,7 @@
 						<TabItem title="Clubs">
 							<AdminClub></AdminClub>
 						</TabItem>
-						<TabItem title="Peer Mentor">
+						<TabItem title="Opportunities">
 							<AdminPeerMentor></AdminPeerMentor>
 						</TabItem>
 						<TabItem title="All Info">
