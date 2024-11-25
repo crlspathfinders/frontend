@@ -34,7 +34,7 @@
 	import { writable } from 'svelte/store';
 	import { deleteMentor } from '../../../lib/mentor';
 	import { TableHeader } from 'flowbite-svelte-blocks';
-	import PeerMentorLinkTable from '../../peermentor/PeerMentorLinkTable.svelte';
+	import PeerMentorLinkTable from '../../opportunities/PeerMentorLinkTable.svelte';
 
 	let wholeReady = writable(false);
 	let deleteMentorConfirmModal = writable(false);
