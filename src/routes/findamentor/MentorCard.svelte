@@ -404,7 +404,7 @@ We met at the library and worked on ..."
 			</P>
 			{#each mentors as m}
 				{#if m.email == email}
-					<ButtonGroup>
+					<!-- <ButtonGroup> -->
 						<Button
 							size="md"
 							pill
@@ -416,7 +416,10 @@ We met at the library and worked on ..."
 								openshowEditModal();
 							}}>Edit Your Mentor<PenOutline size="xs"></PenOutline></Button
 						>
-					</ButtonGroup>
+						<Button size="md" pill color="blue" on:click={() => {openshowLogsModal(); currMentor = m;}}>
+							Log Mentor Hours <BookOpenOutline size="md"></BookOpenOutline>
+						</Button>
+					<!-- </ButtonGroup> -->
 				{/if}
 			{/each}
 		</div>
@@ -608,7 +611,7 @@ We met at the library and worked on ..."
 									<!-- The information of each mentor listed out. -->
 									<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
 									{#if m.email == email}
-										<Button size="xs" pill outline color="red" on:click={() => {openshowLogsModal(); currMentor = m;}}>
+										<Button size="xs" pill outline color="blue" on:click={() => {openshowLogsModal(); currMentor = m;}}>
 											<BookOpenOutline size="md"></BookOpenOutline>
 										</Button>
 									{/if}
