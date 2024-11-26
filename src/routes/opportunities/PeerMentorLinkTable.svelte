@@ -612,7 +612,7 @@
 													<b>{pml.name}</b>
 												</td>
 												<td class="px-2 py-1 text-gray-700">
-													<b>{pml.bio}</b>
+													{pml.bio}
 												</td>
 												<td class="px-2 py-1 text-gray-700">
 													<u><a target="_blank" href={pml.src}>{pml.src}</a></u>
