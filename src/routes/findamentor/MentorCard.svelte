@@ -631,9 +631,9 @@ We met at the library and worked on ..."
 								openshowEditModal();
 							}}>Edit Mentor Profile<PenOutline size="md"></PenOutline></Button
 						>
-						<Button outline size="md" color="blue" on:click={() => {openshowLogsModal(); currMentor = m; hoursWorkedCatalog.set(m.hours_worked_catalog); }}>
+						<!-- <Button outline size="md" color="blue" on:click={() => {openshowLogsModal(); currMentor = m; hoursWorkedCatalog.set(m.hours_worked_catalog); }}>
 							Log Mentor Hours <BookOpenOutline size="md"></BookOpenOutline>
-						</Button>
+						</Button> -->
 						<!-- <Button size="md" pill color="green" on:click={() => {openShowCatalogModal(); currMentor = m;}}>
 							Mentor Catalog <BookOpenOutline size="md"></BookOpenOutline>
 						</Button> -->
