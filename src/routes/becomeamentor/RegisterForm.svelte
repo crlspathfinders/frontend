@@ -112,7 +112,7 @@
 		errorMessage.set('');
 		successMessage.set('');
 		try {
-			const res = await UploadMentorImage(file);
+			const res = await UploadMentorImage(file, currMentor.profile_pic);
 			console.log(res, currEmail);
 			if (showVals) {
 				const res2 = await SetMentorImage(res, currMentor.email);
