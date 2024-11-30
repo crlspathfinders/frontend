@@ -640,7 +640,7 @@ We met at the library and worked on ..."
 					</ButtonGroup>
 				{/if}
 			{/each}
-			{#if userInfo.is_mentee}
+			{#if userInfo && userInfo.is_mentee}
 				<Button color="purple" outline size="md" on:click={() => {
 					currUser = userInfo;
 					openShowMenteeLogs()}}>
