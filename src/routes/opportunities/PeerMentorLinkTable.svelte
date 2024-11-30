@@ -543,9 +543,7 @@
 					<br />
 					{#if $filtersSelected.length > 0}
 						{#each $filtersSelected as f}
-							<div class="badge" style="margin-right:.2rem;">
-								<Badge color="purple">{f}</Badge>
-							</div>
+							<Badge color="purple" style="margin-right:1rem;">{f}</Badge>
 						{/each}
 					{/if}
 				{/if}

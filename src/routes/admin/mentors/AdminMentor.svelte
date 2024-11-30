@@ -18,7 +18,9 @@
 		Spinner,
 		ListPlaceholder,
 		Search,
-		Toggle
+		Toggle,
+		P,
+		Badge
 	} from 'flowbite-svelte';
 	import { Section } from 'flowbite-svelte-blocks';
 	// import paginationData from '../utils/advancedTable.json'
@@ -38,6 +40,7 @@
 	let wholeReady = writable(false);
 	let deleteMentorConfirmModal = writable(false);
 	let removeLoading = writable(false);
+	let showCatalogModal = writable(false);
 
 	let mentors = [];
 
@@ -57,6 +60,22 @@
 		}
 		return bio;
 	}
+
+	let openRow;
+	let currI;
+
+	function handleDesc(desc) {
+		if (desc.length > 50) {
+			return desc.substring(0, 50) + ' ... ';
+		}
+		return desc;
+	}
+
+	const toggleRow = (i, desc) => {
+		currI = i;
+		// findDescription(desc);
+		openRow = openRow === i ? null : i;
+	};
 
 	function labelIncludesSearchTerm(label, searchTerm) {
 		if (typeof label === 'string' && typeof searchTerm === 'string') {
@@ -103,6 +122,9 @@
 
 	const opendeleteMentorConfirmModal = () => deleteMentorConfirmModal.set(true);
 	const closedeleteMentorConfirmModal = () => deleteMentorConfirmModal.set(false);
+
+	const openShowCatalogModal = () => showCatalogModal.set(true);
+	const closeShowCatalogModal = () => showCatalogModal.set(false);
 </script>
 
 {#if $deleteMentorConfirmModal}
@@ -129,6 +151,73 @@
 	</Modal>
 {/if}
 
+<!-- Mentor Catalog Modal: -->
+<Modal class="min-w-full" open={$showCatalogModal} on:close={closeShowCatalogModal} size="lg">
+	<P size="xl">Mentor Hours</P>
+	<P size="md">Something doesn't look right? Let us know at <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">crlspathfinders25@gmail.com</a></u></P>
+	<div>
+		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+			<div class="overflow-x-auto">
+				<table class="w-full text-sm text-left text-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+						<tr>
+							<th scope="col" class="px-4 py-3">Mentee</th>
+							<th scope="col" class="px-4 py-3">Description</th>
+							<th scope="col" class="px-4 py-3">Hours</th>
+							<th scope="col" class="px-4 py-3">Date</th>
+							<th scope="col" class="px-4 py-3">Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each currMentor.hours_worked_catalog as c, i}
+							<tr class="border-b">
+								<td class="px-4 py-3 text-gray-800">{i + 1} | {c.mentee}</td>
+								{#if openRow === i}
+									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
+										<div class="mentordescription">
+											{c.description}
+										</div>
+									</td>
+								{:else}
+									{#if c.description.length > 50 }
+										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{:else}
+										<td class="px-4 py-3 text-gray-700">
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{/if}
+								{/if}
+								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
+								<td class="px-4 py-3 text-gray-700">{c.date}</td>
+								{#if c.status == -1}
+									<td class="px-4 py-3">
+										<Badge color="yellow">Waiting for mentee confirmation</Badge>
+									</td>
+								{:else if c.status == 0}
+									<td class="px-4 py-3">
+										<Badge color="green">Confirmed</Badge>
+									</td>
+								{/if}
+							</tr>
+						{/each}
+						<tr class="border-b">
+							<td class="px-4 py-3 text-gray-800">
+								<Badge color="green">Total hours worked: <b> {currMentor.total_hours_worked}</b></Badge>
+							</td>
+						</tr>
+						</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</Modal>
+
 {#if $wholeReady}
 	<EditMentor {editOn} {currMentor}></EditMentor>
 
@@ -154,10 +243,12 @@
 								<th scope="col" class="px-4 py-3">Edit</th>
 								<th scope="col" class="px-4 py-3">Delete</th>
 								<th scope="col" class="px-4 py-3">Show</th>
+								<th scope="col" class="px-4 py-3">Catalog</th>
 								<th scope="col" class="px-4 py-3">First Name</th>
 								<th scope="col" class="px-4 py-3">Last Name</th>
 								<th scope="col" class="px-4 py-3">Email</th>
 								<th scope="col" class="px-4 py-3">Bio</th>
+								<th scope="col" class="px-4 py-3">Hours</th>
 								<th scope="col" class="px-4 py-3">Gender</th>
 								<th scope="col" class="px-4 py-3">Language(s)</th>
 								<th scope="col" class="px-4 py-3">Race(s)</th>
@@ -205,12 +296,18 @@
 												}}
 											></Toggle>
 										</td>
+										<td class="px-4 py-3">
+											<Button size="xs" style="margin-left:1rem; margin-top:1rem;" outline color="purple" on:click={() => {openShowCatalogModal(); currMentor = m;}}>
+												Show Mentor Catalog
+											</Button>
+										</td>
 										<td class="px-4 py-3">{i + 1} | {m.firstname}</td>
 										<td class="px-4 py-3">{m.lastname}</td>
 										<td class="px-4 py-3"
 											><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td
 										>
 										<td class="px-4 py-3">{handleBio(m.bio)}</td>
+										<td class="px-4 py-3">{m.total_hours_worked}</td>
 										<td class="px-4 py-3">{m.gender}</td>
 										<td class="px-4 py-3">{m.languages}</td>
 										<td class="px-4 py-3">{m.races}</td>

@@ -23,7 +23,10 @@
 		Label,
 		Textarea,
 		Input,
-		Alert
+		Alert,
+		Table,
+		TableBodyCell,
+		TableBodyRow,
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
@@ -43,6 +46,9 @@
 	let showEditModal = writable(false); // boolean store
 	let filters = writable([]); // list store
 	let showLogsModal = writable(false);
+	let showCatalogModal = writable(false);
+	let hoursWorkedCatalog = writable([]);
+	let showMenteeLogs = writable(false);
 
 	let ready = false;
 	let mentors = [];
@@ -68,6 +74,24 @@
 	let logSuccessMessage = writable("");
 	let logFailMessage = writable("");
 	let logLoading = writable(false);
+
+	let currUser;
+
+	let openRow;
+	let currI;
+
+	function handleDesc(desc) {
+		if (desc.length > 50) {
+			return desc.substring(0, 50) + ' ... ';
+		}
+		return desc;
+	}
+
+	const toggleRow = (i, desc) => {
+		currI = i;
+		// findDescription(desc);
+		openRow = openRow === i ? null : i;
+	};
 
 	const checkLogInfo = () => {
 		if (log_mentee.length == 0) {
@@ -101,7 +125,7 @@
 				try {
 					await sendMentorMenteeLogs(currMentor.email, log_mentee[0].email, log_description, log_hours);
 					logFailMessage.set("");
-					logSuccessMessage.set("Success! Check your spam for an email from us, confirming the logging of your hours.");
+					logSuccessMessage.set("Your mentee has recieved an email to verify your hours. Once they confirm, your total hours will be updated. In the meantime, check your email from us (check spam), confirming the logging of your hours, and let us know if you have any questions.");
 					log_mentee = [];
 					log_description = "";
 					log_hours = null;
@@ -113,7 +137,19 @@
 			}
 		} catch (error) {
 			console.log(error);
+			logSuccessMessage.set("");
+			logFailMessage.set(error);
 		}  finally {
+			mentors = await getCollection("Mentors");
+			list_mentees = await setListMentees();
+			currMentor = currMentor;
+			for (let i = 0; i < mentors.length; i++) {
+				if (mentors[i].email.localeCompare(currMentor.email) === 0) {
+					console.log("Found currMentor");
+					hoursWorkedCatalog.set(mentors[i].hours_worked_catalog);
+					console.log("Set hwc");
+				}
+			}
 			logLoading.set(false);
 		}
 		console.log("ended");
@@ -256,7 +292,7 @@
 
 			// if (!localStorage.getItem('demographicsInfo')) {
 			// 	console.log('demographics not in locstor!');
-			// 	const demographics = await retrieveDemographics();
+			const demographics = await retrieveDemographics();
 
 			// 	listReligions = demographics.religions;
 			// 	listAcademics = demographics.academics;
@@ -302,20 +338,25 @@
 
 	const openshowLogsModal = () => showLogsModal.set(true);
 	const closeshowLogsModal = () => { showLogsModal.set(false); logSuccessMessage.set(""); logFailMessage.set(""); };
+
+	const openShowCatalogModal = () => showCatalogModal.set(true);
+	const closeShowCatalogModal = () => showCatalogModal.set(false);
 	
+	const openShowMenteeLogs = () => showMenteeLogs.set(true);
+	const closeShowMenteeLogs = () => showMenteeLogs.set(false);
 </script>
 
 <!-- This is the modal that edits each mentor's profile. -->
 <Modal class="min-w-full" open={$showEditModal} on:close={closeshowEditModal}>
 	<!-- The <RegisterForm> is a component (components in Svelte are files, so you can see the code for this components in the becomeamentor folder!) that controls the editing view. The {data} in brackets are parameters that I pass to indicate *editing*, and not *creating* a mentor. -->
 	<RegisterForm {view} {currMentor} {showVals}></RegisterForm>
+	<br><br><br>
 </Modal>
 
 <!-- Mentor Logging Modal: -->
-
-<Modal open={$showLogsModal} on:close={closeshowLogsModal}>
-	<P size="xl">Log Mentor-Mentee hours</P>
-	<form on:submit={handleLogMentors} style="height:40rem;">
+<Modal open={$showLogsModal} on:close={closeshowLogsModal} size="lg">
+	<P size="xl">Log Hours</P>
+	<form on:submit={handleLogMentors}>
 		<Label>
 			Select mentee
 			<MultiSelect
@@ -345,11 +386,11 @@ We met at the library and worked on ..."
 		/>
 		<br>
 		{#if $logLoading}
-			<Button disabled type="submit" color="green" outline>
+			<Button disabled type="submit" color="green" outline class="w-full">
 				Loading <Spinner color="green" size="6"/>
 			</Button>
 		{:else}
-			<Button type="submit" color="green" outline>
+			<Button type="submit" color="green" class="w-full">
 				Submit
 			</Button>
 		{/if}
@@ -365,9 +406,186 @@ We met at the library and worked on ..."
 				{$logSuccessMessage}
 			</Alert>
 		{/if}
-		<br>
 	</form>
-	
+	<hr>
+	<P size="xl">Completed Hours</P>
+	<P size="md">
+		In order for your hours to count towards your total, your mentee needs to confirm their hours. Please remind them to check their email or send us an <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">email</a></u> if they have any problems.
+		<br>
+		Something doesn't look right? Let us know at <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">crlspathfinders25@gmail.com</a></u>
+	</P>
+	<div>
+		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+			<div class="overflow-x-auto">
+				<table class="w-full text-sm text-left text-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+						<tr>
+							<th scope="col" class="px-4 py-3">Mentee</th>
+							<th scope="col" class="px-4 py-3">Description</th>
+							<th scope="col" class="px-4 py-3">Hours</th>
+							<th scope="col" class="px-4 py-3">Date</th>
+							<th scope="col" class="px-4 py-3">Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each currMentor.hours_worked_catalog as c, i}
+							<tr class="border-b">
+								<td class="px-4 py-3 text-gray-800">{i + 1} | {c.mentee}</td>
+								{#if openRow === i}
+									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
+										<div class="mentordescription">
+											{c.description}
+										</div>
+									</td>
+								{:else}
+									{#if c.description.length > 50 }
+										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{:else}
+										<td class="px-4 py-3 text-gray-700">
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{/if}
+								{/if}	
+
+								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
+								<td class="px-4 py-3 text-gray-700">{c.date}</td>
+								{#if c.status == -1}
+									<td class="px-4 py-3">
+										<Badge color="yellow">Waiting for mentee confirmation</Badge>
+									</td>
+								{:else if c.status == 0}
+									<td class="px-4 py-3">
+										<Badge color="green">Confirmed</Badge>
+									</td>
+								{/if}
+							</tr>
+						{/each}
+						<tr class="border-b">
+							<td class="px-4 py-3 text-gray-800">
+								<Badge color="green">Total hours worked: <b> {currMentor.total_hours_worked}</b></Badge>
+							</td>
+						</tr>
+						</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</Modal>
+
+<!-- Mentee Logs Modal: -->
+<Modal title="Mentee Logs" open={$showMenteeLogs} on:close={closeShowMenteeLogs} size="lg">
+	<div>
+		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+			<div class="overflow-x-auto">
+				<table class="w-full text-sm text-left text-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+						<tr>
+							<th scope="col" class="px-4 py-3">Mentor</th>
+							<th scope="col" class="px-4 py-3">Hours</th>
+							<th scope="col" class="px-4 py-3">Description</th>
+							<th scope="col" class="px-4 py-3">Date Confirmed</th>
+							<th scope="col" class="px-4 py-3">Date Met</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each currUser.mentee_logs as c, i}
+							<tr class="border-b">
+								<td class="px-4 py-3 text-gray-800">{i + 1} | {c.mentor}</td>
+								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
+								<!-- <td class="px-4 py-3 text-gray-700">{c.description}</td> -->
+								{#if openRow === i}
+									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
+										<div class="mentordescription">
+											{c.description}
+										</div>
+									</td>
+								{:else}
+									{#if c.description.length > 50 }
+										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{:else}
+										<td class="px-4 py-3 text-gray-700">
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{/if}
+								{/if}
+								<td class="px-4 py-3 text-gray-700">{c.date_confirmed}</td>
+								<td class="px-4 py-3 text-gray-700">{c.date_met}</td>
+								<!-- {#if c.status == -1}
+									<td class="px-4 py-3">
+										<Badge color="yellow">Waiting for mentee confirmation</Badge>
+									</td>
+								{:else if c.status == 0}
+									<td class="px-4 py-3">
+										<Badge color="green">Confirmed</Badge>
+									</td>
+								{/if} -->
+							</tr>
+						{/each}
+						<!-- <tr class="border-b">
+							<td class="px-4 py-3 text-gray-800">Total hours worked: <b>{currMentor.total_hours_worked}</b></td>
+						</tr> -->
+						</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</Modal>
+
+<!-- Mentor Catalog Modal: (not being used ATM) -->
+<Modal class="min-w-full" open={$showCatalogModal} on:close={closeShowCatalogModal}>
+	<P size="xl">Mentor Hours</P>
+	<P size="md">Something doesn't look right? Let us know at <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">crlspathfinders25@gmail.com</a></u></P>
+	<div>
+		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+			<div class="overflow-x-auto">
+				<table class="w-full text-sm text-left text-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+						<tr>
+							<th scope="col" class="px-4 py-3">Mentee</th>
+							<th scope="col" class="px-4 py-3">Description</th>
+							<th scope="col" class="px-4 py-3">Hours</th>
+							<th scope="col" class="px-4 py-3">Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each $hoursWorkedCatalog as c, i}
+							<tr class="border-b">
+								<td class="px-4 py-3">{i + 1} | {c.mentee}</td>
+								<td class="px-4 py-3">{c.description}</td>
+								{#if c.status == -1}
+									<td class="px-4 py-3 text-gray-500">{c.hours}</td>
+									<td class="px-4 py-3">
+										<div class="badge" style="margin-right:.2rem;">
+											<Badge color="yellow">Waiting for mentee confirmation</Badge>
+										</div>
+									</td>
+								{:else}
+									<td class="px-4 py-3"><b>{c.hours}</b></td>
+									<td class="px-4 py-3">
+										<div class="badge" style="margin-right:.2rem;">
+											<Badge color="green">Confirmed</Badge>
+										</div>
+									</td>
+								{/if}
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </Modal>
 
 <!-- This div holds all of the information. -->
@@ -383,16 +601,13 @@ We met at the library and worked on ..."
 			</Heading>
 			<br />
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
-				Below you can search for and filter juniors and seniors who you believe can best support
-				your academic interests.
+				Below you can search for and filter juniors and seniors who you believe can best support your academic interests.
 			</P>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
-				Through one-on-one support, you can learn about opportunities in Cambridge and CRLS, which
-				classes to take, and how to best find success in highschool.
+				Through one-on-one support, you can learn about opportunities in Cambridge and CRLS, which classes to take, and how to best find success in highschool.
 			</P>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
-				Simply click "message" for whichever mentor you believe can best help you achieve your
-				goals. Send them an email and start your journey today.
+				Simply click "message" for whichever mentor you believe can best help you achieve your goals. Then, send them an email and find your path today!
 			</P>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 				Interested in becoming a mentor?
@@ -404,24 +619,34 @@ We met at the library and worked on ..."
 			</P>
 			{#each mentors as m}
 				{#if m.email == email}
-					<!-- <ButtonGroup> -->
+					<ButtonGroup>
 						<Button
+							outline
 							size="md"
-							pill
 							color="green"
 							on:click={() => {
 								console.log('clicked');
 								currMentor = m;
 								console.log(currMentor);
 								openshowEditModal();
-							}}>Edit Your Mentor<PenOutline size="xs"></PenOutline></Button
+							}}>Edit Mentor Profile<PenOutline size="md"></PenOutline></Button
 						>
-						<Button size="md" pill color="blue" on:click={() => {openshowLogsModal(); currMentor = m;}}>
+						<Button outline size="md" color="blue" on:click={() => {openshowLogsModal(); currMentor = m; hoursWorkedCatalog.set(m.hours_worked_catalog); }}>
 							Log Mentor Hours <BookOpenOutline size="md"></BookOpenOutline>
 						</Button>
-					<!-- </ButtonGroup> -->
+						<!-- <Button size="md" pill color="green" on:click={() => {openShowCatalogModal(); currMentor = m;}}>
+							Mentor Catalog <BookOpenOutline size="md"></BookOpenOutline>
+						</Button> -->
+					</ButtonGroup>
 				{/if}
 			{/each}
+			{#if userInfo.is_mentee}
+				<Button color="purple" outline size="md" on:click={() => {
+					currUser = userInfo;
+					openShowMenteeLogs()}}>
+					View Mentee Logs
+				</Button>
+			{/if}
 		</div>
 
 		<!-- This is the search box - All of the components here are imported from the Flowbite Svelte UI Library, which you can find links to in the doc I emailed you. -->
@@ -583,9 +808,7 @@ We met at the library and worked on ..."
 				<br />
 				{#if $filters.length > 0}
 					{#each $filters as f}
-						<div class="badge" style="margin-right:.2rem;">
-							<Badge color="blue">{f}</Badge>
-						</div>
+						<Badge color="blue" style="margin-right:.2rem;">{f}</Badge>
 					{/each}
 				{/if}
 			{/if}
@@ -617,6 +840,7 @@ We met at the library and worked on ..."
 									{/if}
 									{m.firstname}
 									{m.lastname}
+									<!-- <br> -->
 									<!-- This checks if this mentor is the current logged in user. If it is, it adds the pencil icon, which when clicked allows the user to edit or change their information. -->
 									{#if m.email == email}
 										<Button
@@ -631,6 +855,12 @@ We met at the library and worked on ..."
 												openshowEditModal();
 											}}><PenOutline size="xs"></PenOutline></Button
 										>
+									{/if}
+									<br>
+									{#if m.email == email}
+										<center><Badge color="yellow">{m.total_hours_worked} hours worked</Badge></center>
+									{:else}
+										<center><Badge color="blue">{m.total_hours_worked} hours worked</Badge></center>
 									{/if}
 								</h5>
 								<span class="text-sm text-gray-700">

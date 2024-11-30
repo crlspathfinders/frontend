@@ -27,6 +27,7 @@
 	let roleModalOpen = writable(false);
 	let deleteModalOpen = writable(false);
 	let isLoading = writable(false);
+	let showMenteeLogs = writable(false);
 
 	let users = [];
 
@@ -37,6 +38,23 @@
 	let loggedInUser;
 
 	let searching = '';
+
+	let openRow;
+	let currI;
+
+	function handleDesc(desc) {
+		if (desc.length > 50) {
+			return desc.substring(0, 50) + ' ... ';
+		}
+		return desc;
+	}
+
+	const toggleRow = (i, desc) => {
+		currI = i;
+		// findDescription(desc);
+		openRow = openRow === i ? null : i;
+	};
+	
 
 	function labelIncludesSearchTerm(label, searchTerm) {
 		if (typeof label === 'string' && typeof searchTerm === 'string') {
@@ -136,10 +154,12 @@
 
 	const openDeleteMModal = () => deleteModalOpen.set(true);
 	const closeDeleteModal = () => deleteModalOpen.set(false);
+
+	const openShowMenteeLogs = () => showMenteeLogs.set(true);
+	const closeShowMenteeLogs = () => showMenteeLogs.set(false);
 </script>
 
 <!-- Role Modal: -->
-
 {#if $roleModalOpen}
 	<Modal title="Change {currUser.email} role" open={$roleModalOpen} on:close={closeRoleModal}>
 		<p class="text-base leading-relaxed text-gray-800">
@@ -159,7 +179,6 @@
 {/if}
 
 <!-- Delete Modal: -->
-
 {#if $deleteModalOpen}
 	<Modal title="Delete Member" open={$deleteModalOpen} on:close={closeDeleteModal}>
 		<p class="text-base leading-relaxed text-gray-800">
@@ -174,6 +193,71 @@
 		</Button>
 	</Modal>
 {/if}
+
+<!-- Mentee Logs Modal: -->
+<Modal title="Mentee Logs" open={$showMenteeLogs} on:close={closeShowMenteeLogs} size="lg">
+	<div>
+		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+			<div class="overflow-x-auto">
+				<table class="w-full text-sm text-left text-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+						<tr>
+							<th scope="col" class="px-4 py-3">Mentor</th>
+							<th scope="col" class="px-4 py-3">Hours</th>
+							<th scope="col" class="px-4 py-3">Description</th>
+							<th scope="col" class="px-4 py-3">Date Confirmed</th>
+							<th scope="col" class="px-4 py-3">Date Met</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each currUser.mentee_logs as c, i}
+							<tr class="border-b">
+								<td class="px-4 py-3 text-gray-800">{i + 1} | {c.mentor}</td>
+								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
+								<!-- <td class="px-4 py-3 text-gray-700">{c.description}</td> -->
+								{#if openRow === i}
+									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
+										<div class="mentordescription">
+											{c.description}
+										</div>
+									</td>
+								{:else}
+									{#if c.description.length > 50 }
+										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{:else}
+										<td class="px-4 py-3 text-gray-700">
+											<div class="mentordescription">
+												{handleDesc(c.description)}
+											</div>
+										</td>
+									{/if}
+								{/if}
+								<td class="px-4 py-3 text-gray-700">{c.date_confirmed}</td>
+								<td class="px-4 py-3 text-gray-700">{c.date_met}</td>
+								<!-- {#if c.status == -1}
+									<td class="px-4 py-3">
+										<Badge color="yellow">Waiting for mentee confirmation</Badge>
+									</td>
+								{:else if c.status == 0}
+									<td class="px-4 py-3">
+										<Badge color="green">Confirmed</Badge>
+									</td>
+								{/if} -->
+							</tr>
+						{/each}
+						<!-- <tr class="border-b">
+							<td class="px-4 py-3 text-gray-800">Total hours worked: <b>{currMentor.total_hours_worked}</b></td>
+						</tr> -->
+						</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</Modal>
 
 {#if $wholeReady}
 	<section class="bg-gray-50 p-3 sm:p-5">
@@ -203,6 +287,7 @@
 								<th scope="col" class="px-4 py-3">Is Leader</th>
 								<th scope="col" class="px-4 py-3">Is Mentor-Eligible</th>
 								<th scope="col" class="px-4 py-3">Is Mentor</th>
+								<th scope="col" class="px-4 py-3">Is Mentee</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -278,6 +363,18 @@
 												checked={user.is_mentor}
 												on:change={handleToggleLeaderMentor(user.email, 'Mentor', !user.is_mentor)}
 											></Toggle>
+										</td>
+										<td class="px-4 py-3">
+											{#if user.is_mentee}
+												<!-- <b>Yes</b> -->
+												<Button color="purple" outline size="xs" on:click={() => {
+													currUser = user;
+													openShowMenteeLogs()}}>
+													Logs
+												</Button>
+											{:else}
+												<b>No</b>
+											{/if}
 										</td>
 									</tr>
 								{/if}

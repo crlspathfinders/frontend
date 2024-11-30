@@ -181,3 +181,14 @@ export async function toggleLeaderMentor(email, leaderMentor, toggle) {
 		body: JSON.stringify(toSend)
 	});
 }
+
+export async function confirmMentorMenteeHours(confirm, category_id, mentee_email, mentor_email, mentee_hours, mentee_description) {
+	const url = SEND_URL + "menteeconfirmhours/" + confirm + "/" + category_id + "/" + mentee_email + "/" + mentor_email + "/" + mentee_hours + "/" + mentee_description;
+	const res = await fetch(url);
+	if (!res.ok) {
+		console.log('Failed to fetch url');
+	}
+	const resData = await res.json();
+	console.log(resData);
+	return resData;
+}
