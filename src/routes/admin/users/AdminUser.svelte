@@ -214,39 +214,9 @@
 							<tr class="border-b">
 								<td class="px-4 py-3 text-gray-800">{i + 1} | {c.mentor}</td>
 								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
-								<!-- <td class="px-4 py-3 text-gray-700">{c.description}</td> -->
-								{#if openRow === i}
-									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
-										<div class="mentordescription">
-											{c.description}
-										</div>
-									</td>
-								{:else}
-									{#if c.description.length > 50 }
-										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{:else}
-										<td class="px-4 py-3 text-gray-700">
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{/if}
-								{/if}
+								<td class="px-4 py-3 text-gray-700">{c.description}</td>
 								<td class="px-4 py-3 text-gray-700">{c.date_confirmed}</td>
 								<td class="px-4 py-3 text-gray-700">{c.date_met}</td>
-								<!-- {#if c.status == -1}
-									<td class="px-4 py-3">
-										<Badge color="yellow">Waiting for mentee confirmation</Badge>
-									</td>
-								{:else if c.status == 0}
-									<td class="px-4 py-3">
-										<Badge color="green">Confirmed</Badge>
-									</td>
-								{/if} -->
 							</tr>
 						{/each}
 						<!-- <tr class="border-b">
@@ -279,15 +249,15 @@
 					<table class="w-full text-sm text-left text-gray-500">
 						<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 							<tr>
-								<th scope="col" class="px-4 py-3">Role</th>
-								<th scope="col" class="px-4 py-3">Delete</th>
-								<th scope="col" class="px-4 py-3">Email</th>
-								<th scope="col" class="px-4 py-3">Grade</th>
-								<th scope="col" class="px-4 py-3">Joined Clubs</th>
-								<th scope="col" class="px-4 py-3">Is Leader</th>
-								<th scope="col" class="px-4 py-3">Is Mentor-Eligible</th>
-								<th scope="col" class="px-4 py-3">Is Mentor</th>
-								<th scope="col" class="px-4 py-3">Is Mentee</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Role</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Delete</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Email</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Grade</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Leader</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Mentor-Eligible</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Mentor</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Mentee</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Joined Clubs</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -338,7 +308,6 @@
 										<th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
 											>{user.grade}</th
 										>
-										<td class="px-4 py-3">{user.joined_clubs}</td>
 										<td class="px-4 py-3">
 											<Toggle
 												color="green"
@@ -375,6 +344,11 @@
 											{:else}
 												<b>No</b>
 											{/if}
+										</td>
+										<td class="px-4 py-3" style="max-width:5rem;word-wrap:break-word">
+											<div class="joinclubs">
+												{user.joined_clubs}
+											</div>
 										</td>
 									</tr>
 								{/if}
