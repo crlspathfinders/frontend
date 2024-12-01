@@ -182,12 +182,31 @@ export async function toggleLeaderMentor(email, leaderMentor, toggle) {
 	});
 }
 
-export async function confirmMentorMenteeHours(confirm, category_id, mentee_email, mentor_email, mentee_hours, mentee_description) {
-	const url = SEND_URL + "menteeconfirmhours/" + confirm + "/" + category_id + "/" + mentee_email + "/" + mentor_email + "/" + mentee_hours + "/" + mentee_description;
-	const res = await fetch(url);
-	if (!res.ok) {
-		console.log('Failed to fetch url');
+export async function confirmMentorMenteeHours(confirm, catalog_id, mentee_email, mentor_email, mentee_hours, mentee_description) {
+	// confirm: int
+    // catalog_id: str
+    // mentee_email: str
+    // mentor_email: str
+    // mentee_hours: str
+    // mentee_description: str
+
+	const toSend = {
+		confirm,
+		catalog_id,
+		mentee_email,
+		mentor_email,
+		mentee_hours,
+		mentee_description
 	}
+
+	console.log(toSend);
+
+	const url = SEND_URL + "menteeconfirmhours";
+	const res = await fetch(url, {
+		method: 'POST',
+		headers: { 'Content-type': 'application/json' },
+		body: JSON.stringify(toSend)
+	});
 	const resData = await res.json();
 	console.log(resData);
 	return resData;
