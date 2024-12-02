@@ -329,6 +329,7 @@
 		} finally {
 			// At the end, we will set wholeReady to true, indicating that the data can be rendered to the screen. We don't want to render data that hasn't been requested yet, because that will result in an error. This is also the loading screen that you see while we impatiently wait for the data to come in.
 			wholeReady.set(true);
+			localStorage.clear();
 		}
 	});
 

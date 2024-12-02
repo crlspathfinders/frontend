@@ -1,7 +1,12 @@
 <script>
+  import { onMount } from 'svelte';
   import { Heading, P, Mark, Span, Button, Popover, ButtonGroup, Hr, Alert } from 'flowbite-svelte';
   import { user } from "../stores/auth";
   import { FireOutline } from "flowbite-svelte-icons";
+
+  onMount(() => {
+    localStorage.clear();
+  })
 </script>
 
 <style>

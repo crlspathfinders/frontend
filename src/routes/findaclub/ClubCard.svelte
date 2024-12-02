@@ -117,6 +117,7 @@
 			console.error('Onmount failed: ' + error);
 		} finally {
 			wholeReady.set(true);
+			localStorage.clear();
 		}
 	});
 </script>
