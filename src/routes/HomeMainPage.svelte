@@ -172,6 +172,9 @@
             <P size="xl">
               Scroll below to learn more about what our program offers.
             </P>
+            <P size="lg">
+              Need help navigating the site? Check out our <u><i><a target="_blank" href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.5r4w0ql12kpq#heading=h.hc7xo7n755y3">ultimate guide</a></i></u>.
+            </P>
           </div>
           
         </div>
