@@ -211,3 +211,11 @@ export async function confirmMentorMenteeHours(confirm, catalog_id, mentee_email
 	console.log(resData);
 	return resData;
 }
+
+export async function getMentees() {
+	const url = SEND_URL + "getmentees";
+	const res = await fetch(url);
+	const resData = await res.json();
+	console.log(resData);
+	return resData;
+}

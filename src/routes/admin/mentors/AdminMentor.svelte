@@ -20,7 +20,9 @@
 		Search,
 		Toggle,
 		P,
-		Badge
+		Badge,
+		TabItem,
+		Tabs
 	} from 'flowbite-svelte';
 	import { Section } from 'flowbite-svelte-blocks';
 	// import paginationData from '../utils/advancedTable.json'
@@ -36,6 +38,7 @@
 	import { writable } from 'svelte/store';
 	import { deleteMentor, toggleMentorShow } from '../../../lib/mentor';
 	import { TableHeader } from 'flowbite-svelte-blocks';
+	import { getMentees } from "$lib/user";
 
 	let wholeReady = writable(false);
 	let deleteMentorConfirmModal = writable(false);
@@ -43,6 +46,10 @@
 	let showCatalogModal = writable(false);
 
 	let mentors = [];
+
+	let mentees = [];
+
+	let mentorMentees;
 
 	let searching = '';
 
@@ -54,15 +61,15 @@
 
 	let currEmail;
 
+	let openRow;
+	let currI;
+
 	function handleBio(bio) {
 		if (bio.length > 50) {
 			return bio.substring(0, 50) + ' ... ';
 		}
 		return bio;
 	}
-
-	let openRow;
-	let currI;
 
 	function handleDesc(desc) {
 		if (desc.length > 50) {
@@ -112,7 +119,10 @@
 		wholeReady.set(false);
 		try {
 			mentors = await getCollection('Mentors');
+			mentorMentees = await getMentees();
+			console.log(mentorMentees);
 			console.log(mentors);
+			console.log(mentees);
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
 		} finally {
@@ -221,107 +231,200 @@
 {#if $wholeReady}
 	<EditMentor {editOn} {currMentor}></EditMentor>
 
-	<section class="bg-gray-50 p-3 sm:p-5">
-		<div>
-			<TableHeader headerType="search">
-				<Search
-					bind:value={searching}
-					slot="search"
-					placeholder="Search {mentors.length} mentors"
-					size="md"
-				/>
-				<div class=""></div>
-			</TableHeader>
-		</div>
-		<br />
-		<div>
-			<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
-				<div class="overflow-x-auto">
-					<table class="w-full text-sm text-left text-gray-500">
-						<thead class="text-xs text-gray-700 uppercase bg-gray-50">
-							<tr>
-								<th scope="col" class="px-4 py-3">Edit</th>
-								<th scope="col" class="px-4 py-3">Delete</th>
-								<th scope="col" class="px-4 py-3">Show</th>
-								<th scope="col" class="px-4 py-3">Catalog</th>
-								<th scope="col" class="px-4 py-3">First Name</th>
-								<th scope="col" class="px-4 py-3">Last Name</th>
-								<th scope="col" class="px-4 py-3">Email</th>
-								<th scope="col" class="px-4 py-3">Bio</th>
-								<th scope="col" class="px-4 py-3">Hours</th>
-								<th scope="col" class="px-4 py-3">Gender</th>
-								<th scope="col" class="px-4 py-3">Language(s)</th>
-								<th scope="col" class="px-4 py-3">Race(s)</th>
-								<th scope="col" class="px-4 py-3">Religion(s)</th>
-								<th scope="col" class="px-4 py-3">Academic(s)</th>
-							</tr>
-						</thead>
-						<tbody>
-							{#each mentors as m, i}
-								{#if labelIncludesSearchTerm(m.email, searching)}
-									<tr class="border-b">
-										<td>
-											<Button
-												style="margin-left:1rem; margin-top:1rem;"
-												outline
-												color="dark"
-												size="xs"
-												on:click={() => {
-													currMentor = m;
-													editOn = !editOn;
-												}}>Edit</Button
+	<Tabs>
+		<TabItem open title="All Mentors">
+			<div>
+				<TableHeader headerType="search">
+					<Search
+						bind:value={searching}
+						slot="search"
+						placeholder="Search {mentors.length} mentors"
+						size="md"
+					/>
+					<div class=""></div>
+				</TableHeader>
+			</div>
+			<br />
+			<div>
+				<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+					<div class="overflow-x-auto">
+						<table class="w-full text-sm text-left text-gray-500">
+							<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+								<tr>
+									<th scope="col" class="px-4 py-3">Edit</th>
+									<th scope="col" class="px-4 py-3">Delete</th>
+									<th scope="col" class="px-4 py-3">Show</th>
+									<th scope="col" class="px-4 py-3">Catalog</th>
+									<th scope="col" class="px-4 py-3">First Name</th>
+									<th scope="col" class="px-4 py-3">Last Name</th>
+									<th scope="col" class="px-4 py-3">Email</th>
+									<th scope="col" class="px-4 py-3">Bio</th>
+									<th scope="col" class="px-4 py-3">Hours</th>
+									<th scope="col" class="px-4 py-3">Gender</th>
+									<th scope="col" class="px-4 py-3">Language(s)</th>
+									<th scope="col" class="px-4 py-3">Race(s)</th>
+									<th scope="col" class="px-4 py-3">Religion(s)</th>
+									<th scope="col" class="px-4 py-3">Academic(s)</th>
+								</tr>
+							</thead>
+							<tbody>
+								{#each mentors as m, i}
+									{#if labelIncludesSearchTerm(m.email, searching)}
+										<tr class="border-b">
+											<td>
+												<Button
+													style="margin-left:1rem; margin-top:1rem;"
+													outline
+													color="dark"
+													size="xs"
+													on:click={() => {
+														currMentor = m;
+														editOn = !editOn;
+													}}>Edit</Button
+												>
+											</td>
+											<td class="px-2 py-1">
+												<Button
+													style="margin-left:1rem; margin-top:1rem;"
+													outline
+													color="red"
+													size="xs"
+													on:click={() => {
+														currEmail = m.email;
+														opendeleteMentorConfirmModal();
+													}}
+												>
+													Delete
+												</Button>
+											</td>
+											<td class="px-4 py-3">
+												<Toggle
+													color="green"
+													checked={m.show}
+													on:click={() => {
+														currEmail = m.email;
+														handleToggleMentorShow();
+													}}
+												></Toggle>
+											</td>
+											<td class="px-4 py-3">
+												<Button size="xs" style="margin-left:1rem; margin-top:1rem;" outline color="purple" on:click={() => {openShowCatalogModal(); currMentor = m;}}>
+													Show Mentor Catalog
+												</Button>
+											</td>
+											<td class="px-4 py-3">{i + 1} | {m.firstname}</td>
+											<td class="px-4 py-3">{m.lastname}</td>
+											<td class="px-4 py-3"
+												><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td
 											>
-										</td>
-										<td class="px-2 py-1">
-											<Button
-												style="margin-left:1rem; margin-top:1rem;"
-												outline
-												color="red"
-												size="xs"
-												on:click={() => {
-													currEmail = m.email;
-													opendeleteMentorConfirmModal();
-												}}
-											>
-												Delete
-											</Button>
-										</td>
-										<td class="px-4 py-3">
-											<Toggle
-												color="green"
-												checked={m.show}
-												on:click={() => {
-													currEmail = m.email;
-													handleToggleMentorShow();
-												}}
-											></Toggle>
-										</td>
-										<td class="px-4 py-3">
-											<Button size="xs" style="margin-left:1rem; margin-top:1rem;" outline color="purple" on:click={() => {openShowCatalogModal(); currMentor = m;}}>
-												Show Mentor Catalog
-											</Button>
-										</td>
-										<td class="px-4 py-3">{i + 1} | {m.firstname}</td>
-										<td class="px-4 py-3">{m.lastname}</td>
-										<td class="px-4 py-3"
-											><a target="_blank" href="mailto:{m.email}"><u><b>{m.email}</b></u></a></td
-										>
-										<td class="px-4 py-3">{handleBio(m.bio)}</td>
-										<td class="px-4 py-3">{m.total_hours_worked}</td>
-										<td class="px-4 py-3">{m.gender}</td>
-										<td class="px-4 py-3">{m.languages}</td>
-										<td class="px-4 py-3">{m.races}</td>
-										<td class="px-4 py-3">{m.religions}</td>
-										<td class="px-4 py-3">{m.academics}</td>
-									</tr>
-								{/if}
-							{/each}
-						</tbody>
-					</table>
+											<td class="px-4 py-3">{handleBio(m.bio)}</td>
+											<td class="px-4 py-3">{m.total_hours_worked}</td>
+											<td class="px-4 py-3">{m.gender}</td>
+											<td class="px-4 py-3">{m.languages}</td>
+											<td class="px-4 py-3">{m.races}</td>
+											<td class="px-4 py-3">{m.religions}</td>
+											<td class="px-4 py-3">{m.academics}</td>
+										</tr>
+									{/if}
+								{/each}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</TabItem>
+		<TabItem title="Connections">
+			<div>
+				<TableHeader headerType="search">
+					<Search
+						bind:value={searching}
+						slot="search"
+						placeholder="Search {mentors.length} mentors"
+						size="md"
+					/>
+					<div class=""></div>
+				</TableHeader>
+			</div>
+			<br />
+			<div>
+				<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+					<div class="overflow-x-auto">
+						<table class="w-full text-sm text-left text-gray-500">
+							<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+								<tr>
+									<th scope="col" class="px-4 py-3"></th>
+									<th scope="col" class="px-4 py-3">Mentor</th>
+									<th scope="col" class="px-4 py-3">Mentee</th>
+									<th scope="col" class="px-4 py-3">Date Met</th>
+									<th scope="col" class="px-4 py-3">Date Confirmed</th>
+									<th scope="col" class="px-4 py-3">Hours</th>
+									<th scope="col" class="px-4 py-3">Mentee Description</th>
+									<th scope="col" class="px-4 py-3">Mentor Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								{#each mentorMentees as m, i}
+									{#if labelIncludesSearchTerm(m.mentor, searching) || labelIncludesSearchTerm(m.mentee, searching)}
+										<tr>
+											<td class="px-4 py-3">{i + 1}</td>
+											<td class="px-4 py-3"><b>{m.mentor}</b></td>
+											<td class="px-4 py-3"><b>{m.mentee}</b></td>
+											<td class="px-4 py-3">{m.date_met}</td>
+											<td class="px-4 py-3">{m.date_confirmed}</td>
+											<td class="px-4 py-3">{m.hours}</td>
+											{#if openRow === i}
+												<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, m)}>
+													<div class="mentordescription">
+														{m.mentee_description}
+													</div>
+												</td>
+											{:else}
+												{#if m.mentee_description.length > 50 }
+													<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, m)}>
+														<div class="mentordescription">
+															{handleDesc(m.mentee_description)}
+														</div>
+													</td>
+												{:else}
+													<td class="px-4 py-3 text-gray-700">
+														<div class="mentordescription">
+															{handleDesc(m.mentee_description)}
+														</div>
+													</td>
+												{/if}
+											{/if}
+											{#if openRow === i}
+												<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, m)}>
+													<div class="mentordescription">
+														{m.mentor_description}
+													</div>
+												</td>
+											{:else}
+												{#if m.mentor_description.length > 50 }
+													<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, m)}>
+														<div class="mentordescription">
+															{handleDesc(m.mentor_description)}
+														</div>
+													</td>
+												{:else}
+													<td class="px-4 py-3 text-gray-700">
+														<div class="mentordescription">
+															{handleDesc(m.mentor_description)}
+														</div>
+													</td>
+												{/if}
+											{/if}
+										</tr>
+									{/if}
+								{/each}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</TabItem>
+	</Tabs>
+
 {:else}
 	<center>
 		Gathering Data ... <Spinner color="green" />
