@@ -61,7 +61,7 @@ export async function createClub(
 		console.log('Error: ' + error);
 		return -1;
 	} finally {
-		await retrieveCollectionInfo("Clubs");
+		await retrieveCollectionInfo('Clubs');
 		await retrieveUserInfo();
 	}
 }
@@ -121,7 +121,7 @@ export async function editClub(
 		console.log('Error: ' + error);
 		return -1;
 	} finally {
-		await retrieveCollectionInfo("Clubs");
+		await retrieveCollectionInfo('Clubs');
 		// updateCache("clubsInfo", all_clubs);
 		await retrieveUserInfo();
 	}
@@ -175,7 +175,7 @@ export async function deleteClub(clubId) {
 	} catch (error) {
 		console.log('Failed to delete club: ' + error);
 	} finally {
-		await retrieveCollectionInfo("Clubs");
+		await retrieveCollectionInfo('Clubs');
 		await retrieveUserInfo();
 	}
 }
@@ -228,10 +228,11 @@ export async function UploadClubImage(file) {
 	}
 }
 
-export async function setClubImg(imgUrl, clubId) {
+export async function setClubImg(imgUrl, clubId, oldId) {
 	const toSend = {
 		img_url: imgUrl,
-		club_id: clubId
+		club_id: clubId,
+		old_id: oldId
 	};
 
 	// try {
