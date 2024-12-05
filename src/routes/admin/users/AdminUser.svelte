@@ -9,9 +9,12 @@
 		P,
 		ListPlaceholder,
 		Search,
-		Toggle
+		Toggle,
+		Input,
+		Textarea,
+		Alert
 	} from 'flowbite-svelte';
-	import { getCollection } from '../../../lib/api';
+	import { getCollection, sendMassEmail } from '../../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
 		roleChoices,
@@ -28,6 +31,9 @@
 	let deleteModalOpen = writable(false);
 	let isLoading = writable(false);
 	let showMenteeLogs = writable(false);
+	let showSendMassEmail = writable(false);
+	let successMessage = writable("");
+	let errorMessage = writable("");
 
 	let users = [];
 
@@ -42,6 +48,23 @@
 	let openRow;
 	let currI;
 
+	let emailSubject = "";
+	let emailBody = "";
+
+	const handleSendEmail = () => {
+		try {
+			isLoading.set(true);
+			sendMassEmail("Users", emailSubject, emailBody);
+			errorMessage.set(""); 
+			successMessage.set("Sent email");
+		} catch (error) {
+			successMessage.set("");
+			errorMessage.set(error);
+		} finally {
+			isLoading.set(false);
+		}
+	}
+
 	function handleDesc(desc) {
 		if (desc.length > 50) {
 			return desc.substring(0, 50) + ' ... ';
@@ -55,7 +78,6 @@
 		openRow = openRow === i ? null : i;
 	};
 	
-
 	function labelIncludesSearchTerm(label, searchTerm) {
 		if (typeof label === 'string' && typeof searchTerm === 'string') {
 			return label.toLowerCase().includes(searchTerm.toLowerCase());
@@ -157,7 +179,25 @@
 
 	const openShowMenteeLogs = () => showMenteeLogs.set(true);
 	const closeShowMenteeLogs = () => showMenteeLogs.set(false);
+
+	const openShowSendMassEmail = () => showSendMassEmail.set(true);
+	const closeShowSendMassEmail = () => showSendMassEmail.set(false);
 </script>
+
+<!-- Send Mass Email Modal: -->
+<Modal title="Send Mass Email" open={$showSendMassEmail} on:close={closeShowSendMassEmail}>
+	<form on:submit={handleSendEmail}>
+		<Label>Subject</Label>
+		<Input type="text" bind:value={emailSubject} required></Input>
+		<Label>Body</Label>
+		<Textarea bind:value={emailBody} required></Textarea>
+		{#if $isLoading}
+			<Button type="submit" outline color="green" class="w-full" disabled>Loading <Spinner color="green" size="xs"/></Button>
+		{:else}
+			<Button type="submit" outline color="green" class="w-full">Submit</Button>
+		{/if}
+	</form>
+</Modal>
 
 <!-- Role Modal: -->
 {#if $roleModalOpen}
@@ -240,6 +280,7 @@
 					size="md"
 				/>
 				<div class=""></div>
+				<Button outline color="dark" on:click={openShowSendMassEmail}>Send Mass Email</Button>
 			</TableHeader>
 		</div>
 		<br />

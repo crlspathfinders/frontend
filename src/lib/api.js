@@ -58,7 +58,6 @@ export async function deleteDoc(collection, id) {
 }
 
 export async function getBackendCache(collection) {
-	cons
 	const url = SEND_URL + "cache/" + collection;
 	const res = await fetch(url);
 	if (!res.ok) {
@@ -119,4 +118,21 @@ export async function updateCache(key) {
 		pulledData = await getDataFromLocalStorage(key);
 	}
 	return pulledData;
+}
+
+export async function sendMassEmail(collection, subject, body) {
+	const url = SEND_URL + "emailall/";
+	const toSend = {
+		collection,
+		subject,
+		body
+	}
+	const res = await fetch(url, {
+		method: 'POST',
+		headers: { 'Content-type': 'application/json' },
+		body: JSON.stringify(toSend)
+	});
+	const resData = await res.json();
+	console.log(resData);
+	return resData;
 }
