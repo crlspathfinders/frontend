@@ -25,7 +25,8 @@
 		Tabs,
 		Input,
 		Label,
-		Textarea
+		Textarea,
+		Alert
 	} from 'flowbite-svelte';
 	import { Section } from 'flowbite-svelte-blocks';
 	// import paginationData from '../utils/advancedTable.json'
@@ -74,12 +75,14 @@
 	let emailSubject = "";
 	let emailBody = "";
 
-	const handleSendEmail = () => {
+	const handleSendEmail = async () => {
 		try {
 			isLoading.set(true);
-			sendMassEmail("Mentors", emailSubject, emailBody);
+			await sendMassEmail("Mentors", emailSubject, emailBody);
 			errorMessage.set(""); 
 			successMessage.set("Sent email");
+			emailSubject = "";
+			emailBody = "";
 		} catch (error) {
 			successMessage.set("");
 			errorMessage.set(error);
@@ -172,9 +175,19 @@
 		<Label>Body</Label>
 		<Textarea bind:value={emailBody} required></Textarea>
 		{#if $isLoading}
-			<Button type="submit" outline color="green" class="w-full" disabled>Loading <Spinner color="green" size="xs"/></Button>
+			<Button type="submit" outline color="green" class="w-full" disabled>Loading <Spinner color="green" size={4}/></Button>
 		{:else}
 			<Button type="submit" outline color="green" class="w-full">Submit</Button>
+		{/if}
+		{#if $errorMessage.length > 1}
+			<Alert color="red">
+				Failure: {$errorMessage}
+			</Alert>
+		{/if}
+		{#if $successMessage.length > 1}
+			<Alert color="green">
+				Success: {$successMessage}
+			</Alert>
 		{/if}
 	</form>
 </Modal>
