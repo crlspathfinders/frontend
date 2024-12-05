@@ -49,6 +49,8 @@
 	let showCatalogModal = writable(false);
 	let showSendMassEmail = writable(false);
 	let isLoading = writable(false);
+	let successMessage = writable("");
+	let errorMessage = writable("");
 
 	let mentors = [];
 
@@ -75,7 +77,7 @@
 	const handleSendEmail = () => {
 		try {
 			isLoading.set(true);
-			sendMassEmail("Users", emailSubject, emailBody);
+			sendMassEmail("Mentors", emailSubject, emailBody);
 			errorMessage.set(""); 
 			successMessage.set("Sent email");
 		} catch (error) {
