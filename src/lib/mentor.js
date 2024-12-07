@@ -161,7 +161,7 @@ export async function deleteMentor(email) {
 	}
 }
 
-// Make a function that just sends the name of the old file to the backend for deletion (can copy format of uploadMentorImage)
+// Make a function that just sends the name of the old file to the backend for deletion (can copy format of uploadMentorImage) 
 
 export async function UploadMentorImage(file, oldFileName) {
 	let formData = new FormData();
