@@ -32,7 +32,7 @@
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
 	import { getCollection, getBackendCache } from '$lib/api';
 	import { user } from '../../stores/auth';
-	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
+	import { getUserDocData, toggleClub, fetchUserInfo, checkUserLogin } from '../../lib/user';
 	import { writable } from 'svelte/store';
 	import { PenOutline } from 'flowbite-svelte-icons';
 	import RegisterForm from '../becomeamentor/RegisterForm.svelte';
@@ -55,7 +55,7 @@
 	let mentors = [];
 	let selected_mentees = [];
 	let email = '';
-	let userInfo;
+	let userInfo = {};
 	let view = 'Edit';
 	let showVals = true;
 	let currMentor;
@@ -241,36 +241,60 @@
 		try {
 			// GOOD CODE:
 			// Checks if userInfo is not in the localStorage
-			if (!localStorage.getItem('userInfo')) {
-				console.log('userinfo not in storage');
-				// If userInfo is not in localStorage calls the retrieveUserInfo function from cache.js, which will store the current user's information in the localStorage for future use and caching. This function is used with await because it is an async function
-				userInfo = await retrieveUserInfo();
-				// email = userInfo.email;
-				console.log(userInfo);
-			} else {
-				// If we reach here, that means userInfo is in localStorage
-				console.log('userinfo already in storage');
-				try {
-					// Retrieves the correct userInfo from the localStorage (we know that it must be there!)
-					userInfo = localStorage.getItem('userInfo'); // This will return a STRING.
-					userInfo = JSON.parse(userInfo); // JSON.parse is IMPERATIVE because it turns the string that is returned into a JSON dictionary, allowing us to access data from that dictionary, like the user's email, etc.
-					// console.log(userInfo);
-					email = userInfo['email'];
-					// console.log(email);
-				} catch (error) {
-					// Prints the error that to the console, if one exists.
-					console.log("couldn't fetchuserinfo: " + error);
-				} finally {
-					console.log('finished');
+			// if (!localStorage.getItem('userInfo')) {
+			// 	console.log('userinfo not in storage');
+			// 	// If userInfo is not in localStorage calls the retrieveUserInfo function from cache.js, which will store the current user's information in the localStorage for future use and caching. This function is used with await because it is an async function
+			// 	userInfo = await retrieveUserInfo();
+			// 	// email = userInfo.email;
+			// 	console.log(userInfo);
+			// } else {
+			// 	// If we reach here, that means userInfo is in localStorage
+			// 	console.log('userinfo already in storage');
+			// 	try {
+			// 		// Retrieves the correct userInfo from the localStorage (we know that it must be there!)
+			// 		userInfo = localStorage.getItem('userInfo'); // This will return a STRING.
+			// 		userInfo = JSON.parse(userInfo); // JSON.parse is IMPERATIVE because it turns the string that is returned into a JSON dictionary, allowing us to access data from that dictionary, like the user's email, etc.
+			// 		// console.log(userInfo);
+			// 		email = userInfo['email'];
+			// 		// console.log(email);
+			// 	} catch (error) {
+			// 		// Prints the error that to the console, if one exists.
+			// 		console.log("couldn't fetchuserinfo: " + error);
+			// 	} finally {
+			// 		console.log('finished');
+			// 	}
+			// }
+			// localStorage.clear();
+			// userInfo = await retrieveUserInfo();
+			// console.log(userInfo);
+			// user.subscribe(value => {
+			// 	if (value) {
+			// 		userInfo = value;
+			// 	} else {
+			// 		userInfo = {};
+			// 	}
+			// });
+			// console.log(userInfo);
+
+			// console.log(checkUserLogin());
+			let loggedInUser;
+			user.subscribe(async (value) => {
+				if (value) {
+					email = value.email;
+					console.log(email);
+					loggedInUser = await getUserDocData(email);
+					console.log(loggedInUser);
+				} else {
+					email = '';
 				}
-			}
+			});
 
 			// GREAT WORKS: (uncomment to see in action): The reason we don't use this function now, even though it significantly speeds up the loading time, is because it is not done yet - we have to make sure the mentor data in localStorage is updated when the mentor updates their information, which hasn't been done yet. (That is a TO-DO! - see ClubCard handleClick() function for an example of how to do that, it's not too hard.)
 
 			// if (!localStorage.getItem('mentorsInfo')) {
 			// 	console.log('mentors not in locstor!');
 			// 	mentors = await retrieveCollectionInfo('Mentors');
-			// 	// mentors = J(mentors);
+			// 	// mentors = (mentors);
 			// } else {
 			// 	console.log('mentors in locstor!');
 			// 	mentors = JSON.parse(localStorage.getItem('mentorsInfo'));

@@ -51,24 +51,28 @@ export async function retrieveUserInfo() {
 	console.log('starting function');
 	let email = '';
 	// user.subscribe is the built-in function that checks the user store variable, which essentially just checks to see if the user is currently logged in or not.
-	user.subscribe(async (value) => {
+	user.subscribe(value => {
 		try {
 			// If there is some value, that means the user is logged in currently.
 			if (value) {
+				// localStorage.clear();
 				// The logged in value will have an email associated with it, but not any more useful information for us.
 				email = value.email;
 				// With that email we can find more information using the getUserDocData function from the "lib/user" file.
-				userInfo = await getUserDocData(email);
+				// userInfo = await getUserDocData(email);
+				console.log(email);
+				// console.log(userInfo);
 				// Updates the correct cache.
-				updateCache('userInfo', userInfo);
-				if (typeof cachedData.userInfo === null) {
-					console.log('email', email);
-				} else {
-					console.log('userInfo', userInfo);
-					console.log('Finished updateCache');
-				}
+				// updateCache('userInfo', userInfo);
+				// if (typeof cachedData.userInfo === null) {
+				// 	console.log('email', email);
+				// } else {
+				// 	console.log('userInfo', userInfo);
+				// 	console.log('Finished updateCache');
+				// }
 			} else {
-				let userInfo = cachedData.userInfo; // Access current store value.
+				// let userInfo = cachedData.userInfo; // Access current store value.
+				let userInfo = null;
 				console.log('cached data', userInfo);
 			}
 		} catch (error) {
