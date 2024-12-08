@@ -32,7 +32,7 @@
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
 	import { getCollection, getBackendCache } from '$lib/api';
 	import { user } from '../../stores/auth';
-	import { getUserDocData, toggleClub, fetchUserInfo, checkUserLogin } from '../../lib/user';
+	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
 	import { PenOutline } from 'flowbite-svelte-icons';
 	import RegisterForm from '../becomeamentor/RegisterForm.svelte';
