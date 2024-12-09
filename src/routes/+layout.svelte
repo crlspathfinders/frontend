@@ -21,13 +21,13 @@
 <div class="mainlayoutwrapper bg-gray-100" style="height:100%;">
 	<MainNav></MainNav>
 
-	<center>
+	<!-- <center>
 		<Alert color="red" border>
 			<span class="font-medium">SITE IS DOWN</span>
 			<br>
 			CRLS PathFinders is down for 24 hours - sorry for the inconvenience :(
 		</Alert>
-	</center>
+	</center> -->
 
 	<slot></slot>
 </div>
