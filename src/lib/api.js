@@ -5,6 +5,7 @@ export async function getCollection(collection) {
 		console.log("send url: ");
 		console.log(SEND_URL);
 		const url = SEND_URL + 'read/' + collection;
+		console.log(url);
 		const res = await fetch(url);
 		if (!res.ok) {
 			throw new Error("getvals fetching didn't work");
