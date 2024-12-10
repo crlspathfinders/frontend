@@ -222,7 +222,7 @@
 
       <div class="specinfo" id="pmlinfo">
         <div class="specimg" id="mentorimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F6-removebg-preview.png?alt=media&token=9d2a7327-21d8-4d64-8b76-b6cd30ac61ea" alt="peermentor">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F6-removebg-preview.png?alt=media&token=9d2a7327-21d8-4d64-8b76-b6cd30ac61ea" alt="opportunities">
         </div>
         <div class="spectext" id="pmltext">
           <P size="lg">
@@ -231,7 +231,7 @@
               <br>
               Also keep an eye on this page for peer-shadowing. Once course selection rolls around, you are able to shadow a class you might be interested in taking.
               <br><br>
-              <Button outline color="red"><a href="/peermentor">Explore Opportunities</a></Button>
+              <Button outline color="red"><a href="/opportunities">Explore Opportunities</a></Button>
             </center>
           </P>
         </div>
