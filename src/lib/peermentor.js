@@ -1,4 +1,4 @@
-const SEND_URL = import.meta.env.VITE_URL;
+const SEND_URL = import.meta.env.VITE_REDIS_URL;
 
 export async function addLink(linkname, linkurl, categories, bio, deadline) {
 	const url = SEND_URL + 'addlink/';

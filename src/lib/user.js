@@ -30,7 +30,7 @@ export function basicSetUp() {
 	});
 }
 
-const SEND_URL = import.meta.env.VITE_URL;
+const SEND_URL = import.meta.env.VITE_REDIS_URL;
 
 export const roleChoices = [
 	{ value: 'Member', name: 'Member', color: 'light' },
