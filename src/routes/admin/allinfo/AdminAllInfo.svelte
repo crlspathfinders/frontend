@@ -42,6 +42,7 @@
         allInfo = await getCollection("AllInfo");
         for (let i = 0; i < allInfo.length; i++) {
             const data = await getCollectionDoc("AllInfo", allInfo[i].id)
+            console.log(data);
             const spec = {
                 id: allInfo[i].id,
                 info: data
