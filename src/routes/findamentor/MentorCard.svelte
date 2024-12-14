@@ -497,11 +497,14 @@ We met at the library and worked on ..."
 								<Badge color="green">Total hours worked: <b> {currMentor.total_hours_worked}</b></Badge>
 							</td>
 						</tr>
-						</tbody>
+					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
+	<Button color="dark" outline>
+		<a target="_blank" href="https://secure1.cpsd.us/forms/Community_Service_Form.pdf">Get your community service hours here</a>
+	</Button>
 </Modal>
 
 <!-- Mentee Logs Modal: -->
