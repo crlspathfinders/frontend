@@ -39,7 +39,7 @@
 	import { user } from '../../stores/auth';
 	import { writable } from 'svelte/store';
 	import { getUserDocData } from '../../lib/user';
-	import MultiSelect from 'svelte-multiselect';
+	import { MultiSelect } from 'svelte-multiselect';
 	import { AccordionItem, Accordion } from 'flowbite-svelte';
 	import { List, Li } from 'flowbite-svelte';
 
@@ -237,13 +237,14 @@
 		console.log(newImportRaces);
 
 		if (showVals) {
+			console.log(currMentor);
 			racesSelected = currMentor.races;
 			religionsSelected = currMentor.religions;
 			genderSelected = currMentor.gender;
 			languagesSelected = currMentor.languages;
 			academicsSelected = currMentor.academics;
 			newRaces = currMentor.races;
-			console.log(newRaces);
+			console.log(academicsSelected);
 			newReligions = currMentor.religions;
 			newGender = currMentor.gender;
 			newLanguages = currMentor.languages;

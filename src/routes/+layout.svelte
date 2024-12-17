@@ -15,6 +15,18 @@
 			.findLast(Boolean)
 			.replace(/-/g, ' ')
 			.replace(/\b\w/g, (l) => l.toUpperCase());
+
+	// onMount(() => {
+	// 	if ('serviceWorker' in navigator) {
+	// 		window.addEventListener('load', () => {
+	// 			console.log("starting service worker");
+	// 			navigator.serviceWorker
+	// 			.register('/serviceworker.js')
+	// 			.then(() => console.log('Service Worker registered successfully!'))
+	// 			.catch((err) => console.error('Service Worker registration failed:', err));
+	// 		});
+	// 	} else { console.log("No service worker found."); }
+	// })
 </script>
 
 <div class="mainlayoutwrapper bg-gray-100" style="height:100%;">
