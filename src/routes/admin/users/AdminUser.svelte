@@ -12,7 +12,10 @@
 		Toggle,
 		Input,
 		Textarea,
-		Alert
+		Alert,
+
+		MultiSelect
+
 	} from 'flowbite-svelte';
 	import { getCollection, sendMassEmail } from '../../../lib/api';
 	import { writable } from 'svelte/store';
@@ -50,11 +53,19 @@
 
 	let emailSubject = "";
 	let emailBody = "";
+	let recipientChoices = [
+		{"value": "Everyone", "name": "Everyone"},
+		{"value": "Teachers", "name": "Teachers"},
+		{"value": "Students", "name": "Students"},
+		{"value": "Admin", "name": "Admin"},
+		{"value": "Rehaan", "name": "Rehaan"}
+	]
+	let recipients = [{"value": "Everyone", "name": "Everyone"}];
 
 	const handleSendEmail = async () => {
 		try {
 			isLoading.set(true);
-			await sendMassEmail("Users", emailSubject, emailBody);
+			await sendMassEmail("Users", emailSubject, emailBody, recipients);
 			errorMessage.set(""); 
 			successMessage.set("Sent email");
 			emailSubject = "";
@@ -191,6 +202,9 @@
 	<form on:submit={handleSendEmail}>
 		<Label>Subject</Label>
 		<Input type="text" bind:value={emailSubject} required></Input>
+		<Label>Recipients
+			<MultiSelect items={recipientChoices} bind:value={recipients} on:change={() => {console.log(recipients)}}></MultiSelect>
+		</Label>
 		<Label>Body</Label>
 		<Textarea bind:value={emailBody} required></Textarea>
 		{#if $isLoading}

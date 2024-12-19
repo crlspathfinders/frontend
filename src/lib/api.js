@@ -121,12 +121,13 @@ export async function updateCache(key) {
 	return pulledData;
 }
 
-export async function sendMassEmail(collection, subject, body) {
+export async function sendMassEmail(collection, subject, body, recipients) {
 	const url = SEND_URL + "emailall/";
 	const toSend = {
 		collection,
 		subject,
-		body
+		body,
+		recipients
 	}
 	const res = await fetch(url, {
 		method: 'POST',
