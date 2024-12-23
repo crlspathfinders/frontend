@@ -12,6 +12,7 @@ const cachedData = writable({
 
 // Exports a function that updates the cache at a specific key and value.
 export function updateCache(key, value) {
+	return 0;
 	console.log('Updating cache');
 	cachedData.update((current) => ({ ...current, [key]: value }));
 	console.log('Cache updated' + value);
@@ -47,6 +48,7 @@ if (storedClubs) {
 
 // Export functions for fetching and updating cached data.
 export async function retrieveUserInfo() {
+	return 0;
 	let userInfo;
 	console.log('starting function');
 	let email = '';
@@ -85,6 +87,7 @@ export async function retrieveUserInfo() {
 // This exports a function that allows us to create more localStorage variables for different variables. For example, when we want to store mentors and clubs, we shouldn't hard code those keys, instead this function dynamically creates them for us.
 // BTW: This function isn't ready to be fully used yet, although you can see it in the commented out stuff in MentorCard.svelte, how it should be used.
 export async function retrieveCollectionInfo(collection) {
+	return 0;
 	let collectionInfo;
 	console.log("starting " + collection + " function");
 

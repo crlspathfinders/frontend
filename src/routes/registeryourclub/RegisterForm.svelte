@@ -83,10 +83,10 @@
 				return false;
 			}
 			
-			if (advisor_email.indexOf("@cpsd.us") === -1) {
-				errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
-				return false;
-			}
+			// if (advisor_email.indexOf("@cpsd.us") === -1) {
+			// 	errorMessage.set("Make sure to use your advisor's correct email (only cpsd.us allowed)!");
+			// 	return false;
+			// }
 		} catch(error) {
 			console.log("couldn't find advisor email.");
 		}

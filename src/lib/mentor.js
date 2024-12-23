@@ -227,12 +227,16 @@ export async function retrieveDemographics() {
 		const res = await fetch(url);
 		const wholeRes = await res.json();
 		console.log(wholeRes);
-		listAcademics = wholeRes.academics;
-		listLanguages = wholeRes.languages;
-		listGenders = wholeRes.genders;
-		listReligions = wholeRes.religions;
-		listRaces = wholeRes.races;
-		return wholeRes;
+		console.log("OK")
+		console.log(JSON.parse(wholeRes.collid));
+		const newDems = JSON.parse(wholeRes.collid);
+		console.log("OK")
+		listAcademics = newDems.academics;
+		listLanguages = newDems.languages;
+		listGenders = newDems.genders;
+		listReligions = newDems.religions;
+		listRaces = newDems.races;
+		return newDems;
 	} catch (error) {
 		console.log('Error retrieving demographics: ' + error);
 		return -1;
