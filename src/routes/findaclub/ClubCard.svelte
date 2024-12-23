@@ -84,22 +84,37 @@
 		wholeReady.set(false);
 		try {
 			// GOOD CODE:
-			if (!localStorage.getItem('userInfo')) {
-				console.log('userinfo not in storage');
-				userInfo = await retrieveUserInfo();
-				// userInfo = JSON.parse(userInfo);
-				// myClubs = userInfo.joined_clubs;
-				// email = userInfo.email;
-				// inClubs.set(myClubs);
-			} else {
-				console.log('userinfo already in storage');
-				userInfo = localStorage.getItem('userInfo');
-				userInfo = JSON.parse(userInfo);
-				console.log(userInfo);
-				myClubs = userInfo.joined_clubs;
-				email = userInfo.email;
-				inClubs.set(myClubs);
-			}
+			// if (!localStorage.getItem('userInfo')) {
+			// 	console.log('userinfo not in storage');
+			// 	userInfo = await retrieveUserInfo();
+			// 	// userInfo = JSON.parse(userInfo);
+			// 	// myClubs = userInfo.joined_clubs;
+			// 	// email = userInfo.email;
+			// 	// inClubs.set(myClubs);
+			// } else {
+			// 	console.log('userinfo already in storage');
+			// 	userInfo = localStorage.getItem('userInfo');
+			// 	userInfo = JSON.parse(userInfo);
+			// 	console.log(userInfo);
+			// 	myClubs = userInfo.joined_clubs;
+			// 	email = userInfo.email;
+			// 	inClubs.set(myClubs);
+			// }
+
+			let loggedInUser;
+			user.subscribe(async (value) => {
+				if (value) {
+					email = value.email;
+					console.log(email);
+					loggedInUser = await getUserDocData(email);
+					console.log(loggedInUser);
+					userInfo = loggedInUser;
+					myClubs = userInfo.joined_clubs;
+					inClubs.set(myClubs);
+				} else {
+					email = '';
+				}
+			});
 
 			// GOOD CODE: (uncomment to see in action):
 			// if (!localStorage.getItem("clubsInfo")) {

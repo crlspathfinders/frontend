@@ -1,4 +1,4 @@
-const SEND_URL = import.meta.env.VITE_URL;
+const SEND_URL = import.meta.env.VITE_REDIS_URL; 
 
 export async function getCollection(collection) {
 	try {
@@ -11,14 +11,19 @@ export async function getCollection(collection) {
 			throw new Error("getvals fetching didn't work");
 		}
 		let resData = await res.json();
-		resData = JSON.parse(resData);
-
 		console.log(resData);
 
-		return resData;
+		const status = resData.status;
+		if (status == 0) {
+			const collection = JSON.parse(resData.collection)
+			return collection
+		} else if (status == -1) {
+			return resData.error_message
+		}
+
 	} catch (error) {
 		console.log("Couldn't retrieve / fetch getvals data: " + error);
-		return -1;
+		return {"status": -1, "error_message": "Failed to retrieve collection data: " + error};
 	}
 }
 
@@ -32,8 +37,13 @@ export async function getCollectionDoc(collection, docId) {
 		let resData = await res.json();
 
 		console.log(resData);
+		if (resData.status == 0) {
+			return JSON.parse(resData.collid);
+		} else if (resData.status == 1) {
+			return resData.error_message;
+		}
 
-		return resData;
+		// return resData;
 	} catch (error) {
 		console.log("Couldn't retrieve / fetch getvals data: " + error);
 		return -1;

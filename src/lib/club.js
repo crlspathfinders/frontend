@@ -1,4 +1,4 @@
-const SEND_URL = import.meta.env.VITE_URL;
+const SEND_URL = import.meta.env.VITE_REDIS_URL;
 import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 
 export async function createClub(

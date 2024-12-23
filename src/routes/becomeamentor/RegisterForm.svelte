@@ -221,39 +221,44 @@
 	}
 
 	onMount(async () => {
-		wholeReady.set(false);
-		restReady.set(false);
-		importRaces = await getCollectionDoc('Demographics', '9qHHDN65kY2yIfV4BnnK');
-		importRaces = importRaces.races;
-		console.log(importRaces);
-		basicSetUp();
-		await retrieveDemographics();
+		try {
+			wholeReady.set(false);
+			restReady.set(false);
+			importRaces = await getCollectionDoc('Demographics', '9qHHDN65kY2yIfV4BnnK');
+			importRaces = importRaces.races;
+			console.log(importRaces);
+			basicSetUp();
+			await retrieveDemographics();
 
-		for (let i = 0; i < importRaces.length; i++) {
-			const temp = { value: importRaces[i], name: importRaces[i] };
-			newImportRaces.push(temp);
+			for (let i = 0; i < importRaces.length; i++) {
+				const temp = { value: importRaces[i], name: importRaces[i] };
+				newImportRaces.push(temp);
+			}
+
+			console.log(newImportRaces);
+
+			if (showVals) {
+				console.log(currMentor);
+				racesSelected = currMentor.races;
+				religionsSelected = currMentor.religions;
+				genderSelected = currMentor.gender;
+				languagesSelected = currMentor.languages;
+				academicsSelected = currMentor.academics;
+				newRaces = currMentor.races;
+				console.log(academicsSelected);
+				newReligions = currMentor.religions;
+				newGender = currMentor.gender;
+				newLanguages = currMentor.languages;
+				newAcademics = currMentor.academics;
+				restReady.set(true);
+			} else {
+				restReady.set(true);
+			}
+			wholeReady.set(true);
+		} catch (error) {
+			console.log("Error loading: " + error);
 		}
-
-		console.log(newImportRaces);
-
-		if (showVals) {
-			racesSelected = currMentor.races;
-			religionsSelected = currMentor.religions;
-			genderSelected = currMentor.gender;
-			languagesSelected = currMentor.languages;
-			academicsSelected = currMentor.academics;
-			newRaces = currMentor.races;
-			console.log(newRaces);
-			newReligions = currMentor.religions;
-			newGender = currMentor.gender;
-			newLanguages = currMentor.languages;
-			newAcademics = currMentor.academics;
-			console.log(currMentor);
-			restReady.set(true);
-		} else {
-			restReady.set(true);
-		}
-		wholeReady.set(true);
+		
 	});
 
 	export let view = '';
