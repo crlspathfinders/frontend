@@ -110,7 +110,7 @@ export async function getUserDocData(email) {
 		}
 
 		const resData = await res.json();
-		return resData;
+		return JSON.parse(resData);
 	} catch (error) {
 		return null;
 	}
