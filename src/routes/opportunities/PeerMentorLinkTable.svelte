@@ -18,7 +18,8 @@
 		setDataInLocalStorage,
 		removeDataFromLocalStorage,
 		clearLocalStorage,
-		all_opportunities
+		all_opportunities,
+		getCollectionId
 	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
@@ -269,13 +270,13 @@
 		}
 
 		console.log(peerMentorLinks);
-		// LEAVE THIS FOR NOW
-		categories = await getCollection('Demographics');
-		for (let i = 0; i < categories.length; i++) {
-			if (categories[i].id == 'PeerMentor') {
-				categories = categories[i].categories;
-			}
-		}
+
+		categories = await getCollectionId('Demographics', "PeerMentor");
+		// for (let i = 0; i < categories.length; i++) {
+		// 	if (categories[i].id == 'PeerMentor') {
+		// 		categories = categories[i].categories;
+		// 	}
+		// }
 		categories = makeSelectCategoriesOk(categories);
 		console.log(categories);
 		allReady.set(true);

@@ -30,7 +30,7 @@
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
-	import { getCollection, getBackendCache, all_mentors, all_demographics } from '$lib/api';
+	import { getCollection, getBackendCache, all_mentors, all_demographics, userData } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -279,16 +279,22 @@
 
 			// console.log(checkUserLogin());
 			let loggedInUser;
-			user.subscribe(async (value) => {
-				if (value) {
-					email = value.email;
-					console.log(email);
-					loggedInUser = await getUserDocData(email);
-					console.log(loggedInUser);
-				} else {
-					email = '';
-				}
-			});
+			if (userData) {
+				console.log("found user data");
+				email = userData.email;
+				loggedInUser = userData;
+			} else {
+				console.log("not found user data");
+				user.subscribe(async (value) => {
+					if (value) {
+						email = value.email;
+						loggedInUser = await getUserDocData(email);
+					} else {
+						email = '';
+					}
+				});
+			}
+			
 
 			// GREAT WORKS: (uncomment to see in action): The reason we don't use this function now, even though it significantly speeds up the loading time, is because it is not done yet - we have to make sure the mentor data in localStorage is updated when the mentor updates their information, which hasn't been done yet. (That is a TO-DO! - see ClubCard handleClick() function for an example of how to do that, it's not too hard.)
 
@@ -350,7 +356,7 @@
 
 			// const demographics = await retrieveDemographics();
 
-			console.log(demographics);
+			// console.log(demographics);
 
 			listReligions = demographics.religions;
 			listAcademics = demographics.academics;
@@ -358,7 +364,7 @@
 			listLanguages = demographics.languages;
 			listGenders = demographics.genders;
 
-			console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
+			// console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
 
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
@@ -628,10 +634,11 @@ We met at the library and worked on ..."
 	</div>
 </Modal>
 
+{#if $wholeReady}
+
 <!-- This div holds all of the information. -->
 <div class="wholementorwrapper bg-gray-100" style="height:100%;">
 	<!-- The data is only shown when wholeReady is true (which means all of the data has been successfully requested). Remember that the wholeReady is a boolean store variable. To access the value of a store variable, we put the dollar sign $ before the name of the variable, indicating reactivity. -->
-	{#if $wholeReady}
 		<div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
 			<!-- This is all data that should NOT be hard-coded, but we will fix this later once the more pressing issues are solved. -->
 			<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-red-900">
@@ -955,7 +962,9 @@ We met at the library and worked on ..."
 				{/if}
 			{/each}
 		</div>
-	{:else}
+	
+</div>
+{:else}
 		<!-- This else refers to if $wholeReady is false, in which case a loading message will show. -->
 		<center>
 			<div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
@@ -970,8 +979,8 @@ We met at the library and worked on ..."
 			<CardPlaceholder />
 			<CardPlaceholder />
 		</div>
-	{/if}
-</div>
+{/if}
+
 
 <style>
 	/* Here are some styling. */

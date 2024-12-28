@@ -13,7 +13,7 @@
     import { user } from '../stores/auth';
     import { getUserDocData } from '../lib/user';
     import { retrieveUserInfo } from "$lib/cache";
-    import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps, updateDemographics } from "$lib/api";
+    import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps, updateDemographics, updateUserData } from "$lib/api";
 	import { retrieveDemographics } from '$lib/mentor';
 
     let loggedIn = false;
@@ -28,14 +28,27 @@
 	let dems;
 
     onMount(async () => {
-        if (getLoggedIn()) {
-            loggedIn = true;
-            await retrieveUserInfo();
-            setTimeout(() => {
-                toggleLoggedIn();
-                loggedIn = false;
-            }, 3000);
-        }
+        // if (getLoggedIn()) {
+		// 	console.log("logged in");
+        //     loggedIn = true;
+        //     await retrieveUserInfo();
+        //     setTimeout(() => {
+        //         toggleLoggedIn();
+        //         loggedIn = false;
+        //     }, 3000);
+        // } else {
+		// 	console.log("not logged in");
+		// }
+		user.subscribe(async (value) => {
+			if (value) {
+				email = value.email;
+				console.log(email);
+				loggedInUser = await getUserDocData(email);
+				updateUserData(loggedInUser);
+			} else {
+				email = '';
+			}
+		});
         mentors = await getCollection("Mentors");
         users = await getCollection("Users");
         clubs = await getCollection("Clubs");

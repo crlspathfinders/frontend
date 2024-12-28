@@ -1,5 +1,7 @@
 const SEND_URL = import.meta.env.VITE_URL; 
 
+export let userData;
+
 export let all_mentors;
 
 export let all_users;
@@ -9,6 +11,10 @@ export let all_clubs;
 export let all_opportunities;
 
 export let all_demographics;
+
+export function updateUserData(userInfo) {
+	userData = userInfo;
+}
 
 export function updateMentors(mentors) {
     all_mentors = mentors;
