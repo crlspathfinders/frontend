@@ -72,7 +72,7 @@ export async function getCollectionDoc(collection, docId) {
 		}
 		let resData = await res.json();
 
-		console.log(resData);
+		console.log(JSON.parse(resData.collid));
 		if (resData.status == 0) {
 			return JSON.parse(resData.collid);
 		} else if (resData.status == 1) {
