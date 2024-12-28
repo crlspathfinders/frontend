@@ -13,12 +13,17 @@
 	import { user } from '../stores/auth';
 	import { getUserDocData } from '../lib/user';
 	import { retrieveUserInfo } from "$lib/cache";
+	import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps } from "$lib/api";
 
 	let loggedIn = false;
 
 	let email;
 	let loggedInUser;
 	let userInfo;
+	let mentors;
+	let users;
+	let clubs;
+	let opps;
 
 	onMount(async () => {
 		if (getLoggedIn()) {
@@ -29,6 +34,14 @@
 				loggedIn = false;
 			}, 3000);
 		}
+		mentors = await getCollection("Mentors");
+		users = await getCollection("Users");
+		clubs = await getCollection("Clubs");
+		opps = await getCollection("PeerMentorLinks");
+		updateMentors(mentors);
+		updateUsers(users);
+		updateClubs(clubs);
+		updateOpps(opps);
 	});
 </script>
 

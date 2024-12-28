@@ -30,7 +30,7 @@
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
-	import { getCollection, getBackendCache } from '$lib/api';
+	import { getCollection, getBackendCache, all_mentors } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -300,8 +300,15 @@
 			// 	mentors = JSON.parse(localStorage.getItem('mentorsInfo'));
 			// }
 
-			mentors = await getCollection("Mentors");
-			list_mentees = await setListMentees();
+			if (all_mentors) {
+				console.log("all mentors", all_mentors);
+				mentors = all_mentors;
+				list_mentees = await setListMentees();
+			} else {
+				console.log("all mentors is empty");
+				mentors = await getCollection("Mentors");
+				list_mentees = await setListMentees();
+			}
 			// mentors = await getBackendCache("Mentors");
 			// const mentors_url = SEND_URL + "cache/Mentors";
 			// const res = await fetch(mentors_url);

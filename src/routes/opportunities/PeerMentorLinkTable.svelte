@@ -17,7 +17,8 @@
 		getDataFromLocalStorage,
 		setDataInLocalStorage,
 		removeDataFromLocalStorage,
-		clearLocalStorage
+		clearLocalStorage,
+		all_opportunities
 	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
@@ -110,8 +111,13 @@
 		} finally {
 			// NEED CACHING - Done
 			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
-			categories = await updateCache('Demographics');
+			if (all_opportunities) {
+				console.log("found opps");
+				peerMentorLinks = all_opportunities;
+			} else {
+				console.log("not found opps");
+				peerMentorLinks = await getCollection("PeerMentorLinks");
+			}
 
 			for (let i = 0; i < categories.length; i++) {
 				if (categories[i].id == 'PeerMentor') {

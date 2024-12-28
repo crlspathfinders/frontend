@@ -21,7 +21,7 @@
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
-	import { getBackendCache } from "$lib/api";
+	import { getBackendCache, all_clubs } from "$lib/api";
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 	const SEND_URL = import.meta.env.VITE_URL;
 
@@ -32,7 +32,7 @@
 
 	let ready = false;
 
-	let clubs = [];
+	let clubs;
 
 	let myClubs = [];
 
@@ -83,23 +83,14 @@
 	onMount(async () => {
 		wholeReady.set(false);
 		try {
-			// GOOD CODE:
-			// if (!localStorage.getItem('userInfo')) {
-			// 	console.log('userinfo not in storage');
-			// 	userInfo = await retrieveUserInfo();
-			// 	// userInfo = JSON.parse(userInfo);
-			// 	// myClubs = userInfo.joined_clubs;
-			// 	// email = userInfo.email;
-			// 	// inClubs.set(myClubs);
-			// } else {
-			// 	console.log('userinfo already in storage');
-			// 	userInfo = localStorage.getItem('userInfo');
-			// 	userInfo = JSON.parse(userInfo);
-			// 	console.log(userInfo);
-			// 	myClubs = userInfo.joined_clubs;
-			// 	email = userInfo.email;
-			// 	inClubs.set(myClubs);
-			// }
+			if (all_clubs) {
+				console.log("found all_clubs");
+				clubs = all_clubs;
+				console.log(clubs);
+			} else {
+				console.log("not found all_clubs");
+				clubs = await getCollection('Clubs');
+			}
 
 			let loggedInUser;
 			user.subscribe(async (value) => {
@@ -115,18 +106,6 @@
 					email = '';
 				}
 			});
-
-			// GOOD CODE: (uncomment to see in action):
-			// if (!localStorage.getItem("clubsInfo")) {
-			// 	console.log("clubs not in locstor");
-			// 	clubs = await retrieveCollectionInfo("Clubs");
-			// 	clubs = JSON.parse(clubs);
-			// } else {
-			// 	console.log("clubs in locstor");
-			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
-			// }
-			clubs = await getCollection('Clubs');
-			// clubs = await getBackendCache("Clubs");
 			
 		} catch (error) {
 			console.error('Onmount failed: ' + error);
