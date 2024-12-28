@@ -30,7 +30,7 @@
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
-	import { getCollection, getBackendCache, all_mentors } from '$lib/api';
+	import { getCollection, getBackendCache, all_mentors, all_demographics } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -60,6 +60,7 @@
 	let showVals = true;
 	let currMentor;
 	let searching = '';
+	let demographics;
 
 	let listAcademics = [];
 	let listRaces = [];
@@ -323,7 +324,11 @@
 
 			// if (!localStorage.getItem('demographicsInfo')) {
 			// 	console.log('demographics not in locstor!');
-			const demographics = await retrieveDemographics();
+			if (all_demographics) {
+				demographics = all_demographics;
+			} else {
+				demographics = await retrieveDemographics();
+			}
 
 			// 	listReligions = demographics.religions;
 			// 	listAcademics = demographics.academics;

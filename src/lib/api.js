@@ -8,6 +8,8 @@ export let all_clubs;
 
 export let all_opportunities;
 
+export let all_demographics;
+
 export function updateMentors(mentors) {
     all_mentors = mentors;
 }
@@ -22,6 +24,10 @@ export function updateClubs(clubs) {
 
 export function updateOpps(opps) {
     all_opportunities = opps;
+}
+
+export function updateDemographics(dems) {
+	all_demographics = dems;
 }
 
 export async function getCollection(collection) {

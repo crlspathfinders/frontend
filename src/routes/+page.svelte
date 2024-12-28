@@ -13,7 +13,8 @@
     import { user } from '../stores/auth';
     import { getUserDocData } from '../lib/user';
     import { retrieveUserInfo } from "$lib/cache";
-    import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps } from "$lib/api";
+    import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps, updateDemographics } from "$lib/api";
+	import { retrieveDemographics } from '$lib/mentor';
 
     let loggedIn = false;
 
@@ -24,6 +25,7 @@
     let users;
     let clubs;
     let opps;
+	let dems;
 
     onMount(async () => {
         if (getLoggedIn()) {
@@ -38,10 +40,12 @@
         users = await getCollection("Users");
         clubs = await getCollection("Clubs");
         opps = await getCollection("PeerMentorLinks");
+		dems = await retrieveDemographics();
         updateMentors(mentors);
         updateUsers(users);
         updateClubs(clubs);
         updateOpps(opps);
+		updateDemographics(dems);
     });
 </script>
 
