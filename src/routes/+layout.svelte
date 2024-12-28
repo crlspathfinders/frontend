@@ -4,7 +4,10 @@
 	import { inject } from '@vercel/analytics';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { Alert } from "flowbite-svelte"
+	import { Alert } from "flowbite-svelte";
+	import { getCollectionDoc, getCollection } from "$lib/api";
+
+	let alerts;
 
 	// Adds dynamic title to each page, paired with svelte:head below
 	const appName = 'CRLS PathFinders';
@@ -17,29 +20,41 @@
 			.replace(/-/g, ' ')
 			.replace(/\b\w/g, (l) => l.toUpperCase());
 
-	// onMount(() => {
-	// 	if ('serviceWorker' in navigator) {
-	// 		window.addEventListener('load', () => {
-	// 			console.log("starting service worker");
-	// 			navigator.serviceWorker
-	// 			.register('/serviceworker.js')
-	// 			.then(() => console.log('Service Worker registered successfully!'))
-	// 			.catch((err) => console.error('Service Worker registration failed:', err));
-	// 		});
-	// 	} else { console.log("No service worker found."); }
-	// })
+	onMount(async () => {
+		alerts = await getCollectionDoc("AllInfo", "alerts");
+		console.log(alerts);
+	})
 </script>
 
 <div class="mainlayoutwrapper bg-gray-100" style="height:100%;">
 	<MainNav></MainNav>
 
-	<!-- <center>
-		<Alert color="red" border>
-			<span class="font-medium">SITE IS DOWN</span>
-			<br>
-			CRLS PathFinders is down for 24 hours - sorry for the inconvenience :(
-		</Alert>
-	</center> -->
+	{#if alerts}
+		{#if alerts.bad_announcements}
+			{#each alerts.bad_announcements as abad}
+				{#if abad.show}
+					<center>
+						<Alert color="red" border>
+							<span class="font-medium">{abad.data}</span>
+							<br>
+						</Alert>
+					</center>
+				{/if}
+			{/each}
+		{/if}
+		{#if alerts.good_announcements}
+			{#each alerts.good_announcements as agood}
+				{#if agood.show}
+					<center>
+						<Alert color="blue" border>
+							<span class="font-medium">{agood.data}</span>
+							<br>
+						</Alert>
+					</center>
+				{/if}
+			{/each}
+		{/if}
+	{/if}
 
 	<slot></slot>
 </div>
