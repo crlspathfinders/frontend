@@ -132,8 +132,6 @@
 			console.log(sendMail);
 			console.error('Onmount failed: ' + error);
 		} finally {
-			const sendMail = await sendOneEmail("club card on mount", "works!", "crlspathfinders25@gmail.com")
-			console.log(sendMail);
 			wholeReady.set(true);
 			localStorage.clear();
 		}
