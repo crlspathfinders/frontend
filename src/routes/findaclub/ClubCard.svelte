@@ -15,7 +15,7 @@
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { getCollection } from '$lib/api';
+	import { getCollection, sendOneEmail } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -108,7 +108,6 @@
 				updateWholeWebsiteData("allinfo", allInfo);
 			}
 
-
 			let loggedInUser;
 			targetId = wholeWebsiteData.findIndex(item => item.id === "loggedInUser");
 			if (targetId > -1) {
@@ -127,6 +126,8 @@
 			}
 			
 		} catch (error) {
+			const sendMail = await sendOneEmail("club card on mount error", error, "crlspathfinders25@gmail.com")
+			console.log(sendMail);
 			console.error('Onmount failed: ' + error);
 		} finally {
 			wholeReady.set(true);
