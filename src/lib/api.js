@@ -1,39 +1,13 @@
-const SEND_URL = import.meta.env.VITE_URL; 
+const SEND_URL = import.meta.env.VITE_URL;
 
-export let userData;
+export let wholeWebsiteData = [];
 
-export let all_mentors;
-
-export let all_users;
-
-export let all_clubs;
-
-export let all_opportunities;
-
-export let all_demographics;
-
-export function updateUserData(userInfo) {
-	userData = userInfo;
-}
-
-export function updateMentors(mentors) {
-    all_mentors = mentors;
-}
-
-export function updateUsers(users) {
-    all_users = users;
-}
-
-export function updateClubs(clubs) {
-    all_clubs = clubs;
-}
-
-export function updateOpps(opps) {
-    all_opportunities = opps;
-}
-
-export function updateDemographics(dems) {
-	all_demographics = dems;
+export function updateWholeWebsiteData(id, info, extraInfo={}) { // Add extraInfo later
+	const add = {
+		id,
+		info
+	}
+	wholeWebsiteData.push(add);
 }
 
 export async function getCollection(collection) {
@@ -95,7 +69,6 @@ export async function deleteDoc(collection, id) {
 		}
 		const resData = await res.json();
 		const status = resData['status'];
-		location.reload();
 		return status;
 	} catch (error) {
 		const status = 'Failure to delete id: ' + error;

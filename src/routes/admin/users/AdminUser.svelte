@@ -13,9 +13,7 @@
 		Input,
 		Textarea,
 		Alert,
-
 		MultiSelect
-
 	} from 'flowbite-svelte';
 	import { getCollection, sendMassEmail } from '../../../lib/api';
 	import { writable } from 'svelte/store';

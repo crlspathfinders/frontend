@@ -15,13 +15,13 @@
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { getCollection, all_clubs } from '$lib/api';
+	import { getCollection } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub } from '../../lib/user';
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
-	import { getBackendCache } from "$lib/api";
+	import { wholeWebsiteData, updateWholeWebsiteData } from "$lib/api";
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 	const SEND_URL = import.meta.env.VITE_URL;
 
@@ -32,7 +32,7 @@
 
 	let ready = false;
 
-	let clubs = [];
+	let clubs;
 
 	let myClubs = [];
 
@@ -43,6 +43,8 @@
 	let searching = '';
 
 	let userInfo;
+
+	let info;
 
 	function labelIncludesSearchTerm(label, searchTerm) {
 		if (typeof label === 'string' && typeof searchTerm === 'string') {
@@ -83,54 +85,46 @@
 	onMount(async () => {
 		wholeReady.set(false);
 		try {
-			// GOOD CODE:
-			// if (!localStorage.getItem('userInfo')) {
-			// 	console.log('userinfo not in storage');
-			// 	userInfo = await retrieveUserInfo();
-			// 	// userInfo = JSON.parse(userInfo);
-			// 	// myClubs = userInfo.joined_clubs;
-			// 	// email = userInfo.email;
-			// 	// inClubs.set(myClubs);
-			// } else {
-			// 	console.log('userinfo already in storage');
-			// 	userInfo = localStorage.getItem('userInfo');
-			// 	userInfo = JSON.parse(userInfo);
-			// 	console.log(userInfo);
-			// 	myClubs = userInfo.joined_clubs;
-			// 	email = userInfo.email;
-			// 	inClubs.set(myClubs);
-			// }
-
-			let loggedInUser;
-			user.subscribe(async (value) => {
-				if (value) {
-					email = value.email;
-					console.log(email);
-					loggedInUser = await getUserDocData(email);
-					console.log(loggedInUser);
-					userInfo = loggedInUser;
-					myClubs = userInfo.joined_clubs;
-					inClubs.set(myClubs);
-				} else {
-					email = '';
-				}
-			});
-
-			// GOOD CODE: (uncomment to see in action):
-			// if (!localStorage.getItem("clubsInfo")) {
-			// 	console.log("clubs not in locstor");
-			// 	clubs = await retrieveCollectionInfo("Clubs");
-			// 	clubs = JSON.parse(clubs);
-			// } else {
-			// 	console.log("clubs in locstor");
-			// 	clubs = JSON.parse(localStorage.getItem("clubsInfo"));
-			// }
-			if (all_clubs) {
-				clubs = all_clubs;
+			let targetId = wholeWebsiteData.findIndex(item => item.id === "clubs");
+			console.log("target id: ", targetId)
+			if (targetId > -1) {
+				clubs = wholeWebsiteData[targetId].info;
 			} else {
 				clubs = await getCollection('Clubs');
+				updateWholeWebsiteData("clubs", clubs);
 			}
-			// clubs = await getBackendCache("Clubs");
+
+			targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
+			if (targetId > -1) {
+				const allInfo = wholeWebsiteData[targetId].info;
+				for (let i = 0; i < allInfo.length; i++) {
+					if (allInfo[i].id == "findaclub") { info = allInfo[i].info; }
+				}
+			} else {
+				const allInfo = await getCollection("AllInfo");
+				for (let i = 0; i < allInfo.length; i++) {
+					if (allInfo[i].id == "findaclub") { info = allInfo[i].info; }
+				}
+				updateWholeWebsiteData("allinfo", allInfo);
+			}
+
+
+			let loggedInUser;
+			targetId = wholeWebsiteData.findIndex(item => item.id === "loggedInUser");
+			if (targetId > -1) {
+				loggedInUser = wholeWebsiteData[targetId].info;
+				email = loggedInUser.email;
+			} else {
+				user.subscribe(async (value) => {
+					if (value) {
+						email = value.email;
+						loggedInUser = await getUserDocData(email);
+						updateWholeWebsiteData("loggedInUser", loggedInUser);
+					} else {
+						email = '';
+					}
+				});
+			}
 			
 		} catch (error) {
 			console.error('Onmount failed: ' + error);
@@ -151,18 +145,25 @@
 {/if}
 
 <div class="wholeclubwrapper bg-gray-100" style="height:100%;">
+	
+	{#if $wholeReady}
 	<div class="titleinfowrapper" style="margin-left: 3rem;">
 		<br />
-		<Heading
-			><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
-				>Find</Span
-			> a Club</Heading
-		>
+		<Heading><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Find</Span> a Club</Heading>
 		<br />
-		<P size="xl">
+		{#each info as inf, i}
+			{#if i == 0}
+				<P size="xl">{inf}</P>
+			{:else if i == 1}
+				<P size="lg">{inf}</P>
+			{:else}
+				<P size="sm">{inf}</P>
+			{/if}
+		{/each}
+		<!-- <P size="xl">
 			Scroll through the available clubs within CRLS! You can look at when clubs meet, who else is
 			in the club, what their mission statement is, and so much more!
-		</P>
+		</P> -->
 		<P size="lg">
 			Interested in <u><a href="/registeryourclub">registering</a></u> your club? Please follow the
 			steps
@@ -176,7 +177,6 @@
 		</P>
 	</div>
 
-	{#if $wholeReady}
 		<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
 			<TableHeader headerType="search">
 				<Search

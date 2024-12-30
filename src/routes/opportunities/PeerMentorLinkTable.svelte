@@ -18,7 +18,8 @@
 		setDataInLocalStorage,
 		removeDataFromLocalStorage,
 		clearLocalStorage,
-		all_opportunities,
+		wholeWebsiteData, 
+		updateWholeWebsiteData,
 		getCollectionDoc
 	} from '../../lib/api';
 	import { writable } from 'svelte/store';
@@ -112,8 +113,13 @@
 		} finally {
 			// NEED CACHING - Done
 			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
-			categories = await updateCache('Demographics');
+			if (all_opportunities) {
+				console.log("found opps");
+				peerMentorLinks = all_opportunities;
+			} else {
+				console.log("not found opps");
+				peerMentorLinks = await getCollection("PeerMentorLinks");
+			}
 
 			for (let i = 0; i < categories.length; i++) {
 				if (categories[i].id == 'PeerMentor') {
@@ -260,24 +266,24 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		// NEED CACHE - Done
-		// peerMentorLinks = await updateCache('PeerMentorLinks');
-
-		if (all_opportunities) {
-			peerMentorLinks = all_opportunities;
+		let targetId = wholeWebsiteData.findIndex(item => item.id === "opportunities");
+		if (targetId > -1) {
+			peerMentorLinks = wholeWebsiteData[targetId].info;
 		} else {
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			peerMentorLinks = await getCollection('PeerMentorLinks');
+			updateWholeWebsiteData("opportunities", peerMentorLinks);
 		}
 
-		console.log(peerMentorLinks);
+		targetId = wholeWebsiteData.findIndex(item => item.id === "categories");
+		if (targetId > -1) {
+			categories = wholeWebsiteData[targetId].info;
+		} else {
+			categories = await getCollectionDoc('Demographics', "PeerMentor");
+			updateWholeWebsiteData("categories", categories);
+		}
 
-		categories = await getCollectionDoc('Demographics', "PeerMentor");
 		categories = categories.categories;
-		// for (let i = 0; i < categories.length; i++) {
-		// 	if (categories[i].id == 'PeerMentor') {
-		// 		categories = categories[i].categories;
-		// 	}
-		// }
+		
 		categories = makeSelectCategoriesOk(categories);
 		console.log(categories);
 		allReady.set(true);
