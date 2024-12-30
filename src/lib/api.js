@@ -25,9 +25,9 @@ export async function getCollection(collection) {
 
 		const status = resData.status;
 		if (status == 0) {
+			const collection = JSON.parse(resData.collection)
 			return collection
 		} else if (status == -1) {
-			const collection = JSON.parse(resData.collection)
 			const sentEmail = await sendOneEmail("getCollectionError", resData.error_message, "crlspathfinders25@gmail.com");
 			console.log(sentEmail);
 			return resData.error_message
