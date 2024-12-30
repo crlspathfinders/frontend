@@ -1,4 +1,4 @@
-<script>
+<script> 
 	import { onMount } from 'svelte';
 	import Home from './Home.svelte';
 	import HomeMainPage from './HomeMainPage.svelte';
@@ -16,9 +16,7 @@
 	import { getCollection, updateWholeWebsiteData } from "$lib/api";
 	import { retrieveDemographics } from '$lib/mentor';
 
-
-	let loggedIn = false;
-
+    let loggedIn = false;
 	let email;
 	let loggedInUser;
 	let userInfo;
@@ -55,15 +53,16 @@
 </script>
 
 <div class="mainwrapper">
-	<!-- <Home></Home> -->
-	 <HomeMainPage></HomeMainPage>
+    <!-- <Home></Home> -->
+     <HomeMainPage></HomeMainPage>
 </div>
 
 <style>
-	@media (prefers-color-scheme: dark) {
-		* {
-			color-scheme: light;
-			background-color: white;
-		}
-	}
+    @media (prefers-color-scheme: dark) {
+        * {
+            color-scheme: light;
+            background-color: white;
+        }
+    }
 </style>
+
