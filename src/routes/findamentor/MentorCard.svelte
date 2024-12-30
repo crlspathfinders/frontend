@@ -30,7 +30,7 @@
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
-	import { getCollection, getBackendCache, all_mentors } from '$lib/api';
+	import { getCollection, getBackendCache, wholeWebsiteData, updateWholeWebsiteData } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -60,6 +60,7 @@
 	let showVals = true;
 	let currMentor;
 	let searching = '';
+	let info;
 
 	let listAcademics = [];
 	let listRaces = [];
@@ -239,44 +240,6 @@
 		wholeReady.set(false);
 		// Whole thing in try-catch block:
 		try {
-			// GOOD CODE:
-			// Checks if userInfo is not in the localStorage
-			// if (!localStorage.getItem('userInfo')) {
-			// 	console.log('userinfo not in storage');
-			// 	// If userInfo is not in localStorage calls the retrieveUserInfo function from cache.js, which will store the current user's information in the localStorage for future use and caching. This function is used with await because it is an async function
-			// 	userInfo = await retrieveUserInfo();
-			// 	// email = userInfo.email;
-			// 	console.log(userInfo);
-			// } else {
-			// 	// If we reach here, that means userInfo is in localStorage
-			// 	console.log('userinfo already in storage');
-			// 	try {
-			// 		// Retrieves the correct userInfo from the localStorage (we know that it must be there!)
-			// 		userInfo = localStorage.getItem('userInfo'); // This will return a STRING.
-			// 		userInfo = JSON.parse(userInfo); // JSON.parse is IMPERATIVE because it turns the string that is returned into a JSON dictionary, allowing us to access data from that dictionary, like the user's email, etc.
-			// 		// console.log(userInfo);
-			// 		email = userInfo['email'];
-			// 		// console.log(email);
-			// 	} catch (error) {
-			// 		// Prints the error that to the console, if one exists.
-			// 		console.log("couldn't fetchuserinfo: " + error);
-			// 	} finally {
-			// 		console.log('finished');
-			// 	}
-			// }
-			// localStorage.clear();
-			// userInfo = await retrieveUserInfo();
-			// console.log(userInfo);
-			// user.subscribe(value => {
-			// 	if (value) {
-			// 		userInfo = value;
-			// 	} else {
-			// 		userInfo = {};
-			// 	}
-			// });
-			// console.log(userInfo);
-
-			// console.log(checkUserLogin());
 			let loggedInUser;
 			user.subscribe(async (value) => {
 				if (value) {
@@ -289,62 +252,35 @@
 				}
 			});
 
-			// GREAT WORKS: (uncomment to see in action): The reason we don't use this function now, even though it significantly speeds up the loading time, is because it is not done yet - we have to make sure the mentor data in localStorage is updated when the mentor updates their information, which hasn't been done yet. (That is a TO-DO! - see ClubCard handleClick() function for an example of how to do that, it's not too hard.)
-
-			// if (!localStorage.getItem('mentorsInfo')) {
-			// 	console.log('mentors not in locstor!');
-			// 	mentors = await retrieveCollectionInfo('Mentors');
-			// 	// mentors = (mentors);
-			// } else {
-			// 	console.log('mentors in locstor!');
-			// 	mentors = JSON.parse(localStorage.getItem('mentorsInfo'));
-			// }
-
-			if (all_mentors) {
-				console.log("all mentors", all_mentors);
-				mentors = all_mentors;
-				list_mentees = await setListMentees();
+			let targetId = wholeWebsiteData.findIndex(item => item.id === "mentors");
+			if (targetId > -1) {
+				mentors = wholeWebsiteData[targetId].info;
 			} else {
-				console.log("all mentors is empty");
-				mentors = await getCollection("Mentors");
-				list_mentees = await setListMentees();
+				mentors = await getCollection('Mentors');
+				updateWholeWebsiteData("mentors", mentors);
 			}
-			// mentors = await getBackendCache("Mentors");
-			// const mentors_url = SEND_URL + "cache/Mentors";
-			// const res = await fetch(mentors_url);
-			// if (!res.ok) {
-			// 	throw new Error('Failure to delete id');
-			// }
-			// const resData = await res.json();
-			// mentors = JSON.parse(resData);
-			// console.log(mentors);
+			let demographics;
+			targetId = wholeWebsiteData.findIndex(item => item.id === "demographics");
+			if (targetId > -1) {
+				demographics = wholeWebsiteData[targetId].info;
+			} else {
+				demographics = await retrieveDemographics();
+				updateWholeWebsiteData("demographics", demographics);
+			}
 
-			// For now we do it the old fashioned way. The getCollection function is a function from the api.js file in the lib folder, that just returns a specific colelction. A collection is what our databse (Google Firestore) calls each table of data. In this case we call the collection of Mentors to get the data of each mentor who is signed up. The reason we had to optimize this was because it is calling static data, meaning the data doesn't change on the page reload, but is still being requested. But why should we constantly request data that we know doesn't change? That slows down the site, and the above localStorage implementation fixes that and only calls this data once.
-			// mentors = await getCollection('Mentors');
-
-			// if (!localStorage.getItem('demographicsInfo')) {
-			// 	console.log('demographics not in locstor!');
-			const demographics = await retrieveDemographics();
-
-			// 	listReligions = demographics.religions;
-			// 	listAcademics = demographics.academics;
-			// 	listRaces = demographics.races;
-			// 	listLanguages = demographics.languages;
-			// 	listGenders = demographics.genders;
-
-			// 	localStorage.setItem('demographicsInfo', JSON.stringify(demographics));
-			// } else {
-			// 	console.log('demographics in locstor!');
-			// 	let demographics = JSON.parse(localStorage.getItem('demographicsInfo'));
-
-			// 	listReligions = demographics.religions;
-			// 	listAcademics = demographics.academics;
-			// 	listRaces = demographics.races;
-			// 	listLanguages = demographics.languages;
-			// 	listGenders = demographics.genders;
-			// }
-
-			// const demographics = await retrieveDemographics();
+			targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
+			if (targetId > -1) {
+				const allInfo = wholeWebsiteData[targetId].info;
+				for (let i = 0; i < allInfo.length; i++) {
+					if (allInfo[i].id == "findamentor") { info = allInfo[i].info; }
+				}
+			} else {
+				const allInfo = await getCollection("AllInfo");
+				for (let i = 0; i < allInfo.length; i++) {
+					if (allInfo[i].id == "findamentor") { info = allInfo[i].info; }
+				}
+				updateWholeWebsiteData("allinfo", allInfo);
+			}
 
 			console.log(demographics);
 
@@ -636,7 +572,16 @@ We met at the library and worked on ..."
 				> a Mentor
 			</Heading>
 			<br />
-			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
+			{#each info as inf, i}
+				{#if i == 0}
+					<P size="xl">{inf}</P>
+				{:else if i == 1}
+					<P size="lg">{inf}</P>
+				{:else}
+					<P size="sm">{inf}</P>
+				{/if}
+			{/each}
+			<!-- <P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 				Below you can search for and filter juniors and seniors who you believe can best support your academic interests.
 			</P>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
@@ -644,7 +589,7 @@ We met at the library and worked on ..."
 			</P>
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 				Simply click "message" for whichever mentor you believe can best help you achieve your goals. Then, send them an email and find your path today!
-			</P>
+			</P> -->
 			<P class="mb-2" weight="light" color="text-gray-600 dark:text-gray-200">
 				Interested in becoming a mentor?
 				{#if $user}

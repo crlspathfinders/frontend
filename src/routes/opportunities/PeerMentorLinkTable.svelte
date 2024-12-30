@@ -18,7 +18,8 @@
 		setDataInLocalStorage,
 		removeDataFromLocalStorage,
 		clearLocalStorage,
-		all_opportunities
+		all_opportunities,
+		wholeWebsiteData, updateWholeWebsiteData
 	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
@@ -264,11 +265,14 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		// NEED CACHE - Done
-		// peerMentorLinks = await updateCache('PeerMentorLinks');
-
-		peerMentorLinks = await getCollection("PeerMentorLinks");
-
+		const targetId = wholeWebsiteData.findIndex(item => item.id === "opportunities");
+			console.log("target id: ", targetId)
+			if (targetId > -1) {
+				peerMentorLinks = wholeWebsiteData[targetId].info;
+			} else {
+				peerMentorLinks = await getCollection('PeerMentorLinks');
+				updateWholeWebsiteData("opportunities", peerMentorLinks);
+			}
 		console.log(peerMentorLinks);
 		// LEAVE THIS FOR NOW
 		categories = await getCollection('Demographics');

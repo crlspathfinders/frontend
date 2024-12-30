@@ -1,5 +1,7 @@
 const SEND_URL = import.meta.env.VITE_URL;
 
+export let wholeWebsiteData = [];
+
 export let all_mentors;
 
 export let all_users;
@@ -22,6 +24,14 @@ export function updateClubs(clubs) {
 
 export function updateOpps(opps) {
 	all_opportunities = opps;
+}
+
+export function updateWholeWebsiteData(id, info, extraInfo={}) { // Add extraInfo later
+	const add = {
+		id,
+		info
+	}
+	wholeWebsiteData.push(add);
 }
 
 export async function getCollection(collection) {
@@ -83,7 +93,6 @@ export async function deleteDoc(collection, id) {
 		}
 		const resData = await res.json();
 		const status = resData['status'];
-		location.reload();
 		return status;
 	} catch (error) {
 		const status = 'Failure to delete id: ' + error;

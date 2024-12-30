@@ -69,6 +69,7 @@
             }
             specInfo.push(spec)
         }
+        console.log(specInfo);
         wholeReady.set(true);
     })
 </script>

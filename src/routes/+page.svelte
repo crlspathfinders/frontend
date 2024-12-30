@@ -13,7 +13,9 @@
 	import { user } from '../stores/auth';
 	import { getUserDocData } from '../lib/user';
 	import { retrieveUserInfo } from "$lib/cache";
-	import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps } from "$lib/api";
+	import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps, updateWholeWebsiteData } from "$lib/api";
+	import { retrieveDemographics } from '$lib/mentor';
+
 
 	let loggedIn = false;
 
@@ -24,6 +26,8 @@
 	let users;
 	let clubs;
 	let opps;
+	let allInfo;
+	let demographics;
 
 	onMount(async () => {
 		if (getLoggedIn()) {
@@ -38,10 +42,15 @@
 		users = await getCollection("Users");
 		clubs = await getCollection("Clubs");
 		opps = await getCollection("PeerMentorLinks");
-		updateMentors(mentors);
-		updateUsers(users);
-		updateClubs(clubs);
-		updateOpps(opps);
+		allInfo = await getCollection("AllInfo");
+		demographics = await retrieveDemographics();
+		updateWholeWebsiteData("mentors", mentors);
+		updateWholeWebsiteData("users", users);
+		updateWholeWebsiteData("clubs", clubs);
+		updateWholeWebsiteData("opps", opps);
+		updateWholeWebsiteData("allinfo", allInfo);
+		updateWholeWebsiteData("demographics", demographics);
+
 	});
 </script>
 
