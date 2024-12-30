@@ -15,7 +15,7 @@
 		Alert,
 		MultiSelect
 	} from 'flowbite-svelte';
-	import { getCollection, sendMassEmail, all_users } from '../../../lib/api';
+	import { getCollection, sendMassEmail } from '../../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
 		roleChoices,
@@ -164,11 +164,7 @@
 	onMount(async () => {
 		wholeReady.set(false);
 		try {
-			if (all_users) {
-				users = all_users
-			} else {
-				users = await getCollection('Users');
-			}
+			users = await getCollection('Users');
 			console.log(users);
 			user.subscribe((value) => {
 				if (value) {

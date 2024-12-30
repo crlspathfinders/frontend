@@ -15,7 +15,7 @@
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { getCollection, all_clubs } from '$lib/api';
+	import { getCollection } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -110,19 +110,21 @@
 
 
 			let loggedInUser;
-			user.subscribe(async (value) => {
-				if (value) {
-					email = value.email;
-					console.log(email);
-					loggedInUser = await getUserDocData(email);
-					console.log(loggedInUser);
-					userInfo = loggedInUser;
-					myClubs = userInfo.joined_clubs;
-					inClubs.set(myClubs);
-				} else {
-					email = '';
-				}
-			});
+			targetId = wholeWebsiteData.findIndex(item => item.id === "loggedInUser");
+			if (targetId > -1) {
+				loggedInUser = wholeWebsiteData[targetId].info;
+				email = loggedInUser.email;
+			} else {
+				user.subscribe(async (value) => {
+					if (value) {
+						email = value.email;
+						loggedInUser = await getUserDocData(email);
+						updateWholeWebsiteData("loggedInUser", loggedInUser);
+					} else {
+						email = '';
+					}
+				});
+			}
 			
 		} catch (error) {
 			console.error('Onmount failed: ' + error);

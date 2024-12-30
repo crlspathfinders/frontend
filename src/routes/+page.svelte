@@ -13,7 +13,7 @@
 	import { user } from '../stores/auth';
 	import { getUserDocData } from '../lib/user';
 	import { retrieveUserInfo } from "$lib/cache";
-	import { getCollection, updateWholeWebsiteData } from "$lib/api";
+	import { getCollection, updateWholeWebsiteData, getCollectionDoc } from "$lib/api";
 	import { retrieveDemographics } from '$lib/mentor';
 
     let loggedIn = false;
@@ -26,6 +26,7 @@
 	let opps;
 	let allInfo;
 	let demographics;
+	let categories;
 
 	onMount(async () => {
 		if (getLoggedIn()) {
@@ -42,12 +43,23 @@
 		opps = await getCollection("PeerMentorLinks");
 		allInfo = await getCollection("AllInfo");
 		demographics = await retrieveDemographics();
+		categories = await getCollectionDoc('Demographics', "PeerMentor");
 		updateWholeWebsiteData("mentors", mentors);
 		updateWholeWebsiteData("users", users);
 		updateWholeWebsiteData("clubs", clubs);
 		updateWholeWebsiteData("opps", opps);
 		updateWholeWebsiteData("allinfo", allInfo);
 		updateWholeWebsiteData("demographics", demographics);
+		updateWholeWebsiteData("categories", categories);
+		user.subscribe(async (value) => {
+			if (value) {
+				email = value.email;
+				loggedInUser = await getUserDocData(email);
+				updateWholeWebsiteData("loggedInUser", loggedInUser);
+			} else {
+				email = '';
+			}
+		});
 
 	});
 </script>
