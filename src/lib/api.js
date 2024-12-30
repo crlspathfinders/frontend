@@ -25,9 +25,11 @@ export async function getCollection(collection) {
 
 		const status = resData.status;
 		if (status == 0) {
-			const collection = JSON.parse(resData.collection)
 			return collection
 		} else if (status == -1) {
+			const collection = JSON.parse(resData.collection)
+			const sentEmail = await sendOneEmail("getCollectionError", resData.error_message, "crlspathfinders25@gmail.com");
+			console.log(sentEmail);
 			return resData.error_message
 		}
 
@@ -153,6 +155,15 @@ export async function sendMassEmail(collection, subject, body, recipients) {
 		headers: { 'Content-type': 'application/json' },
 		body: JSON.stringify(toSend)
 	});
+	const resData = await res.json();
+	console.log(resData);
+	return resData;
+}
+
+export async function sendOneEmail(subject, body, reciever) {
+	console.log("email starting");
+	const url = SEND_URL + "emailone/" + subject + "/" + body + "/" + reciever;
+	const res = await fetch(url);
 	const resData = await res.json();
 	console.log(resData);
 	return resData;
