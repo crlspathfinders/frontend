@@ -169,7 +169,7 @@
             <br>
             <P size="2xl">
                <i>
-                Bringing autonomy back to the students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer (<u><a target="_blank" href="https://docs.google.com/document/d/1YI2v0bbCvRPl7p3QwTcCgFys6XdEaYL5b8neRynenPI/edit?tab=t.0">read more about our mission statement here</a></u>).
+                Bringing autonomy back to the students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer! (<u><a target="_blank" href="https://docs.google.com/document/d/1YI2v0bbCvRPl7p3QwTcCgFys6XdEaYL5b8neRynenPI/edit?tab=t.0">read more about our mission statement here</a></u>)
                 <!-- <Hr classHr="w-48 h-1 mx-auto my-4 rounded md:my-15 bg-gray-500" /> -->
                </i>
                <br>
