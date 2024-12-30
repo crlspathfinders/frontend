@@ -13,7 +13,7 @@
 	import { user } from '../stores/auth';
 	import { getUserDocData } from '../lib/user';
 	import { retrieveUserInfo } from "$lib/cache";
-	import { getCollection, updateMentors, updateUsers, updateClubs, updateOpps, updateWholeWebsiteData } from "$lib/api";
+	import { getCollection, updateWholeWebsiteData } from "$lib/api";
 	import { retrieveDemographics } from '$lib/mentor';
 
 

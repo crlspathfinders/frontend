@@ -2,30 +2,6 @@ const SEND_URL = import.meta.env.VITE_URL;
 
 export let wholeWebsiteData = [];
 
-export let all_mentors;
-
-export let all_users;
-
-export let all_clubs;
-
-export let all_opportunities;
-
-export function updateMentors(mentors) {
-	all_mentors = mentors;
-}
-
-export function updateUsers(users) {
-	all_users = users;
-}
-
-export function updateClubs(clubs) {
-	all_clubs = clubs;
-}
-
-export function updateOpps(opps) {
-	all_opportunities = opps;
-}
-
 export function updateWholeWebsiteData(id, info, extraInfo={}) { // Add extraInfo later
 	const add = {
 		id,
