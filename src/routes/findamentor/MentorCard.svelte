@@ -241,16 +241,22 @@
 		// Whole thing in try-catch block:
 		try {
 			let loggedInUser;
-			user.subscribe(async (value) => {
-				if (value) {
-					email = value.email;
-					console.log(email);
-					loggedInUser = await getUserDocData(email);
-					console.log(loggedInUser);
-				} else {
-					email = '';
-				}
-			});
+			if (userData) {
+				console.log("found user data");
+				email = userData.email;
+				loggedInUser = userData;
+			} else {
+				console.log("not found user data");
+				user.subscribe(async (value) => {
+					if (value) {
+						email = value.email;
+						loggedInUser = await getUserDocData(email);
+					} else {
+						email = '';
+					}
+				});
+			}
+			
 
 			let targetId = wholeWebsiteData.findIndex(item => item.id === "mentors");
 			if (targetId > -1) {
@@ -282,7 +288,7 @@
 				updateWholeWebsiteData("allinfo", allInfo);
 			}
 
-			console.log(demographics);
+			// console.log(demographics);
 
 			listReligions = demographics.religions;
 			listAcademics = demographics.academics;
@@ -290,7 +296,7 @@
 			listLanguages = demographics.languages;
 			listGenders = demographics.genders;
 
-			console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
+			// console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
 
 		} catch (error) {
 			console.log('Onmount failed: ' + error);
@@ -560,10 +566,11 @@ We met at the library and worked on ..."
 	</div>
 </Modal>
 
+{#if $wholeReady}
+
 <!-- This div holds all of the information. -->
 <div class="wholementorwrapper bg-gray-100" style="height:100%;">
 	<!-- The data is only shown when wholeReady is true (which means all of the data has been successfully requested). Remember that the wholeReady is a boolean store variable. To access the value of a store variable, we put the dollar sign $ before the name of the variable, indicating reactivity. -->
-	{#if $wholeReady}
 		<div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
 			<!-- This is all data that should NOT be hard-coded, but we will fix this later once the more pressing issues are solved. -->
 			<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-red-900">
@@ -896,7 +903,9 @@ We met at the library and worked on ..."
 				{/if}
 			{/each}
 		</div>
-	{:else}
+	
+</div>
+{:else}
 		<!-- This else refers to if $wholeReady is false, in which case a loading message will show. -->
 		<center>
 			<div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
@@ -911,8 +920,8 @@ We met at the library and worked on ..."
 			<CardPlaceholder />
 			<CardPlaceholder />
 		</div>
-	{/if}
-</div>
+{/if}
+
 
 <style>
 	/* Here are some styling. */

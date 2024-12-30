@@ -274,13 +274,14 @@
 				updateWholeWebsiteData("opportunities", peerMentorLinks);
 			}
 		console.log(peerMentorLinks);
-		// LEAVE THIS FOR NOW
-		categories = await getCollection('Demographics');
-		for (let i = 0; i < categories.length; i++) {
-			if (categories[i].id == 'PeerMentor') {
-				categories = categories[i].categories;
-			}
-		}
+
+		categories = await getCollectionDoc('Demographics', "PeerMentor");
+		categories = categories.categories;
+		// for (let i = 0; i < categories.length; i++) {
+		// 	if (categories[i].id == 'PeerMentor') {
+		// 		categories = categories[i].categories;
+		// 	}
+		// }
 		categories = makeSelectCategoriesOk(categories);
 		console.log(categories);
 		allReady.set(true);
