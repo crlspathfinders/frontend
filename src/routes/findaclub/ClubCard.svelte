@@ -85,6 +85,8 @@
 	onMount(async () => {
 		wholeReady.set(false);
 		try {
+			// const sendMail = await sendOneEmail("club card on mount", "works!", "crlspathfinders25@gmail.com")
+			// console.log(sendMail);
 			let targetId = wholeWebsiteData.findIndex(item => item.id === "clubs");
 			console.log("target id: ", targetId)
 			if (targetId > -1) {
@@ -130,6 +132,8 @@
 			console.log(sendMail);
 			console.error('Onmount failed: ' + error);
 		} finally {
+			const sendMail = await sendOneEmail("club card on mount", "works!", "crlspathfinders25@gmail.com")
+			console.log(sendMail);
 			wholeReady.set(true);
 			localStorage.clear();
 		}
