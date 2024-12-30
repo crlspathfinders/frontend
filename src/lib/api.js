@@ -1,4 +1,14 @@
-const SEND_URL = import.meta.env.VITE_URL; 
+const SEND_URL = import.meta.env.VITE_URL;
+
+export let wholeWebsiteData = [];
+
+export function updateWholeWebsiteData(id, info, extraInfo={}) { // Add extraInfo later
+	const add = {
+		id,
+		info
+	}
+	wholeWebsiteData.push(add);
+}
 
 export let userData;
 
@@ -95,7 +105,6 @@ export async function deleteDoc(collection, id) {
 		}
 		const resData = await res.json();
 		const status = resData['status'];
-		location.reload();
 		return status;
 	} catch (error) {
 		const status = 'Failure to delete id: ' + error;

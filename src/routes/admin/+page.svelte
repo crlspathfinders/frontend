@@ -38,7 +38,7 @@
 	{#if $wholeReady}
 		{#if userInfo}
 			{#if userInfo.role == 'Super Admin' || userInfo.role == 'Admin'}
-				<div style="margin:3rem; margin-top:0" class="admincontainer">
+				<div style="margin:3rem; margin-top:0; height:100vh" class="admincontainer">
 					<p class="text-xl">Admin Dashboard</p>
 
 					<Tabs tabStyle="underline">

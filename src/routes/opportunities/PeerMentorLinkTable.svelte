@@ -19,7 +19,7 @@
 		removeDataFromLocalStorage,
 		clearLocalStorage,
 		all_opportunities,
-		getCollectionDoc
+		wholeWebsiteData, updateWholeWebsiteData
 	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
@@ -112,8 +112,13 @@
 		} finally {
 			// NEED CACHING - Done
 			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
-			categories = await updateCache('Demographics');
+			if (all_opportunities) {
+				console.log("found opps");
+				peerMentorLinks = all_opportunities;
+			} else {
+				console.log("not found opps");
+				peerMentorLinks = await getCollection("PeerMentorLinks");
+			}
 
 			for (let i = 0; i < categories.length; i++) {
 				if (categories[i].id == 'PeerMentor') {
@@ -260,15 +265,14 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		// NEED CACHE - Done
-		// peerMentorLinks = await updateCache('PeerMentorLinks');
-
-		if (all_opportunities) {
-			peerMentorLinks = all_opportunities;
-		} else {
-			peerMentorLinks = await getCollection("PeerMentorLinks");
-		}
-
+		const targetId = wholeWebsiteData.findIndex(item => item.id === "opportunities");
+			console.log("target id: ", targetId)
+			if (targetId > -1) {
+				peerMentorLinks = wholeWebsiteData[targetId].info;
+			} else {
+				peerMentorLinks = await getCollection('PeerMentorLinks');
+				updateWholeWebsiteData("opportunities", peerMentorLinks);
+			}
 		console.log(peerMentorLinks);
 
 		categories = await getCollectionDoc('Demographics', "PeerMentor");
