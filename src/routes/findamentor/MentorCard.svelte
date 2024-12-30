@@ -30,7 +30,7 @@
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
 	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
-	import { getCollection, getBackendCache, wholeWebsiteData, updateWholeWebsiteData } from '$lib/api';
+	import { getCollection, getBackendCache, wholeWebsiteData, updateWholeWebsiteData, sendOneEmail } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -228,8 +228,6 @@
 			} catch (error) {
 				console.log("Advisor found");
 			}
-				
-
 		}
 		return list_mentees;
 	}
@@ -241,22 +239,6 @@
 		// Whole thing in try-catch block:
 		try {
 			let loggedInUser;
-			// if (userData) {
-			// 	console.log("found user data");
-			// 	email = userData.email;
-			// 	loggedInUser = userData;
-			// } else {
-			// 	console.log("not found user data");
-			// 	user.subscribe(async (value) => {
-			// 		if (value) {
-			// 			email = value.email;
-			// 			loggedInUser = await getUserDocData(email);
-			// 		} else {
-			// 			email = '';
-			// 		}
-			// 	});
-			// }
-			
 
 			let targetId = wholeWebsiteData.findIndex(item => item.id === "mentors");
 			if (targetId > -1) {
@@ -316,6 +298,8 @@
 			// console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
 
 		} catch (error) {
+			const sendMail = await sendOneEmail("mentor card on mount error", error, "crlspathfinders25@gmail.com")
+			console.log(sendMail);
 			console.log('Onmount failed: ' + error);
 		} finally {
 			// At the end, we will set wholeReady to true, indicating that the data can be rendered to the screen. We don't want to render data that hasn't been requested yet, because that will result in an error. This is also the loading screen that you see while we impatiently wait for the data to come in.
