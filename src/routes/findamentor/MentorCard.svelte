@@ -241,21 +241,21 @@
 		// Whole thing in try-catch block:
 		try {
 			let loggedInUser;
-			if (userData) {
-				console.log("found user data");
-				email = userData.email;
-				loggedInUser = userData;
-			} else {
-				console.log("not found user data");
-				user.subscribe(async (value) => {
-					if (value) {
-						email = value.email;
-						loggedInUser = await getUserDocData(email);
-					} else {
-						email = '';
-					}
-				});
-			}
+			// if (userData) {
+			// 	console.log("found user data");
+			// 	email = userData.email;
+			// 	loggedInUser = userData;
+			// } else {
+			// 	console.log("not found user data");
+			// 	user.subscribe(async (value) => {
+			// 		if (value) {
+			// 			email = value.email;
+			// 			loggedInUser = await getUserDocData(email);
+			// 		} else {
+			// 			email = '';
+			// 		}
+			// 	});
+			// }
 			
 
 			let targetId = wholeWebsiteData.findIndex(item => item.id === "mentors");
@@ -265,6 +265,23 @@
 				mentors = await getCollection('Mentors');
 				updateWholeWebsiteData("mentors", mentors);
 			}
+
+			targetId = wholeWebsiteData.findIndex(item => item.id === "loggedInUser");
+			if (targetId > -1) {
+				loggedInUser = wholeWebsiteData[targetId].info;
+				email = loggedInUser.email;
+			} else {
+				user.subscribe(async (value) => {
+					if (value) {
+						email = value.email;
+						loggedInUser = await getUserDocData(email);
+						updateWholeWebsiteData("loggedInUser", loggedInUser);
+					} else {
+						email = '';
+					}
+				});
+			}
+
 			let demographics;
 			targetId = wholeWebsiteData.findIndex(item => item.id === "demographics");
 			if (targetId > -1) {

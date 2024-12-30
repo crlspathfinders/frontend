@@ -10,42 +10,6 @@ export function updateWholeWebsiteData(id, info, extraInfo={}) { // Add extraInf
 	wholeWebsiteData.push(add);
 }
 
-export let userData;
-
-export let all_mentors;
-
-export let all_users;
-
-export let all_clubs;
-
-export let all_opportunities;
-
-export let all_demographics;
-
-export function updateUserData(userInfo) {
-	userData = userInfo;
-}
-
-export function updateMentors(mentors) {
-    all_mentors = mentors;
-}
-
-export function updateUsers(users) {
-    all_users = users;
-}
-
-export function updateClubs(clubs) {
-    all_clubs = clubs;
-}
-
-export function updateOpps(opps) {
-    all_opportunities = opps;
-}
-
-export function updateDemographics(dems) {
-	all_demographics = dems;
-}
-
 export async function getCollection(collection) {
 	try {
 		console.log("send url: ");

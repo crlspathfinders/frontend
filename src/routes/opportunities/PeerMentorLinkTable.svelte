@@ -18,8 +18,9 @@
 		setDataInLocalStorage,
 		removeDataFromLocalStorage,
 		clearLocalStorage,
-		all_opportunities,
-		wholeWebsiteData, updateWholeWebsiteData
+		wholeWebsiteData, 
+		updateWholeWebsiteData,
+		getCollectionDoc
 	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
@@ -265,23 +266,24 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		const targetId = wholeWebsiteData.findIndex(item => item.id === "opportunities");
-			console.log("target id: ", targetId)
-			if (targetId > -1) {
-				peerMentorLinks = wholeWebsiteData[targetId].info;
-			} else {
-				peerMentorLinks = await getCollection('PeerMentorLinks');
-				updateWholeWebsiteData("opportunities", peerMentorLinks);
-			}
-		console.log(peerMentorLinks);
+		let targetId = wholeWebsiteData.findIndex(item => item.id === "opportunities");
+		if (targetId > -1) {
+			peerMentorLinks = wholeWebsiteData[targetId].info;
+		} else {
+			peerMentorLinks = await getCollection('PeerMentorLinks');
+			updateWholeWebsiteData("opportunities", peerMentorLinks);
+		}
 
-		categories = await getCollectionDoc('Demographics', "PeerMentor");
+		targetId = wholeWebsiteData.findIndex(item => item.id === "categories");
+		if (targetId > -1) {
+			categories = wholeWebsiteData[targetId].info;
+		} else {
+			categories = await getCollectionDoc('Demographics', "PeerMentor");
+			updateWholeWebsiteData("categories", categories);
+		}
+
 		categories = categories.categories;
-		// for (let i = 0; i < categories.length; i++) {
-		// 	if (categories[i].id == 'PeerMentor') {
-		// 		categories = categories[i].categories;
-		// 	}
-		// }
+		
 		categories = makeSelectCategoriesOk(categories);
 		console.log(categories);
 		allReady.set(true);
