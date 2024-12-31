@@ -151,7 +151,7 @@
         <div class="spectext" id="titlespectext">
           <div class="spectitletext">
             <Heading tag="h1" class="mb-4">
-              CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders</Span>
+              CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders!</Span>
             </Heading>
             <br>
             <P size="2xl">
