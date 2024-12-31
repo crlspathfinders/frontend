@@ -2,7 +2,7 @@ const SEND_URL = import.meta.env.VITE_URL;
 
 const username = import.meta.env.VITE_AUTH_USERNAME;
 const password = import.meta.env.VITE_AUTH_PASSWORD;
-const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
+const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode 
 
 export async function updateAllInfo(doc, vals) {
     const url = SEND_URL + "update/";
