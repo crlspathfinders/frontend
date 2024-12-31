@@ -70,7 +70,6 @@
 			// Brings in the current user's information.
 			userInfo = await getUserDocData(email);
 			// Calls the updateCache function from lib/cache.js to update the userInfo whenever they join/leave a club.
-			updateCache('userInfo', userInfo);
 		} catch (error) {
 			console.log('Failed to toggle club! ' + error);
 		} finally {

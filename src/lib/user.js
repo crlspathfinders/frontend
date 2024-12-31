@@ -1,4 +1,7 @@
-// import { getAuth, getIdToken } from "firebase/auth";
+const username = import.meta.env.VITE_AUTH_USERNAME;
+const password = import.meta.env.VITE_AUTH_PASSWORD;
+const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
+
 import { auth } from './auth/firebaseConfig';
 import { user, logout } from '../stores/auth';
 
@@ -55,7 +58,7 @@ export async function editUser(email, is_leader, password, role) {
 		const url = SEND_URL + 'updateuser/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' },
+			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -104,7 +107,12 @@ export async function getUserDocData(email) {
 	const url = SEND_URL + 'getuserdocdata' + '/' + email;
 
 	try {
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		if (!res.ok) {
 			throw new Error('Failed to getuserdocdata');
 		}
@@ -120,7 +128,12 @@ export async function toggleClub(userEmail, clubId) {
 	const url = SEND_URL + 'toggleclub/' + userEmail + '/' + clubId;
 	// SEND_URL = http://127.0.0.1:8000/
 	try {
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		if (!res.ok) {
 			return 'Failed to toggle club';
 		}
@@ -143,7 +156,7 @@ export async function changeUserRole(email, newRole) {
 		console.log(toSend);
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' },
+			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		console.log(res);
@@ -155,7 +168,12 @@ export async function changeUserRole(email, newRole) {
 export async function deleteUser(email) {
 	const url = SEND_URL + 'deleteuser/' + email;
 	try {
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		if (!res.ok) {
 			console.log('Failed to fetch url');
 		}
@@ -177,7 +195,7 @@ export async function toggleLeaderMentor(email, leaderMentor, toggle) {
 	console.log(toSend);
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }
@@ -204,7 +222,7 @@ export async function confirmMentorMenteeHours(confirm, catalog_id, mentee_email
 	const url = SEND_URL + "menteeconfirmhours";
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	const resData = await res.json();
@@ -214,7 +232,12 @@ export async function confirmMentorMenteeHours(confirm, catalog_id, mentee_email
 
 export async function getMentees() {
 	const url = SEND_URL + "getmentees";
-	const res = await fetch(url);
+	const res = await fetch(url, {
+		method: "GET",
+		headers: {
+			"Authorization": `Basic ${encodedCredentials}`
+		}
+	});
 	const resData = await res.json();
 	console.log(resData);
 	return resData;

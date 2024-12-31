@@ -1,4 +1,7 @@
 const SEND_URL = import.meta.env.VITE_REDIS_URL;
+const username = import.meta.env.VITE_AUTH_USERNAME;
+const password = import.meta.env.VITE_AUTH_PASSWORD;
+const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
 
 export let listRaces = [];
 
@@ -83,7 +86,7 @@ export async function createMentor(
 		const url = SEND_URL + 'creatementor/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' },
+			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -132,7 +135,7 @@ export async function editMentor(
 		const url = SEND_URL + 'updatementor/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' },
+			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -149,7 +152,12 @@ export async function editMentor(
 export async function deleteMentor(email) {
 	const url = SEND_URL + 'deletementor/' + email;
 	try {
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		if (!res.ok) {
 			console.log('Failed to fetch url');
 		}
@@ -173,6 +181,9 @@ export async function UploadMentorImage(file, oldFileName) {
 		let url = SEND_URL + 'uploadmentorimage/';
 		let response = await fetch(url, {
 			method: 'POST',
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			},
 			body: formData
 		});
 
@@ -197,7 +208,7 @@ export async function SetMentorImage(imgUrl, mentorEmail) {
 	const url = SEND_URL + 'setmentorimg/';
 	const response = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	return response;
@@ -214,7 +225,7 @@ export async function sendMentorPitch(email, pitch) {
 	const url = SEND_URL + 'sendmentorpitch/';
 	const response = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	console.log(response);
@@ -224,7 +235,12 @@ export async function sendMentorPitch(email, pitch) {
 export async function retrieveDemographics() {
 	const url = SEND_URL + 'read/AllInfo/demographics';
 	try {
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		const wholeRes = await res.json();
 		console.log(wholeRes);
 		console.log("OK")
@@ -256,7 +272,7 @@ export async function sendMentorMenteeLogs(mentorEmail, menteeEmail, logDescript
 	const url = SEND_URL + 'mentormenteelogs/';
 	const response = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 
@@ -266,7 +282,12 @@ export async function sendMentorMenteeLogs(mentorEmail, menteeEmail, logDescript
 
 export async function toggleMentorShow(mentor_email) {
 	const url = SEND_URL + "toggleshowmentor/" + mentor_email;
-	const response = await fetch(url);
+	const response = await fetch(url, {
+		method: "GET",
+		headers: {
+			"Authorization": `Basic ${encodedCredentials}`
+		}
+	});
 	const resData = await response.json();
 	console.log(resData);
 }

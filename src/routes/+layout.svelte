@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	import { Alert } from "flowbite-svelte";
 	import { getCollectionDoc, getCollection } from "$lib/api";
+	import { auth } from '../lib/auth/firebaseConfig';
 
 	let alerts;
 

@@ -1,4 +1,7 @@
 const SEND_URL = import.meta.env.VITE_REDIS_URL;
+const username = import.meta.env.VITE_AUTH_USERNAME;
+const password = import.meta.env.VITE_AUTH_PASSWORD;
+const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
 
 export async function addLink(linkname, linkurl, categories, bio, deadline) {
 	const url = SEND_URL + 'addlink/';
@@ -14,7 +17,7 @@ export async function addLink(linkname, linkurl, categories, bio, deadline) {
 	try {
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' },
+			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		console.log(res);
@@ -28,7 +31,12 @@ export async function deleteLink(linkName) {
 	const url = SEND_URL + 'deletelink/' + linkName;
 
 	try {
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		const resResponse = await res.json();
 		console.log(resResponse);
 		return 'Success';
@@ -54,7 +62,7 @@ export async function editLink(oldName, newName, newUrl, categories, bio, deadli
 	try {
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' },
+			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		console.log(res);
@@ -83,7 +91,7 @@ export async function editCategories(oldCatName, newCatName) {
 
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }
@@ -97,7 +105,7 @@ export async function addCategory(newCat) {
 
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }
@@ -111,7 +119,7 @@ export async function deleteCategory(catName) {
 
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }

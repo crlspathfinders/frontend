@@ -1,4 +1,8 @@
-const SEND_URL = import.meta.env.VITE_URL; 
+const SEND_URL = import.meta.env.VITE_URL;
+
+const username = import.meta.env.VITE_AUTH_USERNAME;
+const password = import.meta.env.VITE_AUTH_PASSWORD;
+const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
 
 export async function updateAllInfo(doc, vals) {
     const url = SEND_URL + "update/";
@@ -9,7 +13,7 @@ export async function updateAllInfo(doc, vals) {
     console.log(toSend);
     const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
     const resData = await res.json();
@@ -25,7 +29,7 @@ export async function addDocument(doc) {
     console.log(toSend);
     const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
     const resData = await res.json();
