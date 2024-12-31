@@ -58,12 +58,14 @@
 		{"value": "Admin", "name": "Admin"},
 		{"value": "Rehaan", "name": "Rehaan"}
 	]
-	let recipients = [{"value": "Everyone", "name": "Everyone"}];
+	let recipients = [];
 
 	const handleSendEmail = async () => {
 		try {
 			isLoading.set(true);
-			await sendMassEmail("Users", emailSubject, emailBody, recipients);
+			let coll = "Users";
+			if (recipients.indexOf("Rehaan") > -1) { coll = "Rehaan"; } console.log(coll);
+			await sendMassEmail(coll, emailSubject, emailBody, recipients);
 			errorMessage.set(""); 
 			successMessage.set("Sent email");
 			emailSubject = "";
