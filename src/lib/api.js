@@ -1,4 +1,7 @@
 const SEND_URL = import.meta.env.VITE_URL;
+const username = import.meta.env.VITE_AUTH_USERNAME;
+const password = import.meta.env.VITE_AUTH_PASSWORD;
+const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
 
 export let wholeWebsiteData = [];
 
@@ -16,7 +19,12 @@ export async function getCollection(collection) {
 		console.log(SEND_URL);
 		const url = SEND_URL + 'read/' + collection;
 		console.log(url);
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		if (!res.ok) {
 			throw new Error("getvals fetching didn't work");
 		}
@@ -40,7 +48,12 @@ export async function getCollection(collection) {
 export async function getCollectionDoc(collection, docId) {
 	try {
 		const url = SEND_URL + 'read/' + collection + '/' + docId;
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		if (!res.ok) {
 			throw new Error("getvals fetching didn't work");
 		}
@@ -63,7 +76,12 @@ export async function getCollectionDoc(collection, docId) {
 export async function deleteDoc(collection, id) {
 	try {
 		const url = SEND_URL + 'delete/' + collection + '/' + id;
-		const res = await fetch(url);
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Basic ${encodedCredentials}`
+			}
+		});
 		if (!res.ok) {
 			throw new Error('Failure to delete id');
 		}
@@ -150,7 +168,7 @@ export async function sendMassEmail(collection, subject, body, recipients) {
 	}
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json' },
+		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	const resData = await res.json();

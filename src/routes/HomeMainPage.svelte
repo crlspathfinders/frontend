@@ -3,10 +3,25 @@
   import { Heading, P, Mark, Span, Button, Popover, ButtonGroup, Hr, Alert } from 'flowbite-svelte';
   import { user } from "../stores/auth";
   import { FireOutline } from "flowbite-svelte-icons";
+  import { wholeWebsiteData, updateWholeWebsiteData, getCollection} from "$lib/api"
 
-  onMount(() => {
+  // export let info;
+
+  onMount(async () => {
     localStorage.clear();
-  })
+  //   const targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
+	// 		if (targetId > -1) {
+	// 			const allInfo = wholeWebsiteData[targetId].info;
+	// 			for (let i = 0; i < allInfo.length; i++) {
+	// 				if (allInfo[i].id == "homepage") { info = allInfo[i].info; }
+	// 			}
+	// 		} else {
+	// 			const allInfo = await getCollection("AllInfo");
+	// 			updateWholeWebsiteData("allinfo", allInfo);
+	// 		}
+      
+      // console.log(info);
+  });
 </script>
 
 <style>
@@ -126,36 +141,8 @@
 }
 </style>
 
-<!-- <center>
-  <Alert color="red" border>
-    <span class="font-medium">SITE DOWN!</span>
-    <br>
-    CRLS PathFinders is down for 24 hours - sorry for the inconvenience!
-    <br>
-    You will not be able to see any data from other pages - we are working to fix this issue!
-  </Alert>
-</center> -->
-
 <div class="wholerapper bg-gray-100" style="height: 100%;">
   <div class="maincontainer bg-gray-100" style="height: 100%;">
-      <!-- <div class="titlecontainer spectext">
-        <Heading tag="h1" class="mb-4">
-          <center>
-            CRLS <Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">PathFinders</Span>
-          </center>
-        </Heading>
-        <br>
-        <P size="lg">
-          <center>
-            Bringing autonomy back to students, PathFinders seeks to provide 9th and 10th grade students with all of the resources that CRLS and Cambridge have to offer (<u><a target="_blank" href="https://docs.google.com/document/d/1YI2v0bbCvRPl7p3QwTcCgFys6XdEaYL5b8neRynenPI/edit?tab=t.0">read more about our mission statement here</a></u>).
-            <Hr classHr="w-48 h-1 mx-auto my-4 rounded md:my-15 bg-gray-500" />
-            Scroll below to see the various parts of our program!
-          </center>
-        </P>
-      </div>
-      <div class="specimg">
-        <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfinderslogo_nobackground.png?alt=media&token=58a95374-adfd-4c0f-b724-a5bbd6ed7ea5" alt="PathFinders Logo" style="min-width: 30%; min-height:30%;">
-      </div> -->
     
     <!-- This shouldn't be hard-coded! (Will fix later on.) -->
     <div class="infocontainer">

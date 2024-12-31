@@ -10,6 +10,31 @@
 	import { Alert } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 	import { getUserDocData, getCurrEmail, setCurrEmail } from '../../../lib/user';
+	import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
+
+	// Send email confirmation:
+	const actionCodeSettings = {
+		// URL you want to redirect back to. The domain (www.example.com) for this
+		// URL must be in the authorized domains list in the Firebase Console.
+		url: 'https://www.crlspathfinders.com/finishSignUp?cartId=1234',
+		// This must be true.
+		handleCodeInApp: true
+	};
+
+	const ok_auth = getAuth();
+	sendSignInLinkToEmail(ok_auth, email, actionCodeSettings)
+		.then(() => {
+			// The link was successfully sent. Inform the user.
+			// Save the email locally so you don't need to ask the user for it again
+			// if they open the link on the same device.
+			window.localStorage.setItem('emailForSignIn', email);
+			// ...
+		})
+		.catch((error) => {
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			// ...
+		});	
 
 	const SEND_URL = import.meta.env.VITE_URL;
 
