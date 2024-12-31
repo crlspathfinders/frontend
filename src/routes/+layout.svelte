@@ -7,6 +7,7 @@
 	import { Alert } from "flowbite-svelte";
 	import { getCollectionDoc, getCollection } from "$lib/api";
 	import { auth } from '../lib/auth/firebaseConfig';
+	import { Footer, FooterBrand, FooterCopyright, FooterIcon, FooterLink, FooterLinkGroup } from 'flowbite-svelte';
 
 	let alerts;
 
@@ -58,6 +59,22 @@
 	{/if}
 
 	<slot></slot>
+
+	<Footer footerType="logo">
+		<div class="sm:flex sm:items-center sm:justify-between">
+			<FooterBrand href="/" src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfinderslogo_nobackground.png?alt=media&token=58a95374-adfd-4c0f-b724-a5bbd6ed7ea5" alt="PathFinders Logo" name="CRLS PathFinders" />
+			<FooterLinkGroup ulClass="flex flex-wrap items-center mb-6 text-sm text-gray-500 sm:mb-0">
+			<FooterLink href="/findaclub">Clubs</FooterLink>
+			<FooterLink href="/findamentor">Mentors</FooterLink>
+			<FooterLink href="/opportunities">Opportunities</FooterLink>
+			<FooterLink target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">Contact</FooterLink>
+			<FooterLink target="_blank" href="https://github.com/Rehaan12345/crlspathfinders_frontend">Frontend GitHub</FooterLink>
+			<FooterLink target="_blank" href="https://github.com/Rehaan12345/crlspathfinders_backend">Backend GitHub</FooterLink>
+			</FooterLinkGroup>
+		</div>
+		<hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+		<FooterCopyright href="/" by="CRLS PathFinders™"/>
+	</Footer>
 </div>
 
 <svelte:head>
