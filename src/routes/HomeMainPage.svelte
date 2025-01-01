@@ -265,7 +265,8 @@
 
       <div class="specinfo" id="contactinfo">
         <div class="specimg" id="contactimg">
-          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F3-removebg-preview.png?alt=media&token=2289e9bf-8c24-4c99-80ca-9eed0d804232" alt="Contact Us">
+          <!-- <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F3-removebg-preview.png?alt=media&token=2289e9bf-8c24-4c99-80ca-9eed0d804232" alt="Contact Us"> -->
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fthe_best_pathfinder_icons_found_by_urbana__1_-removebg-preview.png?alt=media&token=6e3daaee-d808-44b4-ad50-c4d3168ced83" alt="Contact Us">
         </div>
         <div class="spectext" id="contacttext">
           <P size="lg">
@@ -279,6 +280,27 @@
           </P>
         </div>
       </div>
+
+      <div class="specinfo" id="contributeinfo">
+        <div class="spectext" id="contacttext">
+          <P size="lg">
+            <center>
+              CRLS PathFinders is a student developed and maintained website. Want to help us out and contribute to the project?
+              <br>
+              Follow the links below to our GitHub repositories. Feel free to look around, whether you're experienced or not!
+              <br><br>
+              <ButtonGroup>
+                <Button outline color="red"><a target="_blank" href="https://github.com/Rehaan12345/crlspathfinders_frontend">Frontend</a></Button>
+                <Button outline color="red"><a target="_blank" href="https://github.com/Rehaan12345/crlspathfinders_backend">Backend</a></Button>
+              </ButtonGroup>
+            </center>
+          </P>
+        </div>
+        <div class="specimg" id="contributeimg">
+          <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F3-removebg-preview.png?alt=media&token=2289e9bf-8c24-4c99-80ca-9eed0d804232" alt="Contribute">
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
