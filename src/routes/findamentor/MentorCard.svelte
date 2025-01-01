@@ -217,7 +217,8 @@
     }
 
 	async function setListMentees() {
-		const all_users = await getCollection("Users");
+		console.log("start set list mentees");
+		let all_users = await getCollection("Users");
 		for (let i = 0; i < all_users.length; i++) {
 			const curr_mentee = all_users[i];
 			try {
@@ -243,9 +244,11 @@
 			let targetId = wholeWebsiteData.findIndex(item => item.id === "mentors");
 			if (targetId > -1) {
 				mentors = wholeWebsiteData[targetId].info;
+				list_mentees = await setListMentees();
 			} else {
 				mentors = await getCollection('Mentors');
 				updateWholeWebsiteData("mentors", mentors);
+				list_mentees = await setListMentees();
 			}
 
 			targetId = wholeWebsiteData.findIndex(item => item.id === "loggedInUser");

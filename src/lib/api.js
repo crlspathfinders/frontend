@@ -181,7 +181,12 @@ export async function sendMassEmail(collection, subject, body, recipients) {
 export async function sendOneEmail(subject, body, reciever) {
 	console.log("email starting");
 	const url = SEND_URL + "emailone/" + subject + "/" + body + "/" + reciever;
-	const res = await fetch(url);
+	const res = await fetch(url, {
+		method: "GET",
+		headers: {
+			"Authorization": `Basic ${encodedCredentials}`
+		}
+	});
 	const resData = await res.json();
 	console.log(resData);
 	return resData;
