@@ -26,8 +26,6 @@ export async function createClub(
 	const secret_password = Math.floor(10000 + Math.random() * 90000);
 	console.log(secret_password);
 
-	room_number = parseInt(room_number, 10);
-
 	const toSend = {
 		advisor_email: advisor_email,
 		club_days: clubDays,
@@ -53,9 +51,11 @@ export async function createClub(
 		});
 		const resData = await res.json();
 		const status = resData['status'];
+		console.log(resData);
+		console.log(status);
 		// have to read the value of status and determine whether or not to proceed:
-		if (status.indexOf('Failed') > -1) {
-			return 'Failed';
+		if (status === -16) {
+			return resData["error_message"];
 		}
 
 		console.log('Successfully retrieved message: ' + status);
@@ -89,7 +89,6 @@ export async function editClub(
 	club_days.push(clubDays);
 	vice_presidents_emails.push(vicePresidentsEmails);
 
-	room_number = parseInt(room_number, 10);
 	secret_password = parseInt(secret_password, 10);
 
 	const toSend = {

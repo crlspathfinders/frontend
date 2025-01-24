@@ -26,9 +26,9 @@
 			try {
 				const res = await verifyClub(secretPassword);
 				console.log(res);
-				if (res['status'].localeCompare('Success') === 0) {
+				if (res['status'] === 0) {
 					errorMessage.set('');
-					successMessage.set('Successfully approved ' + res['club'] + '!');
+					successMessage.set('Club successfully approved.');
 				} else if (res['status'].localeCompare('Success') === 0) {
 					errorMessage.set('No matching passwords.');
 				} else {
