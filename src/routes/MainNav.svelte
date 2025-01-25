@@ -68,6 +68,7 @@
 			<NavLi href="/findaclub">Find a Club</NavLi>
 			<NavLi href="/findamentor">Find a Mentor</NavLi>
 			<NavLi href="/opportunities">Opportunities</NavLi>
+			<NavLi target="_blank" href="https://www.cycheadspace.org/">Mental Health</NavLi>
 			<NavLi class="cursor-pointer">
 				{email}<ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 inline" />
 			</NavLi>
@@ -99,6 +100,7 @@
 			<NavLi href="/findaclub">Find a Club</NavLi>
 			<NavLi href="/findamentor">Find a Mentor</NavLi>
 			<NavLi href="/opportunities">Opportunities</NavLi>
+			<NavLi target="_blank" href="https://www.cycheadspace.org/">Mental Health</NavLi>
 			<NavLi href="/auth/login">Log In</NavLi>
 			<NavLi href="/auth/signup">Sign Up</NavLi>
 		{/if}

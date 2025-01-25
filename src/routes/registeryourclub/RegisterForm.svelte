@@ -160,7 +160,8 @@
 						status,
 						veepsEmails
 					);
-					if (res.localeCompare('Failed') === 0) {
+					console.log(res);
+					if (res === -16 ) {
 						errorMessage.set('Failed');
 						return -1;
 					}
@@ -184,9 +185,9 @@
 				if (!showVals) {
 					successMessage.set(
 						name +
-							' has been successfully registered. In order to view your club on the website, your advisor should have gotten an email with a code to verify the club. They can either input the verification code themselves (they would need an account on the site), or you can ask them to send it to you to enter. Once they do so, ' +
+							' has been successfully registered. In order to view your club on the website, you and your advisor should have gotten an email with a code to verify the club. You can either input the verification code yourself or you can ask your advisor to make an account and verify for you. Once you do so, ' +
 							name +
-							' will be visible on the PathFinders website.'
+							' will be visible on the CRLS PathFinders website.'
 					);
 				} else {
 					successMessage.set(
@@ -362,13 +363,13 @@
 			<Label for="roomnumber" class="mb-2">Room Number <i style="color: red;">*</i></Label>
 			{#if showVals}
 				<Input
-					type="number"
+					type="text"
 					id="roomnumber"
 					value={currClub.room_number}
 					placeholder="Room Number"
 				/>
 			{:else}
-				<Input type="number" id="roomnumber" placeholder="Room Number" required bind:value={roomNum}/>
+				<Input type="text" id="roomnumber" placeholder="Room Number" required bind:value={roomNum}/>
 			{/if}
 		</div>
 		<div class="w-full">
@@ -447,7 +448,7 @@
 		{/if}
 		{#if $isLoading}
 			<Button disabled color="green" type="submit">
-				Loading .. <Spinner color="green" />
+				Loading ... <Spinner size={4} color="green" />
 			</Button>
 		{:else}
 			<Button color="green" type="submit">
