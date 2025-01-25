@@ -1,21 +1,32 @@
 <script>
     import { onMount } from "svelte";
-    import { getCollectionDoc, getCollection } from "../../../lib/api";
-    import { TableHeader, Section, SidebarBottomNav, SidebarBottomNavItem } from "flowbite-svelte-blocks";
-    import { Search, Button, Table, TableBody, TableBodyRow, Toggle, Spinner, Sidebar, SidebarGroup, SidebarItem, SidebarWrapper, SidebarDropdownItem, SidebarDropdownWrapper, Dropdown, DropdownItem, Modal, Label, Input, Select, Textarea } from "flowbite-svelte";
+    import { getCollectionDoc, getCollection } from "$lib/api.js";
+    import {
+        Button,
+        Spinner,
+        Sidebar,
+        SidebarGroup,
+        SidebarItem,
+        Modal,
+        Label,
+        Input,
+        Select,
+        SidebarWrapper
+    } from "flowbite-svelte";
     import { writable } from "svelte/store";
     import { page } from "$app/stores";
     import { ArrowRightAltSolid, BarsFromLeftOutline, CalendarEditOutline, CircleMinusSolid, CirclePlusSolid } from 'flowbite-svelte-icons';
     import AllInfoData from "./AllInfoData.svelte";
     import { addDocument } from "$lib/allinfo";
+
     let wholeReady = writable(false);
     let currCollection = writable("");
     let showSidebar = writable(true);
     let showAddInfo = writable(false);
     let isLoading = writable(false);
+
     let allInfo;
     let specInfo = [];
-    let searching = "";
     let clickedCollection = "";
     let wholeCollection = {};
     let selected;
@@ -26,22 +37,37 @@
     let currVal;
     let listFieldsCount = 1;
     let currListVal;
-    
+
     let types = [
         { value: "list", name: "list" },
         { value: "string", name: "string" },
         { value: "int", name: "int" },
         { value: "dict", name: "dict" }
     ];
-    
-    let spanClass = 'flex-1 ms-3 whitespace-nowrap';
+
     $: activeUrl = $page.url.pathname;
+
     const showData = (clicked, spec) => {
         // console.log(clicked + " has been clicked!");
         currCollection.set(clicked);
         clickedCollection = clicked;
         wholeCollection = spec;
     }
+
+    function assignIntOrString(val) {
+        currDoc[currField] = val;
+    }
+
+    function assignList(val) {
+        if (currDoc[currField] === undefined) {
+            currDoc[currField] = [];
+            currDoc[currField].push(val);
+        }
+        else {
+            currDoc[currField].push(val);
+        }
+    }
+
     const handleAddItem = async () => {
         isLoading.set(true);
         try {
@@ -52,6 +78,7 @@
             isLoading.set(false);
         }
     }
+
     onMount(async() => {
         wholeReady.set(false);
         allInfo = await getCollection("AllInfo");
@@ -74,16 +101,19 @@
         display: flex;
         justify-content: space-between;
     }
+
     .allinfodatawrapper {
         overflow: auto;
     }
+
     .showhidesidebarwrapper {
         padding-right: 1rem;
     }
-/* 
-    .listwrapper {
-        padding: 1;
-    } */
+    /*
+				.listwrapper {
+						padding: 1;
+				} */
+
     .fieldwrapper {
         margin-top: 1rem;
         display: flex;
@@ -93,6 +123,7 @@
         /* align-items: center; */
         /* gap: 5rem; */
     }
+
     .minusbuttonwrapper {
         display: flex;
         padding: 1.3rem;
@@ -100,14 +131,16 @@
 </style>
 
 <Modal
-    title="Add Info"
-    open={$showAddInfo}
-    on:close={() => {showAddInfo.set(false);}}>
+  title="Add Info"
+  open={$showAddInfo}
+  on:close={() => {showAddInfo.set(false);}}>
     <form on:submit={handleAddItem}>
         <div>
             <div class="sm:col-span-2">
                 <Label for="docname" class="mb-2">Document Name</Label>
-                <Input type="text" id="docname" placeholder="Doc name" required bind:value={docName} on:change={() => { currDoc["id"] = docName; console.log(currDoc); }}/>
+                <Input type="text" id="docname" placeholder="Doc name" required bind:value={docName} on:change={() => {
+                    currDoc["id"] = docName;
+                    console.log(currDoc); }}/>
             </div>
             {#each {length: fieldCount} as _, i}
                 <div class="w-full">
@@ -121,46 +154,41 @@
                             <Select class="mt-2" items={types} bind:value={selected} required />
                         </Label>
                     </div>
-                    {#if selected == "string"}
+                    {#if selected === "string"}
                         <div class="w-full">
                             <Label for="{selected}_value_{i+1}" class="mb-2">Value</Label>
                             <Input type="text" id="{selected}_value_{i+1}" placeholder="string value" bind:value={currVal} required on:change={() => {
-                                currDoc[currField] = currVal;
-                                console.log(currDoc);
+                                assignIntOrString(currVal);
                             }}/>
                         </div>
-                    {:else if selected == "int"}
+                    {:else if selected === "int"}
                         <div class="w-full">
                             <Label for="{selected}_value_{i+1}" class="mb-2">Value</Label>
                             <Input type="number" id="{selected}_value_{i+1}" placeholder="number value" bind:value={currVal} required on:change={() => {
-                                currDoc[currField] = currVal;
-                                console.log(currDoc);
+                                assignIntOrString(currVal);
                             }}/>
                         </div>
-                    {:else if selected == "list"}
+                    {:else if selected === "list"}
                         <div class="w-full">
                             <div class="listwrapper" style="margin-left:2rem;">
                                 {#each {length: listFieldsCount} as _, j}
                                     <div class="listdivone">
                                         <Label for="{selected}_value_{j+1}" class="mb-2">Value</Label>
                                         <Input type="text" id="{selected}_value_{j+1}" placeholder="string value" bind:value={currListVal} required on:change={() => {
-                                            if (currDoc[currField] == undefined) { 
-                                                currDoc[currField] = [];
-                                                currDoc[currField].push(currListVal);
-                                                console.log(currDoc);
-                                            }
-                                            else { 
-                                                currDoc[currField].push(currListVal);
-                                                console.log(currDoc);
-                                             } 
+                                            assignList(currListVal);
                                         }}/>
                                     </div>
                                     <Button size="xs" outline color="purple" on:click={() => {listFieldsCount++;}}><CirclePlusSolid></CirclePlusSolid></Button>
                                 {/each}
                             </div>
                         </div>
-                    {:else if selected == "dict"}
-                        dict
+                    {:else if selected === "dict"}
+                        <div class="w-full">
+                            <Label for="{selected}_value_{i+1}" class="mb-2">Value</Label>
+                            <Input type="number" id="{selected}_value_{i+1}" placeholder="number value" bind:value={currVal} required on:change={() => {
+                                assignIntOrString(currVal);
+                            }}/>
+                        </div>
                     {/if}
                     <br>
                     <div class="minusbuttonwrapper">
@@ -182,7 +210,7 @@
                 Add Item
             {/if}
         </Button>
-      </form>
+    </form>
 </Modal>
 
 {#if $wholeReady}
@@ -203,15 +231,15 @@
                 <Sidebar {activeUrl}>
                     <SidebarWrapper>
                         <SidebarGroup>
-                        {#each specInfo as spec, i}
-                            <SidebarItem label={spec.id} on:click={() => {
+                            {#each specInfo as spec, i}
+                                <SidebarItem label={spec.id} on:click={() => {
                                 showData(spec.id, spec)
                             }}>
-                                <svelte:fragment slot="icon">
-                                    <ArrowRightAltSolid></ArrowRightAltSolid>
-                                </svelte:fragment>
-                            </SidebarItem>
-                        {/each}
+                                    <svelte:fragment slot="icon">
+                                        <ArrowRightAltSolid></ArrowRightAltSolid>
+                                    </svelte:fragment>
+                                </SidebarItem>
+                            {/each}
                             <SidebarItem label="Add Info" on:click={() => {showAddInfo.set(true);}}>
                                 <svelte:fragment slot="icon">
                                     <CalendarEditOutline size="lg"></CalendarEditOutline>
@@ -239,4 +267,6 @@
 
 {:else}
 
-    <center>Loading ... <Spinner color="red"/></center>
+    <div style="text-align: center;">Loading ... <Spinner color="red"/></div>
+
+{/if}
