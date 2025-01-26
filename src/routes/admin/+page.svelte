@@ -5,7 +5,7 @@
 	import AdminMentor from './mentors/AdminMentor.svelte';
 	import AdminUser from './users/AdminUser.svelte';
 	import AdminAllInfo from './allinfo/AdminAllInfo.svelte';
-	import AdminPeerMentor from './peermentor/AdminPeerMentor.svelte';
+	import AdminOpportunities from './opportunities/AdminOpportunities.svelte';
 	import { user } from '../../stores/auth';
 	import { getUserDocData } from '../../lib/user';
 	import { writable } from 'svelte/store';
@@ -52,7 +52,7 @@
 							<AdminClub></AdminClub>
 						</TabItem>
 						<TabItem title="Opportunities">
-							<AdminPeerMentor></AdminPeerMentor>
+							<AdminOpportunities></AdminOpportunities>
 						</TabItem>
 						<TabItem title="All Info">
 							<AdminAllInfo></AdminAllInfo>

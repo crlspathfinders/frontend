@@ -1,32 +1,23 @@
 <script>
 	import { onMount } from 'svelte';
 	import {
-		Heading,
-		P,
 		Search,
 		Button,
 		Modal,
 		Spinner,
-		CardPlaceholder,
 		Skeleton
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import {
 		getCollection,
-		updateCache,
-		getDataFromLocalStorage,
-		setDataInLocalStorage,
-		removeDataFromLocalStorage,
-		clearLocalStorage,
-		wholeWebsiteData, 
+		wholeWebsiteData,
 		updateWholeWebsiteData,
 		getCollectionDoc
-	} from '../../lib/api';
+	} from '$lib/api.js';
 	import { writable } from 'svelte/store';
 	import {
 		Label,
 		Input,
-		Select,
 		Textarea,
 		MultiSelect,
 		Badge,
@@ -42,8 +33,7 @@
 		editCategories,
 		addCategory,
 		deleteCategory
-	} from '../../lib/peermentor';
-
+	} from '$lib/opportunities.js';
 	let allReady = writable(false);
 	let deleteLinkConfirmModal = writable(false);
 	let isLoading = writable(false);
@@ -55,7 +45,7 @@
 	let filtersSelected = writable([]);
 
 	let searching = '';
-	let peerMentorLinks = [];
+	let opportunities = [];
 	let categories = [];
 	let selectedCategories = [];
 	let currCats = [];
@@ -88,7 +78,7 @@
 		});
 	}
 
-	$: filteredLinks = peerMentorLinks.filter((obj) => {
+	$: filteredLinks = opportunities.filter((obj) => {
 		// Only apply filters to fields that have values in the arrays
 		return $filtersSelected.every((filter) => {
 			return obj.categories.length > 0 && obj.categories.includes(filter);
@@ -111,18 +101,16 @@
 		} catch (error) {
 			console.log('Failed to delete link: ' + error);
 		} finally {
-			// NEED CACHING - Done
-			// peerMentorLinks = await updateCache('PeerMentorLinks');
 			if (all_opportunities) {
-				console.log("found opps");
-				peerMentorLinks = all_opportunities;
+				console.log('found opps');
+				opportunities = all_opportunities;
 			} else {
-				console.log("not found opps");
-				peerMentorLinks = await getCollection("PeerMentorLinks");
+				console.log('not found opps');
+				opportunities = await getCollection('Opportunities');
 			}
 
 			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].id == 'PeerMentor') {
+				if (categories[i].id === 'Opportunities') {
 					categories = categories[i].categories;
 				}
 			}
@@ -138,9 +126,7 @@
 			// console.log(correctedCats);
 			await addLink(linkName, linkUrl, selectedCategories, bio, deadline);
 
-			// UPDATE PML locstor - Done
-			// await setDataInLocalStorage('PeerMentorLinks', peerMentorLinks);
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			opportunities = await getCollection('Opportunities');
 
 			console.log('Successfully added link');
 			linkName = '';
@@ -148,12 +134,10 @@
 			bio = '';
 			deadline = '';
 		} catch (error) {
-			console.log('Failed to add link');
+			console.log(`Failed to add link ${error}`);
 		} finally {
 			isLoading.set(false);
-			// NEED CACHE - Done
-			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			opportunities = await getCollection('Opportunities');
 		}
 	};
 
@@ -170,12 +154,10 @@
 			currBio = '';
 			currDeadline = '';
 		} catch (error) {
-			console.log('Failed to edit link');
+			console.log(`Failed to edit link ${error}`);
 		} finally {
 			isLoading.set(false);
-			// NEED CACHE - Done
-			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			opportunities = await getCollection('Opportunities');
 			closeshowEditLinkModal();
 		}
 	};
@@ -194,30 +176,25 @@
 			// LEAVE FOR NOW
 			categories = await getCollection('Demographics');
 			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].id == 'PeerMentor') {
+				if (categories[i].id === 'Opportunities') {
 					categories = categories[i].categories;
 				}
 			}
 			categories = makeSelectCategoriesOk(categories);
-			// Update the peermentorlinks individual fields:
-			// NEED CACHE - Done
-			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			opportunities = await getCollection('Opportunities');
 
-
-			let currPMLCats;
-			for (let i = 0; i < peerMentorLinks.length; i++) {
-				currPMLCats = peerMentorLinks[i].categories;
-				for (let j = 0; j < currPMLCats.length; j++) {
-					if (currPMLCats[i] == oldCat) {
-						// If that pml has that category that has been changed:
-						currPMLCats[i] = newCat;
-						oldLinkName = peerMentorLinks[i].name;
-						currLinkName = peerMentorLinks[i].name;
-						currLinkUrl = peerMentorLinks[i].src;
-						currCats = currPMLCats;
-						currBio = peerMentorLinks[i].bio;
-						currDeadline = peerMentorLinks[i].deadline;
+			let currOppCats;
+			for (let i = 0; i < opportunities.length; i++) {
+				currOppCats = opportunities[i].categories;
+				for (let j = 0; j < currOppCats.length; j++) {
+					if (currOppCats[i] === oldCat) {
+						currOppCats[i] = newCat;
+						oldLinkName = opportunities[i].name;
+						currLinkName = opportunities[i].name;
+						currLinkUrl = opportunities[i].src;
+						currCats = currOppCats;
+						currBio = opportunities[i].bio;
+						currDeadline = opportunities[i].deadline;
 						await handleEditLink();
 					}
 				}
@@ -236,7 +213,7 @@
 		} finally {
 			categories = await getCollection('Demographics');
 			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].id == 'PeerMentor') {
+				if (categories[i].id === 'Opportunities') {
 					categories = categories[i].categories;
 				}
 			}
@@ -255,7 +232,7 @@
 		} finally {
 			categories = await getCollection('Demographics');
 			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].id == 'PeerMentor') {
+				if (categories[i].id === 'Opportunities') {
 					categories = categories[i].categories;
 				}
 			}
@@ -266,24 +243,24 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		let targetId = wholeWebsiteData.findIndex(item => item.id === "opportunities");
+		let targetId = wholeWebsiteData.findIndex((item) => item.id === 'opportunities');
 		if (targetId > -1) {
-			peerMentorLinks = wholeWebsiteData[targetId].info;
+			opportunities = wholeWebsiteData[targetId].info;
 		} else {
-			peerMentorLinks = await getCollection('PeerMentorLinks');
-			updateWholeWebsiteData("opportunities", peerMentorLinks);
+			opportunities = await getCollection('Opportunities');
+			updateWholeWebsiteData('opportunities', opportunities);
 		}
 
-		targetId = wholeWebsiteData.findIndex(item => item.id === "categories");
+		targetId = wholeWebsiteData.findIndex((item) => item.id === 'categories');
 		if (targetId > -1) {
 			categories = wholeWebsiteData[targetId].info;
 		} else {
-			categories = await getCollectionDoc('Demographics', "PeerMentor");
-			updateWholeWebsiteData("categories", categories);
+			categories = await getCollectionDoc('Demographics', 'Opportunities');
+			updateWholeWebsiteData('categories', categories);
 		}
 
 		categories = categories.categories;
-		
+
 		categories = makeSelectCategoriesOk(categories);
 		console.log(categories);
 		allReady.set(true);
@@ -456,14 +433,14 @@
 									{#if $isLoading}
 										<Button disabled outline color="blue" type="submit"
 											>Update
-											{#if $isLoading && cat.name == currEditCat}
+											{#if $isLoading && cat.name === currEditCat}
 												<Spinner color="blue" size={4} />
 											{/if}
 										</Button>
 									{:else}
 										<Button outline color="blue" type="submit"
 											>Update
-											{#if $isLoading && cat.name == currEditCat}
+											{#if $isLoading && cat.name === currEditCat}
 												<Spinner color="blue" size={4} />
 											{/if}
 										</Button>
@@ -481,7 +458,7 @@
 								}}
 							>
 								Delete
-								{#if $deleteLoading && deleteCat == cat.name}
+								{#if $deleteLoading && deleteCat === cat.name}
 									<Spinner color="red" size={4} />
 								{/if}
 							</Button>
@@ -493,14 +470,14 @@
 	</Modal>
 {/if}
 
-<div class="peermentorwrapper" style="height:100vh;">
+<div class="opportunitieswrapper" style="height:100vh;">
 	{#if $allReady}
 		<section class="bg-gray-50 p-3 sm:p-5">
 			<div>
 				<TableHeader headerType="search">
 					<Search bind:value={searching} slot="search" placeholder="Search" size="md" />
 					<div class=""></div>
-					{#if view == 'Edit'}
+					{#if view === 'Edit'}
 						<Button
 							outline
 							color="purple"
@@ -568,7 +545,7 @@
 						<table class="w-full text-sm text-left text-gray-500">
 							<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 								<tr>
-									{#if view == 'Edit'}
+									{#if view === 'Edit'}
 										<th scope="col" class="px-4 py-3">Edit</th>
 										<th scope="col" class="px-4 py-3">Delete</th>
 									{/if}
@@ -581,11 +558,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								{#each filteredLinks as pml}
-									{#if labelIncludesSearchTerm(pml.name, searching)}
-										{#if pml.id != 'Categories'}
+								{#each filteredLinks as opp}
+									{#if labelIncludesSearchTerm(opp.name, searching)}
+										{#if opp.id !== 'Categories'}
 											<tr class="border-b" style="padding:2rem;">
-												{#if view == 'Edit'}
+												{#if view === 'Edit'}
 													<td>
 														<Button
 															style="margin-left:1rem; margin-top:1rem;"
@@ -593,13 +570,13 @@
 															color="dark"
 															size="xs"
 															on:click={() => {
-																currLinkName = pml.name;
-																currLinkUrl = pml.src;
+																currLinkName = opp.name;
+																currLinkUrl = opp.src;
 																oldLinkName = currLinkName;
-																currBio = pml.bio;
-																currDeadline = pml.deadline;
+																currBio = opp.bio;
+																currDeadline = opp.deadline;
 																openShowEditLinkModal();
-																currCats = pml.categories;
+																currCats = opp.categories;
 															}}>Edit</Button
 														>
 													</td>
@@ -610,7 +587,7 @@
 															color="red"
 															size="xs"
 															on:click={() => {
-																currLinkName = pml.name;
+																currLinkName = opp.name;
 																opendeleteLinkConfirmModal();
 															}}
 														>
@@ -620,17 +597,17 @@
 												{/if}
 
 												<td class="px-2 py-1 text-gray-700" style="font-size:medium;padding:1rem;">
-													<b>{pml.name}</b>
+													<b>{opp.name}</b>
 												</td>
 												<td class="px-2 py-1 text-gray-700">
-													{pml.bio}
+													{opp.bio}
 												</td>
 												<td class="px-2 py-1 text-gray-700">
-													<u><a target="_blank" href={pml.src}>{pml.src}</a></u>
+													<u><a target="_blank" href={opp.src}>{opp.src}</a></u>
 												</td>
 												<td class="px-2 py-1">
 													<div class="catbadgewrapper">
-														{#each pml.categories as cat}
+														{#each opp.categories as cat}
 															<div class="catbadge" style="margin-top:1rem;">
 																<Badge color="purple">{cat}</Badge>
 															</div>
@@ -638,7 +615,7 @@
 													</div>
 												</td>
 												<td class="px-2 py-1 text-gray-700">
-													<b>{pml.deadline}</b>
+													<b>{opp.deadline}</b>
 												</td>
 											</tr>
 										{/if}
@@ -651,11 +628,11 @@
 			</div>
 		</section>
 	{:else}
-		<center>
+		<div style="text-align: center;">
 			<div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
-				Loading Peer Mentor Links ... <Spinner color="blue" />
+				Loading Opportunities Links ... <Spinner color="blue" />
 			</div>
-		</center>
+		</div>
 
 		<Skeleton size="sm" class="my-8" />
 	{/if}
