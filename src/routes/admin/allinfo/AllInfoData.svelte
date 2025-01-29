@@ -54,6 +54,12 @@
 	let editItem = '';
 	let isObj = false;
 
+	let isDict = writable(false);
+	let dictMiniColl;
+	let isDictUpdate = writable(false);
+	let isDictNewItem = writable(false);
+	let newDictItem;
+
 	export let clickedCollection = 'rehaan';
 	export let wholeCollection = {};
 
@@ -216,6 +222,79 @@
 		}
 	};
 
+	const handleDictUpdate = async () => {
+		if ($isDictNewItem) { console.log("updating list dict", newDictItem); }
+		console.log('dict delete starting');
+		isLoading.set(true);
+		try {
+			console.log(clickedCollection);
+			for (let i = 0; i < allInfo.length; i++) {
+				if (allInfo[i]['id'] == clickedCollection) {
+					let newVals = allInfo[i][selectedItemLocation];
+					console.log(dictMiniColl);
+					console.log(newVals);
+					console.log(newVals[dictMiniColl]);
+					let tempList = newVals[dictMiniColl];
+					console.log(typeof tempList);
+					if (typeof tempList === "string" || typeof tempList === "number") {
+						if ($isDictUpdate) {
+							newVals[dictMiniColl] = $editValue;
+						} else {
+							newVals[dictMiniColl] = "";
+						}
+					} else {
+						if ($isDictNewItem) {
+							console.log("dictisnewitem")
+							tempList.push(newDictItem);
+							console.log(tempList);
+							// break;
+						} else {
+							for (let j = 0; j < tempList.length; j++) {
+							console.log(typeof tempList[j], tempList[j]);
+							if (tempList[j] === selectedItem) {
+								console.log("found", tempList.indexOf(tempList[j]));
+								if ($isDictUpdate) {
+									tempList[j] = $editValue;
+									break;
+								}
+								} else {
+									if (j == 0) { tempList.splice(j, j+1)}
+									else { tempList.splice(j, j); }
+									break;
+								}
+								
+							}
+							console.log(tempList);
+							newVals[dictMiniColl] = tempList;
+						}
+						
+					}
+					let send = newVals;
+					console.log(send);
+					// console.log(newVals);
+					console.log(clickedCollection);
+					const result = await updateAllInfo(clickedCollection, send);
+					if (result['status'] == 0) {
+						allInfo = await getCollection('AllInfo');
+						data = await getCollectionDoc('AllInfo', allInfo[i].id);
+						const spec = {
+							id: allInfo[i].id,
+							info: data
+						};
+						specInfo.push(spec);
+						isLoading.set(false);
+						return 0;
+					} // If some failure
+					console.log(result);
+				}
+			}
+		} catch (error) {
+			return -1;
+		} finally {
+			isLoading.set(false);
+		}
+	};
+
 	onMount(async () => {
 		wholeReady.set(false);
 		allInfo = await getCollection('AllInfo');
@@ -243,7 +322,10 @@
 	<p class="text-base leading-relaxed text-gray-800">
 		Confirm delete <Badge color="blue">{selectedItem}</Badge>. You can't undo this.
 	</p>
-	<Button outline color="red" on:click={handleDelete}>
+	<Button outline color="red" on:click={() => {
+		if ($isDict) { console.log("starting dict delete"); handleDictUpdate() }
+		else { console.log("not starting dict delete"); handleDelete() }
+	}}>
 		Delete
 		{#if $isLoading}
 			<Spinner size={4} color="red" />
@@ -340,13 +422,17 @@
 							{#each Object.entries(wholeCollection.info) as [key, value]}
 								<!-- key = column, value = data in that column (could be a list, etc.) -->
 								{#if key != 'id'}
+									<!-- {console.log(typeof value, value)} -->
 									{#if typeof value == 'boolean'}
 										<td class="px-4 py-3">
 											<Toggle color="green" checked={value}></Toggle>
 										</td>
 									{:else if typeof value == 'object'}
 										<td class="px-4 py-3">
+											{#if Array.isArray(value)}
+												<!-- {console.log("array")} -->
 											{#each value as v}
+												<!-- {console.log(typeof v, v)} -->
                                                 <div class="listwrapper">
 													<div class="indlistbadge">
 														<div class="wholebadge">
@@ -477,6 +563,7 @@
 													</div>
 												</div>
 											{/each}
+											<!-- Add new item below -->
 											{#if $showEdit}
 												<div class="additem">
 													{#if $addLocation == key}
@@ -503,6 +590,219 @@
 													{/if}
 												</div>
 											{/if}
+											{:else}
+											<table>
+												<thead class="text-lg text-gray-700 bg-gray-50">
+													<tr>
+														{#each Object.entries(value) as [key1, value1]}
+															{#if key1 != 'id'}
+																<th scope="col" class="px-4 py-3">{key1}</th>
+															{/if}
+														{/each}
+													</tr>
+												</thead>
+												<tbody>
+													<tr class="border-b">
+														{#each Object.entries(value) as [key1, value1]}
+														<td class="px-4 py-3">
+															{#if key1 != "id"}
+															<div class="listwrapper">
+																<div class="indlistbadge">
+																	<div class="wholebadge">
+																		{#if Array.isArray(value1)}
+																		<div class="dictlistwrapper">
+																			{#each value1 as v1}
+																				<Badge color="blue" style="padding: .5rem;">
+																					{#if $showEdit}
+																						<div class="deleteitem">
+																							<Button
+																								outline
+																								size="xs"
+																								color="blue"
+																								on:click={() => {
+																									selectedItem = v1.replace(/ /g, '-'); // Replaces all the spaces with dashes
+																									selectedItemLocation = key;
+																									showDeleteModal.set(true);
+																									isObj = true;
+																									isDict.set(true);
+																									dictMiniColl = key1;
+																								}}><CloseOutline></CloseOutline></Button
+																							>
+																						</div>
+																						{#if $editValue.length > 1 && selectedItemLocation == key + '_' + v1.replace(/ /g, '-')}
+																							<Input
+																								size="sm"
+																								bind:value={editItem}
+																								on:input={() => {
+																									selectedItemLocation = key1;
+																									selectedItem = v1;
+																								}}
+																							/>
+																						{:else}
+																							<Input
+																								size="sm"
+																								id="{key1}_{v1.replace(/ /g, '-')}"
+																								value={v1}
+																								on:input={() => {
+																									selectedItemLocation = key;
+																									selectedItem = v1;
+																									editValue.set(v1);
+																									editItem = document.querySelector(
+																										'#' + key1 + '_' + v1.replace(/ /g, '-')
+																									).value;
+																									console.log(editItem);
+																									editValue.set(editItem);
+																								}}
+																							/>
+																						{/if}
+																						<Button
+																							size="xs"
+																							outline
+																							color="blue"
+																							on:click={async () => {
+																								// alert(v1);
+																								selectedItem = v1.replace(/ /g, '-'); // Replaces all the spaces with dashes
+																								selectedItemLocation = key;
+																								showDeleteModal.set(true);
+																								isObj = true;
+																								isDict.set(true);
+																								dictMiniColl = key1;
+																								isDictUpdate.set(true);
+																								await handleDictUpdate();
+																								// await handleEdit(v1);
+																							}}
+																						>
+																							{#if $isLoading}
+																								<Spinner color="green" size={4} />
+																							{:else}
+																								<CheckCircleOutline style="cursor:pointer;"
+																								></CheckCircleOutline>
+																							{/if}
+																						</Button>
+																					{/if}
+																					<div class="eachdictlist">
+																						{v1}
+																					</div>
+																				</Badge>
+																			{/each}
+																			<!-- Add new list item to dict -->
+																			{#if $showEdit}
+																			<div class="additem">
+																				{#if $addLocation == key}
+																					<Input size="sm" id={key} placeholder="Add Item" bind:value={addItem} />
+																					<Button size="xs" color="purple" on:click={handleDictUpdate}>
+																						{#if $isLoading}
+																							<Spinner color="purple" size={4} />
+																						{:else}
+																							Confirm
+																						{/if}
+																					</Button>
+																				{:else}
+																					<Input
+																						size="sm"
+																						id="dicttemp_{key}"
+																						placeholder="Add Item"
+																						on:change={() => {
+																							addLocation.set(key);
+																							selectedItemLocation = key;
+																							// selectedItem = v1.replace(/ /g, '-'); // Replaces all the spaces with dashes
+																							selectedItemLocation = key;
+																							// showDeleteModal.set(true);
+																							isObj = true;
+																							dictMiniColl = key1;
+																							isDictUpdate.set(false);
+																							isDictNewItem.set(true);
+																							newDictItem = document.querySelector('#dicttemp_' + key).value;
+																						}}
+																					/>
+																					<Button size="xs" color="blue">Add Item</Button>
+																				{/if}
+																			</div>
+																		{/if}
+																		</div>
+																		{:else}
+																			<Badge color="blue" style="padding: .5rem;">
+																				{#if $showEdit}
+																					<div class="deleteitem">
+																						<Button
+																							outline
+																							size="xs"
+																							color="blue"
+																							on:click={() => {
+																								selectedItem = value1.replace(/ /g, '-'); // Replaces all the spaces with dashes
+																								selectedItemLocation = key;
+																								showDeleteModal.set(true);
+																								isObj = true;
+																								isDict.set(true);
+																								dictMiniColl = key1;
+																							}}><CloseOutline></CloseOutline></Button
+																						>
+																					</div>
+																					{#if $editValue.length > 1 && selectedItemLocation == key + '_' + value1.replace(/ /g, '-')}
+																							<Input
+																								size="sm"
+																								bind:value={editItem}
+																								on:input={() => {
+																									selectedItemLocation = key1;
+																									selectedItem = value1;
+																								}}
+																							/>
+																						{:else}
+																							<Input
+																								size="sm"
+																								id="{key1}_{value1.replace(/ /g, '-')}"
+																								value={value1}
+																								on:input={() => {
+																									selectedItemLocation = key;
+																									selectedItem = value1;
+																									editValue.set(value1);
+																									editItem = document.querySelector(
+																										'#' + key1 + '_' + value1.replace(/ /g, '-')
+																									).value;
+																									console.log(editItem);
+																									editValue.set(editItem);
+																								}}
+																							/>
+																						{/if}
+																						<Button
+																							size="xs"
+																							outline
+																							color="blue"
+																							on:click={async () => {
+																								// alert(v1);
+																								selectedItem = value1.replace(/ /g, '-'); // Replaces all the spaces with dashes
+																								selectedItemLocation = key;
+																								showDeleteModal.set(true);
+																								isObj = true;
+																								isDict.set(true);
+																								dictMiniColl = key1;
+																								isDictUpdate.set(true);
+																								await handleDictUpdate();
+																								// await handleEdit(v1);
+																							}}
+																						>
+																							{#if $isLoading}
+																								<Spinner color="green" size={4} />
+																							{:else}
+																								<CheckCircleOutline style="cursor:pointer;"
+																								></CheckCircleOutline>
+																							{/if}
+																						</Button>
+																					
+																				{/if}
+																				<div class="showv">{value1}</div>
+																			</Badge>
+																		{/if}
+																	</div>
+																</div>
+															</div>
+															{/if}
+														</td>
+														{/each}
+													</tr>
+												</tbody>
+											</table>
+											{/if}
 										</td>
 									{:else if typeof value == 'list'}
 										<td class="px-4 py-3">
@@ -511,10 +811,9 @@
 											{/each}
 										</td>
 									{:else}
+										PRESET NOT MADE (YET) - CONTACT SUPPORT ASAP
 										<td class="px-4 py-3">
-											<!-- {#if $showEdit} -->
 											{value}
-											<!-- {/if} -->
 										</td>
 									{/if}
 								{/if}
@@ -550,5 +849,14 @@
 	.additem {
 		display: grid;
 		gap: 0.3rem;
+	}
+
+	.dictlistwrapper {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.eachdictlist {
+		font-size: large;
 	}
 </style>
