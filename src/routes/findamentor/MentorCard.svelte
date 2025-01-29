@@ -301,7 +301,7 @@
 			// console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
 
 		} catch (error) {
-			const sendMail = await sendOneEmail("mentor card on mount error", error, "crlspathfinders25@gmail.com")
+            const sendMail = await sendOneEmail("club card on mount error. email: " + email, error, "crlspathfinders25@gmail.com")
 			console.log(sendMail);
 			console.log('Onmount failed: ' + error);
 		} finally {
