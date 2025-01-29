@@ -18,13 +18,11 @@
     import { ArrowRightAltSolid, BarsFromLeftOutline, CalendarEditOutline, CircleMinusSolid, CirclePlusSolid } from 'flowbite-svelte-icons';
     import AllInfoData from "./AllInfoData.svelte";
     import { addDocument } from "$lib/allinfo";
-
     let wholeReady = writable(false);
     let currCollection = writable("");
     let showSidebar = writable(true);
     let showAddInfo = writable(false);
     let isLoading = writable(false);
-
     let allInfo;
     let specInfo = [];
     let clickedCollection = "";
@@ -54,7 +52,6 @@
     ];
 
     $: activeUrl = $page.url.pathname;
-
     const showData = (clicked, spec) => {
         console.log(clicked + " has been clicked!", spec);
         currCollection.set(clicked);
@@ -104,7 +101,6 @@
             isLoading.set(false);
         }
     }
-
     onMount(async() => {
         wholeReady.set(false);
         allInfo = await getCollection("AllInfo");
@@ -127,19 +123,16 @@
         display: flex;
         justify-content: space-between;
     }
-
     .allinfodatawrapper {
         overflow: auto;
     }
-
     .showhidesidebarwrapper {
         padding-right: 1rem;
     }
-    /*
-				.listwrapper {
-						padding: 1;
-				} */
-
+/* 
+    .listwrapper {
+        padding: 1;
+    } */
     .fieldwrapper {
         margin-top: 1rem;
         display: flex;
@@ -149,7 +142,6 @@
         /* align-items: center; */
         /* gap: 5rem; */
     }
-
     .minusbuttonwrapper {
         display: flex;
         padding: 1.3rem;
@@ -291,6 +283,7 @@
 
     <div class="wholeallinfowrapper">
 
+
         {#if $showSidebar}
             <div class="sidebarwrapper">
                 <div class="showhidesidebarwrapper">
@@ -301,6 +294,7 @@
                         <BarsFromLeftOutline color="black" size="lg" style="cursor:pointer;"></BarsFromLeftOutline>
                     </Button>
                 </div>
+
 
                 <Sidebar {activeUrl}>
                     <SidebarWrapper>
