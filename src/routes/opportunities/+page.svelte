@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import PeerMentorLinkTable from './PeerMentorLinkTable.svelte';
+	import OpportunitiesTable from './OpportunitiesTable.svelte';
 	import { Heading, P, Span } from 'flowbite-svelte';
 </script>
 
@@ -16,4 +16,4 @@
 	</P>
 </div>
 
-<PeerMentorLinkTable></PeerMentorLinkTable>
+<OpportunitiesTable></OpportunitiesTable>

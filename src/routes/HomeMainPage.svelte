@@ -207,11 +207,11 @@
         </div>
       </div>
 
-      <div class="specinfo" id="pmlinfo">
+      <div class="specinfo" id="oppinfo">
         <div class="specimg" id="mentorimg">
           <img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2F6-removebg-preview.png?alt=media&token=9d2a7327-21d8-4d64-8b76-b6cd30ac61ea" alt="opportunities">
         </div>
-        <div class="spectext" id="pmltext">
+        <div class="spectext" id="opptext">
           <P size="lg">
             <center>
               Looking for opportunities in CRLS or Cambridge? Check out our list of available opportunities to see which one catches your eye!

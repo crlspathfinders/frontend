@@ -35,7 +35,6 @@
     let currVal;
     let listFieldsCount = 1;
     let currListVal;
-
     let dictCount = 1;
     let currDictField;
     let dictSelected;
@@ -51,6 +50,8 @@
         { value: "dict", name: "dict" }
     ];
 
+    let spanClass = 'flex-1 ms-3 whitespace-nowrap';
+  
     $: activeUrl = $page.url.pathname;
     const showData = (clicked, spec) => {
         console.log(clicked + " has been clicked!", spec);
@@ -129,10 +130,10 @@
     .showhidesidebarwrapper {
         padding-right: 1rem;
     }
-/* 
-    .listwrapper {
-        padding: 1;
-    } */
+    /*
+				.listwrapper {
+						padding: 1;
+				} */
     .fieldwrapper {
         margin-top: 1rem;
         display: flex;
@@ -339,7 +340,7 @@
     </div>
 
 {:else}
-
+                          
     <div style="text-align: center;">Loading ... <Spinner color="red"/></div>
 
 {/if}

@@ -40,10 +40,10 @@
 		mentors = await getCollection("Mentors");
 		users = await getCollection("Users");
 		clubs = await getCollection("Clubs");
-		opps = await getCollection("PeerMentorLinks");
+		opps = await getCollection("Opportunities");
 		allInfo = await getCollection("AllInfo");
 		demographics = await retrieveDemographics();
-		categories = await getCollectionDoc('Demographics', "PeerMentor");
+		categories = await getCollectionDoc('Demographics', "Opportunities");
 		updateWholeWebsiteData("mentors", mentors);
 		updateWholeWebsiteData("users", users);
 		updateWholeWebsiteData("clubs", clubs);
