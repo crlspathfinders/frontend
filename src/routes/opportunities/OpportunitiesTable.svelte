@@ -64,6 +64,7 @@
 	let deadline = '';
 	let currBio = '';
 	let currDeadline = '';
+	let all_opportunities;
 
 	function toggleFilters(item) {
 		filtersSelected.update((currentItems) => {
@@ -108,7 +109,6 @@
 				console.log('not found opps');
 				opportunities = await getCollection('Opportunities');
 			}
-
 			for (let i = 0; i < categories.length; i++) {
 				if (categories[i].id === 'Opportunities') {
 					categories = categories[i].categories;
@@ -250,6 +250,8 @@
 			opportunities = await getCollection('Opportunities');
 			updateWholeWebsiteData('opportunities', opportunities);
 		}
+
+		all_opportunities = opportunities;
 
 		targetId = wholeWebsiteData.findIndex((item) => item.id === 'categories');
 		if (targetId > -1) {
