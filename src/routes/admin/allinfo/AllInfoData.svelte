@@ -804,16 +804,18 @@
 											</table>
 											{/if}
 										</td>
-									{:else if typeof value == 'list'}
+									{:else if typeof value == "string" || typeof value == "number"}
 										<td class="px-4 py-3">
-											{#each value as v}
-												{v}
-											{/each}
+											<Badge color="blue" style="padding: .5rem;">
+												{value}
+											</Badge>
 										</td>
 									{:else}
-										PRESET NOT MADE (YET) - CONTACT SUPPORT ASAP
+										PRESET NOT MADE (YET)! Contact support ASAP
 										<td class="px-4 py-3">
-											{value}
+											<Badge color="blue" style="padding: .5rem;">
+												{value}
+											</Badge>
 										</td>
 									{/if}
 								{/if}

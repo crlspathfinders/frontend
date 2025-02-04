@@ -8,6 +8,21 @@
     import { writable } from "svelte/store";
     import { onMount } from "svelte";
 
+    /* Steps:
+
+    1) Check page parameter (const newPage = $page.params.pageId;)
+    (Assume the page exists in AllInfo)
+    2) Pull in data from all info
+    3) Determine specific value of data.
+        - collection = thing.id
+            - Pull in from getCollection, etc.
+        - If string, or id == "info" - then it's the main info at top of page.
+            - Find from AllInfo.
+    4) Populate and render page with results.
+    
+
+    */
+
     let wholeReady = writable(false);
 
     let data;
