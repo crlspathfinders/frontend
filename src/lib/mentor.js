@@ -189,7 +189,7 @@ export async function UploadMentorImage(file, oldFileName) {
 
 		let resData = await response.json();
 		console.log(resData);
-		const imgUrl = resData['status'];
+		const imgUrl = resData['img_url'];
 		return imgUrl;
 	} catch (error) {
 		console.log('error uploading mentor img: ' + error);
