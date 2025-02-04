@@ -227,7 +227,7 @@ export async function UploadClubImage(file) {
 
 		let resData = await response.json();
 		console.log(resData);
-		const imgUrl = resData['status'];
+		const imgUrl = resData['img_url'];
 		return imgUrl;
 
 		// if (data.image_url) {
@@ -245,6 +245,8 @@ export async function setClubImg(imgUrl, clubId, oldId) {
 		club_id: clubId,
 		old_id: oldId
 	};
+	
+	console.log(toSend);
 
 	// try {
 	const url = SEND_URL + 'setclubimg';
