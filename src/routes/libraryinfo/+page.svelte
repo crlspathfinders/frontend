@@ -75,7 +75,7 @@
 					<Search
 						bind:value={searching}
 						slot="search"
-						placeholder="Search {events.length} clubs"
+						placeholder="Search {events.length} events"
 						size="md"
 					/>
 					<div></div>
