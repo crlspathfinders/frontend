@@ -16,12 +16,12 @@
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 	import { getCollection, sendOneEmail } from '$lib/api';
-	import { user } from '../../../../frontend-old/src/stores/auth';
-	import { getUserDocData, toggleClub } from '../../../../frontend-old/src/lib/user';
+	import { user } from '../../stores/auth';
+	import { getUserDocData, toggleClub } from '../../lib/user';
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
-	import { wholeWebsiteData, updateWholeWebsiteData } from '$lib/api';
+	import { wholeWebsiteData, updateWholeWebsiteData } from "$lib/api";
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 	const SEND_URL = import.meta.env.VITE_URL;
 
