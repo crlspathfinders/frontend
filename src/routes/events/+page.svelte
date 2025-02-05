@@ -44,6 +44,8 @@
 	let libraryInfo;
 	let events;
 
+	let info;
+
 	onMount(async () => {
 		try {
 			wholeReady.set(false);
@@ -54,6 +56,19 @@
 			} else {
 				libraryInfo = await getCollection("LibraryInfo");
 				updateWholeWebsiteData('libraryinfo', libraryInfo);
+			}
+			targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
+			if (targetId > -1) {
+				const allInfo = wholeWebsiteData[targetId].info;
+				for (let i = 0; i < allInfo.length; i++) {
+					if (allInfo[i].id == "events") { info = allInfo[i].info; }
+				}
+			} else {
+				const allInfo = await getCollection("AllInfo");
+				for (let i = 0; i < allInfo.length; i++) {
+					if (allInfo[i].id == "events") { info = allInfo[i].info; }
+				}
+				updateWholeWebsiteData("allinfo", allInfo);
 			}
 			events = libraryInfo;
 		} catch (error) {
@@ -74,6 +89,16 @@
 						>Events in Cambridge</Span
 					></Heading
 				>
+				<br>
+				{#each info as inf, i}
+					{#if i == 0}
+						<P size="xl">{inf}</P>
+					{:else if i == 1}
+						<P size="lg">{inf}</P>
+					{:else}
+						<P size="sm">{inf}</P>
+					{/if}
+				{/each}
 			</div>
 
 			<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
@@ -142,7 +167,7 @@
 			display: flex;
 			flex-direction: column;
 			gap: 1rem;
-			padding: 3rem;
+			padding-bottom: 3rem;
 			width: fit-content;
 			min-width: 800px;
 		}

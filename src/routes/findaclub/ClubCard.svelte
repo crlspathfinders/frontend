@@ -329,7 +329,7 @@
 		gap: 1rem;
 		/* align-items: center;
             justify-content: center; */
-		padding: 3rem;
+		padding-bottom: 3rem;
 		width: fit-content;
 	}
 
