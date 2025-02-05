@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { getLibraryInfo } from '$lib/libraryinfo';
+	import { getCollection, wholeWebsiteData, updateWholeWebsiteData } from "$lib/api";
 	import { writable } from 'svelte/store';
 	import {
 		Card,
@@ -47,9 +47,15 @@
 	onMount(async () => {
 		try {
 			wholeReady.set(false);
-			libraryInfo = await getLibraryInfo();
-			events = libraryInfo.events;
-			console.log(events);
+			let targetId = wholeWebsiteData.findIndex((item) => item.id === 'libraryinfo');
+			console.log('target id: ', targetId);
+			if (targetId > -1) {
+				libraryInfo = wholeWebsiteData[targetId].info;
+			} else {
+				libraryInfo = await getCollection("LibraryInfo");
+				updateWholeWebsiteData('libraryinfo', libraryInfo);
+			}
+			events = libraryInfo;
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -65,7 +71,7 @@
 				<br />
 				<Heading
 					><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
-						>Library Events</Span
+						>Events in Cambridge</Span
 					></Heading
 				>
 			</div>
