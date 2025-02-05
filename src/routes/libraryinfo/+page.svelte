@@ -186,7 +186,41 @@
 				max-width: 100%;
 			}
 		}
+		
+		.placeholder-card-container {
+			display: flex;
+			gap: 1rem;
+		}
 	</style>
 {:else}
-	Loading ... <Spinner color="purple" size={4} />
+<div class="outer-container">
+	<div class="wholeclubwrapper bg-gray-100" style="height:100%;">
+		<center>
+			<div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
+				Loading Events ... <Spinner color="blue" />
+			</div>
+		</center>
+
+		<div class="placeholder-card-container">
+			<CardPlaceholder />
+			<CardPlaceholder />
+			<CardPlaceholder />
+			<CardPlaceholder />
+			<CardPlaceholder />
+		</div>
+	</div>
+</div>
+
+<style>
+			.outer-container {
+			display: flex;
+			justify-content: center;
+		}
+		.placeholder-card-container {
+			margin: 3rem;
+			display: flex;
+			gap: 3rem;
+			align-self: center;
+		}
+</style>
 {/if}
