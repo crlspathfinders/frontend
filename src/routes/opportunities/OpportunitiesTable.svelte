@@ -5,7 +5,10 @@
 		Button,
 		Modal,
 		Spinner,
-		Skeleton
+		Skeleton,
+		Heading,
+		Span,
+		P
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import {
@@ -65,6 +68,8 @@
 	let currBio = '';
 	let currDeadline = '';
 	let all_opportunities;
+
+	let info;
 
 	function toggleFilters(item) {
 		filtersSelected.update((currentItems) => {
@@ -259,6 +264,20 @@
 		} else {
 			categories = await getCollectionDoc('Demographics', 'Opportunities');
 			updateWholeWebsiteData('categories', categories);
+		}
+
+		targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
+		if (targetId > -1) {
+			const allInfo = wholeWebsiteData[targetId].info;
+			for (let i = 0; i < allInfo.length; i++) {
+				if (allInfo[i].id == "opportunities") { info = allInfo[i].info; }
+			}
+		} else {
+			const allInfo = await getCollection("AllInfo");
+			for (let i = 0; i < allInfo.length; i++) {
+				if (allInfo[i].id == "opportunities") { info = allInfo[i].info; }
+			}
+			updateWholeWebsiteData("allinfo", allInfo);
 		}
 
 		categories = categories.categories;
@@ -474,6 +493,21 @@
 
 <div class="opportunitieswrapper" style="height:100vh;">
 	{#if $allReady}
+	<div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
+		<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-gray-100"
+			><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Opportunities</Span></Heading
+		>
+		<br>
+		{#each info as inf, i}
+			{#if i == 0}
+				<P size="xl">{inf}</P>
+			{:else if i == 1}
+				<P size="lg">{inf}</P>
+			{:else}
+				<P size="sm">{inf}</P>
+			{/if}
+		{/each}
+	</div>
 		<section class="bg-gray-50 p-3 sm:p-5">
 			<div>
 				<TableHeader headerType="search">
