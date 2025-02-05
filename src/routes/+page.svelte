@@ -27,6 +27,7 @@
 	let allInfo;
 	let demographics;
 	let categories;
+	let libraryInfo;
 
 	onMount(async () => {
 		if (getLoggedIn()) {
@@ -44,6 +45,7 @@
 		allInfo = await getCollection("AllInfo");
 		demographics = await retrieveDemographics();
 		categories = await getCollectionDoc('Demographics', "Opportunities");
+		libraryInfo = await getCollection("LibraryInfo");
 		updateWholeWebsiteData("mentors", mentors);
 		updateWholeWebsiteData("users", users);
 		updateWholeWebsiteData("clubs", clubs);
@@ -51,6 +53,7 @@
 		updateWholeWebsiteData("allinfo", allInfo);
 		updateWholeWebsiteData("demographics", demographics);
 		updateWholeWebsiteData("categories", categories);
+		updateWholeWebsiteData("libraryinfo", libraryInfo);
 		user.subscribe(async (value) => {
 			if (value) {
 				email = value.email;
