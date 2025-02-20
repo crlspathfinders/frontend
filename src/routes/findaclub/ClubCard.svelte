@@ -227,73 +227,75 @@
 								.filter((club) => club.status === 'Approved' && labelIncludesSearchTerm(club.club_name, searching))
 								.filter((_, i) => i % columns === colIndex) as club}
 								<div class="space-y-4 clubcard">
-									<Card img={club.club_img}>
-										<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-											{club.club_name}
-										</h5>
-										<p class="mb-3 font-normal text-gray-700 leading-tight">
-											{handleDescription(club.club_description)}
-										</p>
-										<ButtonGroup>
-											<Button pill color="yellow">
-												<a href="/findaclub/{club.id}">View Club</a>
-											</Button>
-											{#if $user}
-												{#if myClubs.includes(club.id)}
-													<Button
-														pill
-														color="red"
-														on:click={() => {
-															currClick = club.id;
-															handleClick(club.id);
-														}}
-													>
-														Leave Club
-														{#if $isLoading}
-															{#if currClick == club.id}
-																<Spinner size={4} color="red" />
+									<a href="/findaclub/{club.id}">
+										<Card img={club.club_img}>
+											<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+												{club.club_name}
+											</h5>
+											<p class="mb-3 font-normal text-gray-700 leading-tight">
+												{handleDescription(club.club_description)}
+											</p>
+											<ButtonGroup>
+												<!-- <Button pill color="yellow">
+													<a href="/findaclub/{club.id}">View Club</a>
+												</Button> -->
+												{#if $user}
+													{#if myClubs.includes(club.id)}
+														<Button
+															pill
+															color="red"
+															on:click={() => {
+																currClick = club.id;
+																handleClick(club.id);
+															}}
+														>
+															Leave Club
+															{#if $isLoading}
+																{#if currClick == club.id}
+																	<Spinner size={4} color="red" />
+																{/if}
 															{/if}
-														{/if}
-													</Button>
+														</Button>
+													{:else}
+														<Button
+															pill
+															color="green"
+															on:click={() => {
+																currClick = club.id;
+																handleClick(club.id);
+															}}
+														>
+															Join Club
+															{#if $isLoading}
+																{#if currClick == club.id}
+																	<Spinner size={4} color="green" />
+																{/if}
+															{/if}
+														</Button>
+													{/if}
 												{:else}
-													<Button
-														pill
-														color="green"
-														on:click={() => {
-															currClick = club.id;
-															handleClick(club.id);
-														}}
+													<Button disabled pill color="green" id="disabledjoinclubbutton"
+														>Join Club</Button
 													>
-														Join Club
-														{#if $isLoading}
-															{#if currClick == club.id}
-																<Spinner size={4} color="green" />
-															{/if}
-														{/if}
-													</Button>
-												{/if}
-											{:else}
-												<Button disabled pill color="green" id="disabledjoinclubbutton"
-													>Join Club</Button
-												>
 
-												<Popover
-													class="w-64 text-sm font-light "
-													title="Make an account first!"
-													triggeredBy="#disabledjoinclubbutton"
-												>
-													<p class="text-gray-800">
-														You can only join clubs when you have an account!
-														<br /><br />
-														<u><a href="/auth/login">Log in</a></u> or
-														<u><a href="/auth/signup">Sign up</a></u>
-													</p>
-												</Popover>
-											{/if}
-										</ButtonGroup>
-										<br /> <br />
-										<Badge color="dark">{club.members.length} members</Badge>
-									</Card>
+													<Popover
+														class="w-64 text-sm font-light "
+														title="Make an account first!"
+														triggeredBy="#disabledjoinclubbutton"
+													>
+														<p class="text-gray-800">
+															You can only join clubs when you have an account!
+															<br /><br />
+															<u><a href="/auth/login">Log in</a></u> or
+															<u><a href="/auth/signup">Sign up</a></u>
+														</p>
+													</Popover>
+												{/if}
+											</ButtonGroup>
+											<br /> <br />
+											<Badge color="dark">{club.members.length} members</Badge>
+										</Card>
+									</a>
 								</div>
 							{/each}
 						</div>
