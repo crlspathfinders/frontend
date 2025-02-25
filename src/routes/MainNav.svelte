@@ -103,6 +103,7 @@
 						updateWholeWebsiteData("loggedInUser", loggedInUser);
 					} else {
 						email = '';
+						loggedInUser.set("hello-user");
 					}
 				});
 			}
