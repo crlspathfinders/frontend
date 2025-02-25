@@ -45,7 +45,7 @@
 	};
 </script>
 
-<Modal title="Verify Club" open>
+<!-- <Modal title="Verify Club" open> -->
 	<div class="mb-6">
 		<p class="text-base text-gray-800">
 			In order to allow students to join your club, please enter the code that was emailed to you
@@ -81,4 +81,4 @@
 			</Alert>
 		{/if}
 	</div>
-</Modal>
+<!-- </Modal> -->
