@@ -21,6 +21,7 @@
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
+	import Calendar from './Calendar.svelte';
 	import { wholeWebsiteData, updateWholeWebsiteData } from "$lib/api";
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
 	const SEND_URL = import.meta.env.VITE_URL;
@@ -204,6 +205,8 @@
 					>!
 				</P>
 			</div>
+
+			<Calendar />
 
 			<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
 				<TableHeader headerType="search">
