@@ -297,6 +297,7 @@
 											</ButtonGroup>
 											<br /> <br />
 											<Badge color="dark">{club.members.length} members</Badge>
+											<Badge color="dark">{club.club_days}</Badge>
 										</Card>
 									</a>
 								</div>
