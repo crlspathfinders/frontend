@@ -69,12 +69,12 @@
 		// const advisor = await getUserDocData(advisor_email);
 		// checkIsAdvisor(advisor_email);
 		// console.log(advisor);
-		// if (!advisor) {
-		// 	errorMessage.set(
-		// 		'Your advisor needs to have already made an account with CRLS PathFinders prior to registering your club.'
-		// 	);
-		// 	return false;
-		// }
+		if (!advisor) {
+			errorMessage.set(
+				'Your advisor needs to have already made an account with CRLS PathFinders prior to registering your club.'
+			);
+			return false;
+		}
 
 		try {
 			console.log(advisor_email);
