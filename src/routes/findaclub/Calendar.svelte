@@ -13,6 +13,7 @@
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub } from '../../lib/user';
 	import { writable } from 'svelte/store';
+	import { CalendarWeekOutline } from 'flowbite-svelte-icons';
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
 	import { wholeWebsiteData, updateWholeWebsiteData } from "$lib/api";
@@ -108,7 +109,8 @@
 	</div>
 {/if}
 
-<Modal open={$showLogsModal} on:close={closeshowLogsModal} size="xl">
+<Modal open={$showLogsModal} on:close={closeshowLogsModal} size="xl" title="Club Calendar">
+	<p>Click on each club to see more</p>
 	<div class="outer-container">
 		<div class="wholeclubwrapper" style="height:100%;">
 			{#if $wholeReady}
@@ -164,7 +166,7 @@
 </Modal>
 
 <Button on:click={openshowLogsModal} color="dark" size="lg" outline style="margin-left: 3rem; margin-right: 3rem;">
-	Show Club Calendar
+	Club Calendar&nbsp;<CalendarWeekOutline/>
 </Button>
 
 <style>
@@ -178,7 +180,7 @@
 		gap: 1rem;
 		/* align-items: center;
             justify-content: center; */
-		padding: 3rem;
+		padding: 1rem;
 		width: fit-content;
 		width: 100%;
 	}

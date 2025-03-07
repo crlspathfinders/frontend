@@ -277,6 +277,10 @@
 						<DescriptionList tag="dd">{clubInfo.room_number}</DescriptionList>
 					</div>
 					<div class="flex flex-col pb-3">
+						<DescriptionList tag="dt" class="mb-1">Meeting Days</DescriptionList>
+						<DescriptionList tag="dd">{clubInfo.club_days}</DescriptionList>
+					</div>
+					<div class="flex flex-col pb-3">
 						<DescriptionList tag="dt" class="mb-1">Start Time</DescriptionList>
 						<DescriptionList tag="dd">{clubInfo.start_time}</DescriptionList>
 					</div>

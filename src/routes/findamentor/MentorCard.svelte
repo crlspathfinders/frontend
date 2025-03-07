@@ -809,7 +809,7 @@ We met at the library and worked on ..."
 		<!-- This div holds all of the mentor cards. Each mentor is its own card, with their own informatino, etc. -->
 		<div class="card-container">
 			<!-- Iterates over the filteredMentors array, which we had defined up above with the $: syntax. -->
-			{#each filteredMentors as m}
+			{#each filteredMentors.sort((a, b) => b.total_hours_worked - a.total_hours_worked) as m}
 				{#if m.show}
 					<!-- Checks first if either the mentor's first name, last name, anything in bio, is what is in the search box. The search box is "" by default, and every mentor has that string, so every mentor is listed out first. -->
 					{#if labelIncludesSearchTerm(m.firstname, searching) || labelIncludesSearchTerm(m.lastname, searching) || labelIncludesSearchTerm(m.bio, searching) || labelIncludesSearchTerm(m.firstname + ' ' + m.lastname, searching)}
