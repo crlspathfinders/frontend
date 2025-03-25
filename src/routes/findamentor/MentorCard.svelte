@@ -817,10 +817,16 @@ We met at the library and worked on ..."
 						<Card padding="md">
 							<div class="flex flex-col items-center pb-4">
 								<!-- The profile pic of each mentor shown first. -->
-								{#if m.email == email}
-									<Avatar size="xl" src={m.profile_pic} border class="ring-yellow-400" />
+								{#if m.profile_pic == "" || m.profile_pic == null}
+								<Avatar size="xl" border class="ring-gray-400" style={{ objectFit: "cover" }}/>
 								{:else}
-									<Avatar size="xl" src={m.profile_pic} border class="ring-blue-400" />
+									{#if m.email == email}
+										<!-- <Avatar size="xl" src={m.profile_pic} border class="ring-yellow-400" style={{ objectFit: "cover" }}/> -->
+										<img class="rounded-full p-1 ring-2 dark:ring-gray-500 w-36 h-36 bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300 ring-yellow-400 object-cover" src={m.profile_pic} alt="{m.firstname} {m.lastname}" />
+									{:else}
+										<!-- <Avatar size="xl" src={m.profile_pic} border class="ring-blue-400" style={{ objectFit: "cover" }}/> -->
+										<img class="rounded-full p-1 ring-2 dark:ring-gray-500 w-36 h-36 bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300 ring-blue-400 object-cover" src={m.profile_pic} alt="{m.firstname} {m.lastname}" />
+									{/if}
 								{/if}
 								<h5 class="mb-1 text-xl font-medium text-gray-900">
 									<!-- The information of each mentor listed out. -->
