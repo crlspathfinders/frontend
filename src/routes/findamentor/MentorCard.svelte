@@ -335,6 +335,9 @@
 <!-- Mentor Logging Modal: -->
 <Modal open={$showLogsModal} on:close={closeshowLogsModal} size="lg">
 	<P size="xl">Log Hours</P>
+	<Button color="dark" outline>
+		<a target="_blank" href="https://secure1.cpsd.us/forms/Community_Service_Form.pdf">Get your community service hours here</a>
+	</Button>
 	<form on:submit={handleLogMentors}>
 		<Label>
 			Select mentee
@@ -455,9 +458,6 @@ We met at the library and worked on ..."
 			</div>
 		</div>
 	</div>
-	<Button color="dark" outline>
-		<a target="_blank" href="https://secure1.cpsd.us/forms/Community_Service_Form.pdf">Get your community service hours here</a>
-	</Button>
 </Modal>
 
 <!-- Mentee Logs Modal: -->

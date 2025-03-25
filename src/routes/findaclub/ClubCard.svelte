@@ -11,6 +11,9 @@
 		Search,
 		Popover,
 		Heading,
+		Dropdown,
+		Checkbox,
+		DropdownItem,
 		Span
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
@@ -22,18 +25,23 @@
 	import { fly } from 'svelte/transition';
 	import { Badge } from 'flowbite-svelte';
 	import Calendar from './Calendar.svelte';
-	import { wholeWebsiteData, updateWholeWebsiteData } from "$lib/api";
+	import { wholeWebsiteData, updateWholeWebsiteData } from '$lib/api';
 	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
+	import { ChevronRightOutline, BookOpenOutline } from 'flowbite-svelte-icons';
 	const SEND_URL = import.meta.env.VITE_URL;
 
 	let wholeReady = writable(false);
 	let inClubs = writable([]);
 	let isLoading = writable(null);
 	let showToast = writable(false);
+	let filters = writable([]);
+
+	let listDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+	let listTimes = ['Morning', 'Afternoon'];
 
 	let ready = false;
 
-	let clubs;
+	let clubs = [];
 
 	let myClubs = [];
 
@@ -49,6 +57,33 @@
 
 	let windowWidth;
 	let columns;
+
+	// Filter functionality
+	function toggleFilters(item) {
+		console.log(filters);
+		filters.update((currentItems) => {
+			// Check if the item exists in the array
+			if (currentItems.includes(item)) {
+				// Remove the item if it exists
+				return currentItems.filter((i) => i !== item);
+			} else {
+				// Add the item if it doesn't exist
+				return [...currentItems, item];
+			}
+		});
+	}
+
+	// Dollar sign ($:) syntax is used for reactivity. Whenever any variables that are used after the $:, the whole function is rerun. For example, whenever the mentors variable changes, the filteredMentors variable also changes its data based on the lines in the second return statement (the specifics for how this work isn't really too important).
+	$: filteredClubs = clubs.filter((obj) => {
+		// If no filters are selected, include the club.
+		if ($filters.length === 0) return true;
+		// Include the club if it passes at least one filter
+		return $filters.some((filter) =>
+			Array.isArray(obj.club_days) && obj.club_days.includes(filter) ||
+			parseInt(obj.start_time) < 12 && filter === 'Morning' ||
+			parseInt(obj.start_time) > 12 && filter === 'Afternoon'
+		);
+	});
 
 	function labelIncludesSearchTerm(label, searchTerm) {
 		if (typeof label === 'string' && typeof searchTerm === 'string') {
@@ -145,6 +180,7 @@
 					}
 				});
 			}
+
 		} catch (error) {
 			const sendMail = await sendOneEmail(
 				'club card on mount error',
@@ -217,16 +253,85 @@
 						size="md"
 					/>
 					<div class=""></div>
+					<Button outline color="blue">Filters</Button>
+					<Dropdown class="w-48 p-3 space-y-2 text-sm">
+						<DropdownItem class="flex items-center justify-between">
+							Meeting Days<ChevronRightOutline class="w-6 h-6 ms-2 text-primary-700 dark:text-white" />
+						</DropdownItem>
+						<Dropdown placement="right-start">
+							{#each listDays as r}
+								<DropdownItem>
+									{#if $filters.includes(r)}
+										<Checkbox
+											checked
+											on:change={() => {
+												toggleFilters(r);
+												console.log($filters);
+											}}><li>{r}</li></Checkbox
+										>
+									{:else}
+										<Checkbox
+											on:change={() => {
+												toggleFilters(r);
+												console.log($filters);
+											}}><li>{r}</li></Checkbox
+										>
+									{/if}
+								</DropdownItem>
+							{/each}
+						</Dropdown>
+						<DropdownItem class="flex items-center justify-between">
+							Time<ChevronRightOutline class="w-6 h-6 ms-2 text-primary-700 dark:text-white" />
+						</DropdownItem>
+						<Dropdown placement="right-start">
+							{#each listTimes as r}
+								<DropdownItem>
+									{#if $filters.includes(r)}
+										<Checkbox
+											checked
+											on:change={() => {
+												toggleFilters(r);
+												console.log($filters);
+											}}><li>{r}</li></Checkbox
+										>
+									{:else}
+										<Checkbox
+											on:change={() => {
+												toggleFilters(r);
+												console.log($filters);
+											}}><li>{r}</li></Checkbox
+										>
+									{/if}
+								</DropdownItem>
+							{/each}
+						</Dropdown>
+					</Dropdown>
+					<Button
+						outline
+						color="dark"
+						on:click={() => {
+							filters.set([]);
+						}}>Reset filters</Button
+					>
 				</TableHeader>
+				<!-- This just lists out the different filters that are currently selected: -->
+				{#if $filters.length > 0}
+					<br />
+					{#if $filters.length > 0}
+						{#each $filters as f}
+							<Badge color="blue" style="margin-right:.2rem;">{f}</Badge>
+						{/each}
+					{/if}
+				{/if}
 			</div>
 
 			<div class="flex card-container">
 				{#each Array(columns) as _, colIndex}
-					{#if clubs
+					{#if filteredClubs
 						.filter((club) => club.status === 'Approved' && labelIncludesSearchTerm(club.club_name, searching))
 						.filter((_, i) => i % columns === colIndex).length > 0}
 						<div class="masonry-column" style="flex: 1;">
-							{#each clubs
+							{#each filteredClubs
 								.filter((club) => club.status === 'Approved' && labelIncludesSearchTerm(club.club_name, searching))
 								.filter((_, i) => i % columns === colIndex) as club}
 								<div class="space-y-4 clubcard">
