@@ -418,7 +418,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="border-b">
+						<tr class="border-b tablerow">
 							{#each Object.entries(wholeCollection.info) as [key, value]}
 								<!-- key = column, value = data in that column (could be a list, etc.) -->
 								{#if key != 'id'}
@@ -591,6 +591,7 @@
 												</div>
 											{/if}
 											{:else}
+											<!-- Showing dicts -->
 											<table>
 												<thead class="text-lg text-gray-700 bg-gray-50">
 													<tr>
@@ -604,7 +605,7 @@
 												<tbody>
 													<tr class="border-b">
 														{#each Object.entries(value) as [key1, value1]}
-														<td class="px-4 py-3">
+														<td class="px-4 py-3" style="overflow:visible">
 															{#if key1 != "id"}
 															<div class="listwrapper">
 																<div class="indlistbadge">
@@ -750,7 +751,7 @@
 																						{:else}
 																							<Input
 																								size="sm"
-																								id="{key1}_{value1.replace(/ /g, '-')}"
+																								id="rehaan"
 																								value={value1}
 																								on:input={() => {
 																									selectedItemLocation = key;
@@ -829,6 +830,10 @@
 </section>
 
 <style>
+	/* .tablerow {
+		display: grid;
+	} */
+
 	.listwrapper {
 		margin-bottom: 0.5rem;
 	}
