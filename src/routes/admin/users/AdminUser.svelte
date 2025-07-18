@@ -108,9 +108,16 @@
 	}
 
 	function setRoleColor(role) {
-		const roleInd = roleChoices.findIndex((p) => p.name == role);
-		roleColor = roleChoices[roleInd].color;
-		return roleColor;
+		try {
+			const roleInd = roleChoices.findIndex((p) => p.name == role);
+			roleColor = roleChoices[roleInd].color;
+			console.log(roleColor);
+			return roleColor;
+		} catch (error) {
+			console.log(error);
+			return "red";
+		}
+		
 	}
 
 	function setRoleChoices(role) {
