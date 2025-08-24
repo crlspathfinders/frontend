@@ -49,28 +49,42 @@ export async function getCollection(collection) {
 
 export async function getCollectionDoc(collection, docId) {
 	try {
+		console.log("=== getCollectionDoc DEBUG ===");
+		console.log("Collection:", collection, "DocId:", docId);
 		const url = SEND_URL + 'read/' + collection + '/' + docId;
+		console.log("URL:", url);
+		
 		const res = await fetch(url, {
 			method: "GET",
 			headers: {
 				"Authorization": `Basic ${encodedCredentials}`
 			}
 		});
+		
+		console.log("Response status:", res.status);
+		console.log("Response ok:", res.ok);
+		
 		if (!res.ok) {
-			throw new Error("getvals fetching didn't work");
+			const errorText = await res.text();
+			console.error("Response error:", errorText);
+			throw new Error(`HTTP ${res.status}: ${errorText}`);
 		}
+		
 		let resData = await res.json();
+		console.log("Raw response data:", resData);
 
-		console.log(JSON.parse(resData.collid));
 		if (resData.status == 0) {
-			return JSON.parse(resData.collid);
+			const parsed = JSON.parse(resData.collid);
+			console.log("Parsed data:", parsed);
+			return parsed;
 		} else if (resData.status == 1) {
+			console.error("API returned error:", resData.error_message);
 			return resData.error_message;
 		}
 
 		// return resData;
 	} catch (error) {
-		console.log("Couldn't retrieve / fetch getvals data: " + error);
+		console.error("getCollectionDoc error:", error);
 		return -1;
 	}
 }

@@ -265,8 +265,26 @@
 		if (targetId > -1) {
 			categories = wholeWebsiteData[targetId].info;
 		} else {
-			categories = await getCollectionDoc('Demographics', 'Opportunities');
-			updateWholeWebsiteData('categories', categories);
+			try {
+				categories = await getCollectionDoc('Demographics', 'Opportunities');
+				if (categories && categories !== -1 && typeof categories === 'object') {
+					updateWholeWebsiteData('categories', categories);
+				} else {
+					// Fallback: try to get the full Demographics collection
+					const fullDemographics = await getCollection('Demographics');
+					const oppDemo = fullDemographics.find(item => item.id === 'Opportunities');
+					if (oppDemo) {
+						categories = oppDemo;
+						updateWholeWebsiteData('categories', categories);
+					} else {
+						// Ultimate fallback: empty categories
+						categories = { categories: [] };
+					}
+				}
+			} catch (error) {
+				console.error('Error getting categories:', error);
+				categories = { categories: [] };
+			}
 		}
 
 		targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
@@ -285,7 +303,11 @@
 
 		categories = categories.categories;
 
-		categories = makeSelectCategoriesOk(categories);
+		if (categories && Array.isArray(categories)) {
+			categories = makeSelectCategoriesOk(categories);
+		} else {
+			categories = [];
+		}
 		console.log(categories);
 		allReady.set(true);
 	});
