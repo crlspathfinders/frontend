@@ -29,12 +29,23 @@ export async function getCollection(collection) {
 			throw new Error("getvals fetching didn't work");
 		}
 		let resData = await res.json();
-		console.log(resData);
+		console.log("Raw response data:", resData);
 
 		const status = resData.status;
 		if (status == 0) {
-			const collection = JSON.parse(resData.collection)
-			return collection
+			let collectionData = resData.collection;
+			
+			// Handle if data is double-stringified
+			if (typeof collectionData === 'string') {
+				try {
+					collectionData = JSON.parse(collectionData);
+				} catch (e) {
+					console.warn("Could not parse collection string, using as-is");
+				}
+			}
+			
+			console.log("Parsed collection data:", collectionData);
+			return Array.isArray(collectionData) ? collectionData : [collectionData];
 		} else if (status == -1) {
 			const sentEmail = await sendOneEmail("getCollectionError", resData.error_message, "crlspathfinders25@gmail.com");
 			console.log(sentEmail);
