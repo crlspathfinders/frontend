@@ -171,7 +171,7 @@
   },
   {
     Accepted: 'Wentworth Institute of Technology, Suffolk University, UMass Boston, Emmanuel College, Northeastern University',
-    Rejected: 'None (College of the Holy Cross waitlisted)',
+    Rejected: 'None',
     Waitlisted: 'College of the Holy Cross',
     GPA: '92.836/100 (unweighted)',
     Major: 'Computer Science',
@@ -219,8 +219,8 @@
   },
   {
     Accepted: 'Boston College, Boston University, Babson College, UMichigan, others (not fully listed)',
-    Rejected: 'Not fully specified',
-    Waitlisted: 'Not fully specified',
+    Rejected: 'N/A',
+    Waitlisted: 'N/A',
     GPA: 93.5,
     Major: 'Economics and Computer Science',
     SAT: '1420',
@@ -235,8 +235,8 @@
   },
   {
     Accepted: 'Amherst, Bates, Bowdoin, Carleton, Colby, Middlebury, Northwestern, NYU, Pomona, Swarthmore, UMich, WashU, Wesleyan, Williams (ED), Case Western, Macalester, UIUC, UMass Amherst',
-    Rejected: 'Harvard, Harvey Mudd (plus any omitted)',
-    Waitlisted: 'Middlebury (and some others via narrative)',
+    Rejected: 'Harvard, Harvey Mudd',
+    Waitlisted: 'Middlebury',
     GPA: '96.15/100',
     Major: 'Statistics (math where no stats major)',
     SAT: '1510 (740 English, 770 Math)',
@@ -330,9 +330,9 @@
     Notes: '“nothin much see ya”'
   },
   {
-    Accepted: 'Carnegie Mellon, plus list schools not all specified as decisions',
-    Rejected: 'Not fully detailed',
-    Waitlisted: 'Not fully detailed',
+    Accepted: 'Carnegie Mellon',
+    Rejected: 'N/A',
+    Waitlisted: 'N/A',
     GPA: '3.8 (4.2 weighted)',
     Major: 'Civil engineering and public policy',
     SAT: '1450',
@@ -363,8 +363,8 @@
   },
   {
     Accepted: 'Northeastern (ED1), Simmons, Johnson & Wales, UMass Dartmouth, Lesley',
-    Rejected: 'None listed',
-    Waitlisted: 'None listed',
+    Rejected: 'N/A',
+    Waitlisted: 'N/A',
     GPA: '98/4.0',
     Major: 'Design / Graphic Design',
     SAT: '1480 superscore (710 Math, 770 Reading)',
